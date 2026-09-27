@@ -1,0 +1,49 @@
+39
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+Data yang diperoleh, baik dari
+pengumpulan data maupun
+akuisisi data dilakukan klasifikasi
+dan/atau dilakukan
+pengkodean/coding pada variabel
+tertentu (jika diperlukan untuk
+memudahlan dalam pengolahan
+lebih lanjut).
+Contoh:
+❑ mengubah pilihan (centang/
+silang) pada pertanyaan tertutup
+menjadi kode (angka/ huruf).
+❑ Menambahkan kode klasifikasi
+(angka/huruf) pada isian variabel
+yang diperoleh dari akuisisi data
+Proses pemeriksaan
+dan memperbaiki
+penulisan yang
+salah/kurang jelas
+dan pemberian kode
+pada isian dokumen
+hasil pencacahan
+dengan
+memperhatikan
+kaidah-kaidah
+editing dan coding
+(penyuntingan/
+penyandian) yang
+telah ditetapkan
+Hasil editing
+dan coding
+sangat
+mempengaru
+hi kualitas
+data dan
+proses
+pengolahan
+selanjutnya

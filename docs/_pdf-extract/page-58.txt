@@ -1,0 +1,24 @@
+METADATA STATISTIK
+Data yang
+dihasilkan oleh
+produsen data
+harus dilengkapi
+dengan metadata
+Struktur dan format
+metadata baku dari
+data statistik
+ditetapkan oleh
+BPS sebagai
+pembina data
+tingkat pusat
+Peraturan Badan Pusat Statistik nomor 5 Tahun 2020
+tentang Petunjuk Teknis Metadata Statistik
+“ Informasi dalam bentuk struktur dan format yang baku untuk
+menggambarkan data, menjelaskan data, serta memudahkan pencarian,
+penggunaan, dan pengelolaan informasi data ”
+.
+Informasi dalam
+metadata harus
+mengikuti struktur
+dan format yang
+baku

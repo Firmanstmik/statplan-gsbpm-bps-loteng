@@ -16,7 +16,7 @@ import { BrandLockup } from '@/components/branding/BrandLockup'
 const steps = [
   {
     title: 'Selamat datang di StatPlan',
-    body: 'Platform perencanaan kegiatan statistik untuk OPD Kabupaten Lombok Tengah, dipandu kerangka GSBPM 5.2. Keluaran aplikasi berstatus draf hingga divalidasi BPS.',
+    body: 'Platform perencanaan kegiatan statistik untuk OPD Kabupaten Lombok Tengah, dipandu kerangka GSBPM 5.2. Keluaran aplikasi berstatus draf bahan kerja — bukan persetujuan resmi BPS.',
     icon: MagicStar,
   },
   {

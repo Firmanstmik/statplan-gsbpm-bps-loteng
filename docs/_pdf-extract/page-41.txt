@@ -1,0 +1,21 @@
+41
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+Edit dan Imputasi diperlukan ketika data dianggap tidak benar, tidak ada isian
+(missing), tidak wajar, sehingga dapat dimasukkan suatu nilai baru atau dilakukan
+penghapusan pada data yang tidak wajar.
+Aktivitas-aktivitas yang dilakukan pada subproses ini meliputi:
+• Menentukan apakah akan menambah atau mengubah data.
+• Memilih metode yang akan digunakan.
+• Menambah/mengubah nilai data.
+• Menuliskan kembali nilai data baru ke dalam set data dan menandainya (flag)
+sebagai penanda bahwa data yang ada telah diubah.
+• Membuat metadata pada proses editing dan imputasi.

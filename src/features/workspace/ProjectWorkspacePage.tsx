@@ -50,6 +50,7 @@ import { VariableCard } from '@/features/workspace/VariableCard'
 import { QuestionCard } from '@/features/workspace/QuestionCard'
 import { NextStepsCard } from '@/features/workspace/NextStepsCard'
 import { ContohPanel } from '@/features/workspace/ContohPanel'
+import { SpecifyNeedLearningPanel } from '@/features/workspace/learning/SpecifyNeedLearningPanel'
 import { SampelKalkulator } from '@/features/workspace/SampelKalkulator'
 import { TAB_GUIDES } from '@/content/howToWork'
 import { isDemoProject } from '@/demo'
@@ -576,8 +577,12 @@ export function ProjectWorkspacePage() {
         <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
           <Card className="h-fit space-y-4">
             <div className="text-xs font-medium uppercase tracking-wide text-ink-600">
-              Empat tahap navigasi
+              Kelompok pembelajaran
             </div>
+            <p className="text-[11px] leading-snug text-ink-500">
+              Pengelompokan antarmuka (bukan fase resmi GSBPM). Delapan fase di bawah tetap
+              merujuk GSBPM 5.2.
+            </p>
             {SDI_STAGES.map((s) => (
               <div key={s.id}>
                 <div className="mb-2 text-sm font-semibold text-ink-950">{s.title}</div>
@@ -620,6 +625,108 @@ export function ProjectWorkspacePage() {
           </Card>
 
           <div className="space-y-4">
+            {phase.id === 'specify_need' ? (
+              <SpecifyNeedLearningPanel
+                phase={phase}
+                jenisKegiatan={project.jenisKegiatan}
+                klasifikasi={project.klasifikasi}
+                checklistState={project.checklistState}
+                onChecklistToggle={onChecklistToggle}
+                contextualSlotForCode={(code) =>
+                  code === '1.5' ? (
+                    portalComplete && !portalEditing ? (
+                      <div
+                        id="focus-portal"
+                        className="scroll-mt-28 rounded-xl border border-success/20 bg-success-soft/30 p-3"
+                      >
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                          <div>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <h4 className="font-semibold text-ink-950">
+                                Pemeriksaan portal rujukan statistik
+                              </h4>
+                              <Badge tone="success">Sudah dikonfirmasi</Badge>
+                              <HelpTip topic="portal_sdi" />
+                            </div>
+                            <p className="mt-2 text-sm text-ink-700">
+                              Sirusa dan Romantik telah dicentang
+                              {project.portalSdi.notes?.trim()
+                                ? ` · ${project.portalSdi.notes.trim().slice(0, 80)}`
+                                : ''}
+                            </p>
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => setPortalEditing(true)}
+                          >
+                            Ubah
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        id="focus-portal"
+                        className="scroll-mt-28 rounded-xl border border-brand/20 bg-brand-soft/30 p-3"
+                      >
+                        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h4 className="font-semibold text-ink-950">
+                              Pemeriksaan portal rujukan statistik
+                            </h4>
+                            <HelpTip topic="portal_sdi" />
+                            <PdfRefBadge ref="Hal. 15" />
+                          </div>
+                          {portalComplete ? (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => setPortalEditing(false)}
+                            >
+                              Selesai
+                            </Button>
+                          ) : null}
+                        </div>
+                        <p className="mb-4 text-sm text-ink-700">
+                          Cek sirusa.web.bps.go.id, romantik.bps.go.id, dan portal SDI (dll.)
+                          untuk menghindari duplikasi kegiatan (Specify Need 1.5).
+                        </p>
+                        <div className="space-y-3">
+                          <Checkbox
+                            checked={project.portalSdi.sirusaChecked}
+                            onChange={(next) => {
+                              updatePortal({ sirusaChecked: next })
+                              toast('Pemeriksaan portal diperbarui')
+                              markSaved({ silent: true })
+                            }}
+                            label="Sudah mengecek sirusa.web.bps.go.id"
+                          />
+                          <Checkbox
+                            checked={project.portalSdi.romantikChecked}
+                            onChange={(next) => {
+                              updatePortal({ romantikChecked: next })
+                              toast('Pemeriksaan portal diperbarui')
+                              markSaved({ silent: true })
+                            }}
+                            label="Sudah mengecek romantik.bps.go.id"
+                          />
+                          <Field>
+                            <Label>Catatan hasil pengecekan</Label>
+                            <Textarea
+                              value={project.portalSdi.notes}
+                              onChange={(e) => updatePortal({ notes: e.target.value })}
+                              onBlur={() => notifySaved()}
+                              placeholder="Contoh: Data belum tersedia di portal, perlu survei baru"
+                            />
+                          </Field>
+                        </div>
+                      </div>
+                    )
+                  ) : null
+                }
+              />
+            ) : (
+              <>
             <Card>
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <div className="text-xs font-medium text-ink-600">
@@ -917,6 +1024,8 @@ export function ProjectWorkspacePage() {
                 </Card>
               )
             })}
+              </>
+            )}
           </div>
         </div>
         </div>

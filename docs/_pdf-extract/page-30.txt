@@ -1,0 +1,24 @@
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Mencakup uji coba kuesioner, uji coba metodologi, dan uji coba pengolahan
+data.
+• Uji coba kuesioner: apakah kondef dari variabel sudah dapat diaplikasikan
+seluruhnya di lapangan.
+• Uji coba metodologi, mencakup organisasi survei/organisasi lapangan, dan
+pelatihan petugas, apakah rancangan organisasi lapangan sudah memadai
+(beban tugas, koordinasi kerja, durasi setiap kegiatan dsb.
+• Uji coba pengolahan data: editing, coding, data entry, aturan validasi, dan
+dummy table, apakah pedoman editing & coding, program entry data, validasi
+dapat berjalan sesuai yang diharapkan. Dapat diketahui rata-rata lamanya
+editing per dokumen, rata-rata entry data per dokumen dan ukuran lain yang
+diperlukan dalam kegiatan pengolahan data.

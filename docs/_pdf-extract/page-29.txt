@@ -1,0 +1,17 @@
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Pengujian terhadap komponen dan alur kerja terkait yang sudah
+dibangun/diatur.
+• Pengujian tidak hanya dilakukan secara individual pada masing-masing komponen,
+tetapi juga mencakup pengujian terhadap interaksi antar komponen, dan
+memastikan bahwa sistem produksi dapat bekerja dan berfungsi dengan baik.

@@ -1,0 +1,11 @@
+8
+KARAKTERISTIK GSBPM
+• Dapat diterapkan secara
+fleksibel
+• Alur sub-proses tidak harus
+berurutan dan dimungkinkan
+adanya iterasi
+• Merupakan sebuah matriks
+sehingga terdapat banyak
+kemungkinan urutan sub-
+proses

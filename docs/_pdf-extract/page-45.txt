@@ -1,0 +1,14 @@
+45
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+❑ Menyiapkan data untuk dilanjutkan ke tahap berikutnya
+❑ Menyerahkan data final untuk digunakan di tahap
+analisis

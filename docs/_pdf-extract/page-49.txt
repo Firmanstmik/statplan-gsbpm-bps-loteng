@@ -1,0 +1,21 @@
+ANALYSE (ANALISIS DATA)
+TAHAPAN GSBPM
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+Interpretasi dan Menjelaskan Output merupakan subproses berupa
+pemberian pemahaman yang mendalam mengenai output statistik yang
+dihasilkan. Pemahaman ini diperlukan untuk menginterpretasikan dan
+menjelaskan output statistik tersebut.
+Aktivitas-aktivitas yang dilakukan dalam subproses ini mencakup:
+• mengevaluasi seberapa baik output statistik tersebut mencerminkan
+ekspektasi (hipotesis awal),
+• melihat statistik dari berbagai perspektif dengan menggunakan alat
+dan media yang berbeda, dan
+• melakukan analisis secara mendalam, seperti analisis deret waktu,
+analisis dampak, analisis keterbandingan, analisis hasil revisi (analisis
+perbedaan antara angka estimasi awal dengan hasil revisi), analisis
+asimetri, dan lain-lain.

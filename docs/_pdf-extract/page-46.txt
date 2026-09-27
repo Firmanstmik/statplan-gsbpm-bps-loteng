@@ -1,0 +1,48 @@
+• Output kegiatan layak digunakan sebelum diseminasi
+• Mikro data final (sudah anonimisasi)
+• Dokumentasi Pembahasan validasi output, diskusi pra
+rilis, persetujuan rilis, dll
+• Metadata Statistik Indikator
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analys
+e
+Dissemi
+nate
+Evaluat
+e
+46
+ANALYSE (ANALISIS DATA)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Mengubah hasil pengolahan menjadi output statistik,
+seperti membangun tabel analisis, indeks, mikro data, dll.
+• Memvalidasi dan membandingkan output yang dihasilkan
+dengan periode sebelumnya (jika ada) dan/atau sumber
+lain.
+• Melakukan identifikasi anomali dan inkonsistensi
+• Menafsirkan makna statistik yang dihasilkan
+• Melakukan analisis mendalam (time series, ekonometrika,
+dll)
+• Menerapkan dan menjaga kerahasiaan data individu.
+• Pemeriksaan konsistensi akhir
+• Menentukan tingkat rilis & catatan kehati-hatian
+• Melengkapi interpretasi, catatan teknis, dan menyusun
+metadata statistik Indikator
+• Diskusi pra-rilis dengan pakar internal
+• Membuat dan menyepakati persetujuan konten untuk
+diseminasi
+Aktivitas
+Output
+Sub Proses
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output

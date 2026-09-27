@@ -1,0 +1,24 @@
+ANALYSE (ANALISIS DATA)
+TAHAPAN GSBPM
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+Validasi Output merupakan subproses berupa pemeriksaan dan validasi atas
+kualitas output yang dihasilkan sesuai dengan pedoman kualitas standar yang
+berlaku dan target kualitas yang telah ditetapkan sebelumnya.
+Aktivitas-aktivitas yang dilakukan dalam subproses ini mencakup:
+• Memeriksa konsistensi;
+• Memeriksa dan memastikan cakupan populasi dan tingkat respon sesuai
+dengan kebutuhan.
+• Membandingkan output statistik dengan periode sebelumnya (jika ada).
+• Memeriksa dan memastikan bahwa metadata, paradata, dan indikator kualitas
+tersedia dan sesuai dengan harapan.
+• Membandingkan output statistik dengan data relevan lainnya, baik internal
+maupun eksternal (koherensi).
+• Menyelidiki ketidakkonsistenan pada output statistik.
+• Memeriksa dan melakukan penyuntingan pada tingkat agregat atau makro.
+• Memeriksa dan memastikan bahwa output statistik telah sesuai ekspektasi
+dan keilmuan terkait.

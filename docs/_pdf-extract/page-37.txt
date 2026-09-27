@@ -1,0 +1,46 @@
+• Dataset mikro atau makro, baik data final
+maupun sementara.
+• Metadata Statistik Variabel
+Specify
+Need
+Design
+Build
+Collect
+Proce
+ss
+Analyse
+Dissemi
+nate
+Evaluat
+e
+37
+PROCESS (PENGOLAHAN DATA)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Menggabungkan data dari satu atau lebih
+sumber
+• Mengolah data input agar siap dianalisis,
+meliputi : integrasi, klasifikasi, validasi, imputasi,
+editing, pembersihan, dan transformasi data.
+• Pembentukan variabel/unit baru, tidak
+disediakan dalam pengumpulan data tetapi
+diperlukan untuk menghasilkan output yang
+dibutuhkan
+• Menghitung dan menerapkan bobot unit data
+sesuai metodologi.
+• Menghitung agregat, seperti : jumlah, rata-rata,
+dan sebaran.
+• Menyusun Metadata statistik variabel dari
+dataset
+Aktivitas
+Output
+Sub Proses
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat

@@ -1,0 +1,30 @@
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Susunan pertanyaan saling berkaitan satu sama lain secara logis, runtun,
+dan tidak meloncat- loncat
+• Pertanyaan yang mudah sebaiknya pada bagian awal kuesioner
+• Pertanyaan sensitif dan jawaban terbuka sebaiknya di bagian akhir
+kuesioner;
+• Gunakan pertanyaan secara singkat dan jelas, tidak bertele-tele.
+• Jangan gunakan pasangan pertanyaan yang mengecek reliabilitas. Misal,
+setujukah Anda terhadap aborsi? Sementara itu di tempat lain, ada
+pertanyaan, tidak setujukah Anda terhadap aborsi?
+Perlu diperhatikan:
+• Relevansi pertanyaan di kuesioner (tujuan, responden, jenis studi)
+• Uji coba (validitas & reliabilitas)
+• Penyusun buku pedoman
+• Hindari:
+✓Pertanyaan ganda
+✓Pertanyaan yang mengarahkan
+✓Pertanyaan sensitif
+✓Pertanyaan yang menakut-nakuti.

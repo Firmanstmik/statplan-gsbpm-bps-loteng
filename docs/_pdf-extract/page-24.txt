@@ -1,0 +1,49 @@
+• Sistem alur kerja (SOP)
+• Instrumen (Kuesioner/Panduan Teknis Kegiatan)
+• Sistem Pengumpulan, Pengolahan dan Diseminasi
+Data yang siap digunakan
+• Surat Rekomendasi Kegiatan Statistik
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analyse
+Dissemi
+nate
+Evaluat
+e
+24
+BUILD (PEMBANGUNAN)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Membangun atau menggunakan kembali instrumen
+pengumpulan data (panduan, kuesioner, dll)
+• Menggunakan kembali atau membangun layanan
+transformasi data, dashboard, geospasial, workflow,
+dan komponen pengolahan analisis diseminasi
+lainnya.
+• Mengonfigurasi alur kerja dari pengumpulan hingga
+diseminasi
+• Melakukan uji coba instrumen pengumpulan data,
+pengolahan, analisis, dan diseminasi
+• Melakukan uji coba keseluruhan tahapan proses
+kegiatan statistik (skala kecil)
+• Menyiapkan sistem agar siap digunakan secara
+operasional
+• Menyusun dokumentasi teknis dan panduan pengguna
+Aktivitas
+Output
+Sub Proses
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi

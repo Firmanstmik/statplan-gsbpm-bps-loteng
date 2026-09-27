@@ -1,0 +1,15 @@
+19
+DESIGN (PERANCANGAN)
+TAHAPAN GSBPM
+Merancang Output & Diseminasi
+Merancang Variabel
+Merancang Pengumpulan Data
+Merancang Kerangka Sampel
+Merancang Sistem Produksi & Alur
+Kerja
+Merancang Pengolahan & Analisis
+• Merancang variabel yang akan dikumpulkan.
+Misal: nama, umur, jenis kelamin, tingkat pendidikan, pekerjaan
+utama, instansi, dll
+• Cek Standar Data Statistik Nasional untuk setiap variabel
+• Cek ketersedian variabel

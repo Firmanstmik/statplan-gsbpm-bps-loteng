@@ -1,0 +1,21 @@
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Memastikan bahwa semua komponen yang telah dibangun, baik yang sudah ada
+maupun yang baru dibuat, berfungsi dengan baik dan siap digunakan pada proses
+produksi statistik.
+• Aktivitas-aktivitas yang dilakukan pada subproses ini mencakup:
+✓ Penyusunan dokumentasi tentang komponen proses bisnis, termasuk
+penyusunan dokumentasi teknis dan panduan pengguna proses bisnis.
+✓ Pemindahan komponen-komponen proses bisnis ke lingkungan produksi dan
+memastikan bahwa proses bisnis tersebut berjalan atau berfungsi sesuai
+harapan.

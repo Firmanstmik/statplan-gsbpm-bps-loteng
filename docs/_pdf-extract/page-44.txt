@@ -1,0 +1,17 @@
+44
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+•Menggunakan penimbang yang telah ditetapkan (jika Survei)
+•Menghitung data/tabulasi agregat
+•Menyusun data set turunan untuk kebutuhan analisis khusus
+•Menghitung sampling error (jika Survei)
+•Melakukan estimasi (jika Survei)
+•Melakukan rekonsiliasi data/tabulasi antar wilayah

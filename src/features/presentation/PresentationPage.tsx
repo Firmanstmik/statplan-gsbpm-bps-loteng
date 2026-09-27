@@ -4,7 +4,6 @@ import {
   ArrowLeft2,
   ArrowRight2,
   Hierarchy,
-  DocumentText,
   TickSquare,
   ExportSquare,
   MagicStar,
@@ -23,39 +22,39 @@ type TabId = 'sorotan' | 'slide' | 'script' | 'faq'
 
 const highlights = [
   {
+    id: 'guided',
+    title: 'Mode Terpandu (utama untuk demo)',
+    body: 'Tunjukkan Apa → Contoh → Format kerja → Bukti dukung → Sudah dipahami. Mode Terpandu membantu pemula menyusun rencana bertahap — bukan menjalankan pengumpulan data.',
+    icon: Book1,
+    tabHint: 'Mulai dari Landing → Lihat contoh → Buat rencana → Timeline → Mode Terpandu.',
+  },
+  {
     id: 'recommend',
     title: 'Rekomendasi jenis kegiatan',
-    body: 'Tunjukkan bagaimana asisten memilih Survei / Sensus / Kompromin berdasarkan ketersediaan data (Specify Need 1.5 & Design 2.3).',
+    body: 'Asisten rule-based membantu mempertimbangkan Survei / Sensus / Kompromin. Ini bantuan perencanaan — bukan putusan resmi BPS.',
     icon: MagicStar,
     tabHint: 'Buka Asisten atau kartu rekomendasi di workspace.',
   },
   {
     id: 'portal',
     title: 'Portal rujukan statistik',
-    body: 'Tekankan kewajiban cek sirusa & romantik (serta portal SDI bila relevan) sebelum pengumpulan baru — validasi ekspor memblokir jika sirusa/romantik belum lengkap (Specify Need 1.5).',
+    body: 'Materi menekankan pemeriksaan SIRuSa / Romantik / Portal SDI sebelum pengumpulan baru. StatPlan membantu pencatatan hasil cek — tidak mengakses portal secara otomatis.',
     icon: TickSquare,
-    tabHint: 'Di workspace → Alur kerja → kartu portal rujukan.',
+    tabHint: 'Guided Phase 1.5 atau workspace → kartu portal rujukan.',
   },
   {
     id: 'gsbpm',
     title: 'Alur GSBPM',
-    body: 'Navigasi empat tahap antarmuka membungkus delapan fase GSBPM 5.2. Subproses sampling dilewati otomatis untuk sensus/kompromin.',
+    body: 'Delapan fase GSBPM 5.2 dibungkus Mode Terpandu dan Workspace. GSBPM fleksibel; urutan Mode Terpandu adalah panduan belajar StatPlan, bukan urutan wajib.',
     icon: Hierarchy,
-    tabHint: 'Tab Alur kerja — pilih fase di sidebar kiri.',
-  },
-  {
-    id: 'metadata',
-    title: 'Metadata MS-Keg / Var / Ind',
-    body: 'Tampilkan form metadata sesuai arah Perka BPS 5/2020 sebagai draf — bukan katalog Perka penuh.',
-    icon: DocumentText,
-    tabHint: 'Tab Metadata pada workspace proyek.',
+    tabHint: 'Mode Terpandu Phase 1–8 atau tab Alur kerja di workspace.',
   },
   {
     id: 'export',
     title: 'Ekspor draf DOCX',
-    body: 'Ekspor hanya aktif setelah persyaratan wajib terpenuhi. Dokumen tetap berstatus draf untuk validasi BPS.',
+    body: 'Ekspor menghasilkan draf perencanaan. Bukan dokumen resmi BPS dan bukan persetujuan kegiatan.',
     icon: ExportSquare,
-    tabHint: 'Tab Ekspor — atau tombol unduh di header proyek.',
+    tabHint: 'Tab Ekspor setelah draf cukup lengkap — atau tunjukkan status gated pada proyek baru.',
   },
 ]
 
@@ -63,97 +62,89 @@ const slides = [
   {
     n: 1,
     title: 'Judul',
-    body: 'StatPlan · Perencanaan Statistik OPD · BPS Lombok Tengah',
+    body: 'StatPlan · Simulator perencanaan kegiatan statistik · berbasis GSBPM 5.2',
   },
   {
     n: 2,
     title: 'Apa ini',
-    body: 'Workspace GSBPM 5.2 untuk OPD menyusun perencanaan statistik. Bukan LMS pelatihan, bukan database lapangan.',
+    body: 'Media pembelajaran dan penyusunan rencana kegiatan statistik. Bukan LMS, bukan database lapangan, bukan sistem resmi BPS.',
   },
   {
     n: 3,
-    title: 'Tiga jenis kegiatan',
-    body: 'Survei · Sensus · Kompilasi produk administrasi (Kompromin) — dipilih lewat rekomendasi rule-based yang dapat diaudit.',
+    title: 'Masalah',
+    body: 'Seseorang ingin merancang kegiatan statistik, tetapi belum tahu apa yang harus disiapkan dan dari mana memulai.',
   },
   {
     n: 4,
-    title: 'Fitur inti',
-    body: 'Rekomendasi jenis · Checklist GSBPM · Variabel · Instrumen · Metadata MS-Keg/Var/Ind · Ekspor draf DOCX.',
+    title: 'Solusi',
+    body: 'StatPlan memandu secara bertahap: contoh → kebutuhan → timeline → Mode Terpandu (8 fase) → draf yang dapat ditinjau.',
   },
   {
     n: 5,
-    title: 'Demo live',
-    body: 'Tampilkan satu proyek OPD di workspace: alur kerja → variabel → metadata → ekspor.',
+    title: 'Contoh utama',
+    body: 'Survei Kepuasan Masyarakat Pelayanan Perizinan — contoh ilustratif StatPlan, bukan data kegiatan nyata.',
   },
   {
     n: 6,
-    title: 'Metadata',
-    body: 'MS-Keg / MS-Var / MS-Ind mengikuti arah Perka BPS 5/2020 sebagai draf perencanaan.',
+    title: 'Mode Terpandu',
+    body: 'Setiap kartu: Apa? · Contoh · Yang bisa dipelajari · Format kerja StatPlan · Bukti dukung · Sudah dipahami.',
   },
   {
     n: 7,
-    title: 'Batasan',
-    body: 'Client-side · localStorage · dokumen draf · lima proyek demo bersifat contoh ilustratif (bukan standar resmi BPS).',
+    title: 'GSBPM',
+    body: 'Delapan fase Specify Need → … → Evaluate. Mode Terpandu membantu memahami; Workspace untuk penyusunan lanjut.',
   },
   {
     n: 8,
-    title: 'Validasi BPS',
-    body: 'Keluaran tetap draf hingga divalidasi BPS. Jangan masukkan data pribadi responden ke workspace.',
+    title: 'Batasan',
+    body: 'Client-side · localStorage · dokumen draf · contoh ilustratif · tanpa AI generatif · tanpa data responden nyata.',
   },
   {
     n: 9,
-    title: 'Hosting',
-    body: 'Deploy Vercel → domain target simulator.bpsloteng.net (CNAME). Lihat HOSTING.md / Pengaturan → Hosting.',
+    title: 'Keluaran',
+    body: 'Hasil = draf perencanaan. Bukan approval BPS, bukan dokumen resmi, bukan pengganti prosedur lembaga.',
   },
 ]
 
 const scriptSteps = [
   {
-    aksi: 'Beranda',
-    ucap: 'Ini daftar proyek OPD. Progress dihitung dari checklist wajib.',
+    aksi: 'Landing',
+    ucap: 'StatPlan membantu menyusun rencana kegiatan statistik secara bertahap berdasarkan GSBPM — simulator perencanaan, bukan sistem resmi BPS.',
   },
   {
-    aksi: 'Buka SKM DPMPTSP (Survei ~98%)',
-    ucap: 'Contoh survei sektoral hampir siap review.',
+    aksi: 'Lihat contoh → SKM Perizinan',
+    ucap: 'Ini contoh ilustratif. User belajar bentuk rencana sebelum mengisi sendiri.',
   },
   {
-    aksi: 'Tab Alur kerja',
-    ucap: 'Delapan fase GSBPM. Centang mengikuti jenis kegiatan.',
+    aksi: 'Buat rencana seperti ini → Intake → Timeline',
+    ucap: 'User menceritakan kebutuhan dengan bahasa sehari-hari, lalu menyusun rencana waktu. Bukan durasi wajib BPS.',
   },
   {
-    aksi: 'Kartu portal rujukan',
-    ucap: 'Sirusa & Romantik wajib sebelum ekspor — cegah duplikasi.',
+    aksi: 'Mode Terpandu Phase 1',
+    ucap: 'Setiap kartu: pahami Apa, lihat Contoh, pelajari poinnya, isi Format kerja, catat Bukti dukung, tandai Sudah dipahami.',
   },
   {
-    aksi: 'Asisten / rekomendasi',
-    ucap: 'Survei / Sensus / Kompromin dipilih dari aturan, bukan tebak-tebakan.',
+    aksi: 'Phase 2–8 (ringkas)',
+    ucap: 'Pola pembelajaran konsisten di delapan fase GSBPM. Tidak perlu membuka semua kartu di demo singkat.',
   },
   {
-    aksi: 'Tab Variabel → NIB (proyek UMKM)',
-    ucap: 'Setiap variabel: nama, definisi, tipe, skala, sumber, contoh, missing. Helper Misal mengikuti variabel yang sedang dibuka.',
+    aksi: 'Completion → Workspace',
+    ucap: 'Mode Terpandu selesai dipelajari — bukan kegiatan statistik selesai. Workspace untuk penyusunan lanjut.',
   },
   {
-    aksi: 'Tab Instrumen',
-    ucap: 'Survei/Sensus: pertanyaan selaras variabel. Kompromin: tanpa kuesioner — data dari administrasi.',
+    aksi: 'Validasi / Ekspor',
+    ucap: 'Periksa kelengkapan draf. Ekspor = dokumen draf Word, bukan dokumen resmi BPS.',
   },
   {
-    aksi: 'Tab Metadata',
-    ucap: 'MS-Keg / Var / Ind sebagai draf arah Perka 5/2020.',
-  },
-  {
-    aksi: 'Tab Ekspor',
-    ucap: 'Tombol aktif hanya jika syarat wajib terpenuhi. File = draf Word.',
-  },
-  {
-    aksi: 'Ganti proyek (UMKM / Dukcapil / Padi / Pendidikan)',
-    ucap: 'Tunjukkan branching Survei · Sensus · Kompromin.',
+    aksi: 'Batasan (closing)',
+    ucap: 'Tanpa AI generatif, tanpa data responden, tanpa approval. Contoh SKM berlabel contoh ilustratif.',
   },
 ]
 
 const faqs = [
   {
     q: 'Apakah ini sistem resmi BPS?',
-    a: 'Belum. Demonstrasi perencanaan untuk BPS Kabupaten Lombok Tengah.',
+    a: 'Tidak. StatPlan adalah simulator perencanaan dan media pembelajaran berbasis GSBPM.',
   },
   {
     q: 'Apakah data responden disimpan di server?',
@@ -161,15 +152,15 @@ const faqs = [
   },
   {
     q: 'Apakah rekomendasi aplikasi = putusan BPS?',
-    a: 'Tidak. Aturan aplikasi membantu perencanaan; rekomendasi resmi ke BPS tetap proses formal.',
+    a: 'Tidak. Rekomendasi rule-based membantu perencanaan; keputusan formal tetap di luar StatPlan.',
   },
   {
-    q: 'Kenapa kompromin tanpa kuesioner?',
-    a: 'Sumbernya produk administrasi, bukan pengumpulan primer lewat instrumen.',
+    q: 'Apakah Mode Terpandu = urutan wajib GSBPM?',
+    a: 'Tidak. GSBPM fleksibel. Mode Terpandu adalah panduan belajar StatPlan.',
   },
   {
-    q: 'Apakah metadata “lengkap” = katalog Perka penuh?',
-    a: 'Tidak. Form draf di aplikasi; validasi BPS tetap diperlukan.',
+    q: 'Apakah hasil ekspor dokumen resmi?',
+    a: 'Tidak. File Word berstatus draf perencanaan.',
   },
 ]
 
@@ -224,29 +215,35 @@ export function PresentationPage() {
 
   return (
     <div className="mx-auto max-w-4xl space-y-5">
-      <div>
-        <p className="mb-1 text-xs font-semibold uppercase tracking-[0.14em] text-ink-600">
-          Mode presentasi
-        </p>
-        <h1 className="font-display text-3xl font-semibold tracking-tight">
-          Materi Presentasi StatPlan
-        </h1>
-        <p className="mt-2 text-sm text-ink-700">
-          Naskah demo, slide, dan FAQ untuk demonstrasi ke BPS Lombok Tengah. Keluaran aplikasi
-          berstatus <span className="font-medium text-ink-900">draf</span>; lima proyek demo =
-          contoh ilustratif.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="mb-1 text-xs font-semibold uppercase tracking-[0.14em] text-ink-600">
+            Mode presentasi
+          </p>
+          <h1 className="font-display text-3xl font-semibold tracking-tight">
+            Materi Presentasi StatPlan
+          </h1>
+          <p className="mt-2 text-sm text-ink-700">
+            Naskah demo, slide, dan FAQ untuk presentasi singkat. Keluaran aplikasi berstatus{' '}
+            <span className="font-medium text-ink-900">draf</span>. Proyek demo ={' '}
+            <span className="font-medium text-ink-900">contoh ilustratif</span>, bukan data kegiatan
+            nyata.
+          </p>
+        </div>
+        <Button size="sm" variant="secondary" onClick={() => navigate('/')}>
+          Kembali ke beranda
+        </Button>
       </div>
 
       {/* Handout singkat */}
       <Card className="border-ink-900/10 bg-gradient-to-br from-ink-50 to-white">
         <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">Handout singkat</p>
         <p className="mt-2 text-sm leading-relaxed text-ink-800">
-          <strong>StatPlan</strong> membantu OPD merancang kegiatan statistik mengikuti{' '}
-          <strong>GSBPM 5.2</strong>: memilih jenis kegiatan (Survei / Sensus / Kompromin),
-          mengisi checklist, menyusun variabel & instrumen, melengkapi metadata MS-Keg / Var / Ind,
-          lalu mengekspor <strong>draf</strong> dokumen. Portal Sirusa / Romantik dicek sebelum
-          pengumpulan baru. Semua keluaran bersifat draf hingga divalidasi BPS.
+          <strong>StatPlan</strong> adalah simulator perencanaan kegiatan statistik berbasis{' '}
+          <strong>GSBPM 5.2</strong>. Alur utama demo: lihat contoh → ceritakan kebutuhan →
+          timeline → Mode Terpandu (8 fase) → periksa di Workspace → unduh{' '}
+          <strong>draf</strong>. Semua contoh demo berlabel contoh ilustratif. Bukan sistem
+          resmi BPS dan bukan pengganti prosedur lembaga.
         </p>
       </Card>
 

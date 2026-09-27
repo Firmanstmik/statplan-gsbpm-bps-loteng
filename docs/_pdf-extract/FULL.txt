@@ -1,0 +1,1566 @@
+
+
+===== PAGE 1 =====
+MULAI
+PROSES BISNIS
+STATISTIK
+Jakarta, ----- Januari 2026
+
+===== PAGE 2 =====
+2
+PROFIL PENGAJAR
+
+===== PAGE 3 =====
+3
+TUJUAN PEMBELAJARAN
+HASIL BELAJAR
+Mampu menjelaskan (C2)
+karakteristik, fase/tahapan, dan
+subproses pada GSBPM
+INDIKATOR HASIL BELAJAR
+Dapat
+menjelaskan (C2)
+karakteristik
+GSBPM
+Dapat
+menjelaskan (C2)
+tahapan
+GSBPM
+Dapat
+menjelaskan (C2)
+subproses
+GSBPM
+
+===== PAGE 4 =====
+PENYELENGGARAAN KEGIATAN STATISTIK YANG BERKUALITAS
+4
+GAMBARAN UMUM
+Specify
+Needs Design Build Collect
+Process Analyze Disse-
+minate Evaluate
+Penjaminan Kualitas Statistik
+Mudah ditafsirkan
+Akurat
+Mudah Diakses
+Relevan
+Konsisten
+Tepat Waktu
+Statistik yang
+dihasilkan
+memenuhi
+dimensi kualitas
+statistik.
+GSBPM
+Penjaminan kualitas statistik proses yang bertujuan untuk
+memastikan bahwa data statistik yang dihasilkan atau
+disediakan oleh lembaga statistik memenuhi standar
+kualitas yang telah ditentukan.
+
+===== PAGE 5 =====
+Generic Statistical Business Process Model
+Bersifat fleksibel dan tidak kaku, dengan tahapan yang saling terkait
+dalam proses bisnis statistik.
+GSBPM
+Merupakan suatu kerangka kerja standar internasional yang digunakan
+untuk menjelaskan serangkaian proses bisnis yang dibutuhkan untuk
+menghasilkan statistik.
+MANFAAT GSBPM
+Menyediakan struktur
+untuk dokumentasi
+proses statistik secara
+koheren (berkaitan/
+berkesesuaian
+Untuk membandingkan
+dan mencari
+benchmark proses di
+dalam maupun antar
+organisasi/unit kerja
+Untuk membuat
+keputusan yang lebih
+baik terkait sistem
+produksi dan
+kebutuhan sumber
+daya
+menyediakan suatu
+framework yang
+dapat digunakan
+dalam penilaian dan
+perbaikan kualitas
+proses
+Generic Statistical
+Business Process Model
+(GSBPM) yang
+ditetapkan oleh UNECE
+dan telah diadopsi oleh
+National Statistics
+Office (NSO) di dunia.
+
+===== PAGE 6 =====
+GSBPM 5.2
+6
+proses bisnis
+statistik
+fase
+sub-
+proses
+
+===== PAGE 7 =====
+7
+PENYEMPURNAAN
+GSBPM 5.1 MENJADI 5.2
+• Penekanan pada sumber data administratif dan non-survei
+• Lebih detail pada pendekatan kepada responden dan pengguna
+• Penegasan antara data dan produk.
+Penyempurnaan
+Deskripsi
+• Pembaharuan istilah agar relevan dengan perkembangan
+Teknologi
+Terminologi di
+Modernisasi
+• Tidak ada pengurangan fase/sub proses baru hanya beberapa
+penamaan diperjelas
+Penyesuaian
+Struktur
+Sub
+Proses
+5.1
+Sub
+Proses
+5.2
+2.1 Design Outputs 2.1 Design Outputs and
+Dissemination
+2.2 Design Variable
+Description 2.2 Design Variabel
+7.3 Manage Release
+Dissemination Products
+7.3 Release Dissemination
+Products
+7.5 Manage User
+Support 7.5 Provide User Support
+Pada fase “Specify Need“, Output yang
+dirancang lebih difokuskkan kepada kebutuhan
+pengguna berdasarkan hasil konsultasi dan
+konfirmasi kepada pengguna data, sehingga
+sumber data administratiF menjadi sumber
+data yang ditelaah lebih dahulu ketersediaan
+dan kelayakannya sebelum merancang fase
+lanjutannya, sehingga metodologi yang akan
+digunakan di selarasakan dengan data dan
+produk yang akan dihasilkan.
+
+===== PAGE 8 =====
+8
+KARAKTERISTIK GSBPM
+• Dapat diterapkan secara
+fleksibel
+• Alur sub-proses tidak harus
+berurutan dan dimungkinkan
+adanya iterasi
+• Merupakan sebuah matriks
+sehingga terdapat banyak
+kemungkinan urutan sub-
+proses
+
+===== PAGE 9 =====
+9
+SIKLUS GSBPM
+Ongoing work phases
+Change work
+phases
+Design
+Evaluate
+Beberapa fase yang mencakup aktivitas yang cenderung
+untuk output yang mengalami perubahan atau aktivitas
+baru (pertama kali)
+Change Work Phases
+Ongoing Work Phases
+Beberapa fase yang mencakup aktivitas yang
+cenderung berkelanjutan dan berjalan normal
+
+===== PAGE 10 =====
+• Kerangka Acuan Kerja
+• Dokumentasi rapat pembahasan kebutuhan data
+• Daftar Kebutuhan Data (Daftar Data dan Data
+Prioritas)
+10
+Specify Need (Identifikasi Kebutuhan)
+GSBPM
+5.2
+• Mengidentifikasi statistik yang dibutuhkan
+dan tujuan penggunaannya.
+• Melakukan konsultasi serta konfirmasi dengan
+pemangku kepentingan internal dan eksternal.
+• Menetapkan statistik tujuan dan bentuk
+output.
+• Mengidentifikasi dan mengkonfirmasi konsep
+definisi yang akan diukur sesuai kebutuhan
+pengguna.
+• Memeriksa sumber data yang tersedia saat ini
+apakah dapat memenuhi kebutuhan
+pengguna.
+• mendokumentasikan hasil seluruh analisis
+kebutuhan meliputi analisis dampak, manfaat
+dan biaya.
+Sub Proses Aktivitas
+Output
+Identifikasi Kebutuhan
+Konsultasi & Konfirmasi
+Kebutuhan
+Penetapan Tujuan Output
+Identifikasi Konsep Definisi
+Penyusunan & Pengajuan Proposal
+Kegiatan/ Kerangka Acuan Kerja (KAK)
+Pemeriksaan Ketersediaan &
+Kelayakan Data
+TAHAPAN GSBPM
+
+===== PAGE 11 =====
+11
+1. Specify Need (Identifikasi Kebutuhan)
+TAHAPAN GSBPM
+1.2. Konsultasi & Konfirmasi
+Kebutuhan
+1.3. Penetapan Tujuan Output
+1.4. Identifikasi Konsep Definisi
+1.5. Pemeriksaan Ketersediaan &
+Kelayakan Data
+1.6. Penyusunan Proposal Kegiatan/
+Kerangka Acuan Kerja (KAK)
+1.1. Identifikasi Kebutuhan Identifikasi kebutuhan merupakan
+langkah pertama dalam melakukan
+suatu kegiatan statistik yang
+ditentukan dari perumusan masalah
+yang dikembangkan. Dengan adanya
+identifikasi kebutuhan, penyelenggara
+kegiatan statistik dapat merancang
+tujuan dan metodologi yang akan
+digunakan untuk memberikan solusi
+terhadap permasalahan yang terjadi
+Hal-hal yang dilakukan pada
+tahapan identifikasi kebutuhan
+adalah:
+❑ Identifikasi awal statistik yang
+diperlukan, baik berupa data
+maupun indikator,
+❑ Identifikasi hal-hal yang
+dibutuhkan dari statistik tersebut.
+
+===== PAGE 12 =====
+12
+TAHAPAN GSBPM
+Konsultasi & Konfirmasi
+Kebutuhan
+Penetapan Tujuan Output
+Identifikasi Konsep Definisi
+Pemeriksaan Ketersediaan &
+Kelayakan Data
+Penyusunan Proposal Kegiatan/
+Kerangka Acuan Kerja (KAK)
+Identifikasi Kebutuhan
+Specify Need (Identifikasi Kebutuhan)
+• Konsultasi dengan stakeholder dan melakukan konfirmasi
+secara rinci atas kebutuhan data statistik.
+• Manfaat data statistik yang akan dikumpulkan harus
+dipahami secara detail agar penyelenggara kegiatan
+statistik dapat mengetahui mengapa statistik itu diperlukan,
+apa yang diharapkan, kapan didiseminasikan, bagaimana
+penghitungannya, dll
+
+===== PAGE 13 =====
+13
+TAHAPAN GSBPM
+Konsultasi & Konfirmasi
+Kebutuhan
+Penetapan Tujuan Output
+Identifikasi Konsep Definisi
+Pemeriksaan Ketersediaan &
+Kelayakan Data
+Penyusunan Proposal Kegiatan/
+Kerangka Acuan Kerja (KAK)
+Identifikasi Kebutuhan
+Specify Need (Identifikasi Kebutuhan)
+• Tujuan dapat berisi output statistik yang diperlukan.
+• Output statistik dirumuskan untuk menjawab kebutuhan pengguna.
+• Setelah tujuan ditentukan, perlu dilakukan kesesuaian antara output
+statistik yang diusulkan dalam tujuan dengan langkah-langkah yang
+akan dilakukan
+
+===== PAGE 14 =====
+14
+TAHAPAN GSBPM
+Konsultasi & Konfirmasi
+Kebutuhan
+Penetapan Tujuan Output
+Identifikasi Konsep Definisi
+Pemeriksaan Ketersediaan &
+Kelayakan Data
+Penyusunan Proposal Kegiatan/
+Kerangka Acuan Kerja (KAK)
+Identifikasi Kebutuhan
+Specify Need (Identifikasi Kebutuhan)
+• Identifikasi konsep dan definisi dari indikator yang akan diukur
+(sesuai tujuan).
+• Kondef berdasarkan referensi berbagai sumber.
+• Kondef sebaiknya sesuai standar statistik
+
+===== PAGE 15 =====
+15
+TAHAPAN GSBPM
+Konsultasi & Konfirmasi
+Kebutuhan
+Penetapan Tujuan Output
+Identifikasi Konsep Definisi
+Pemeriksaan Ketersediaan &
+Kelayakan Data
+Penyusunan Proposal Kegiatan/
+Kerangka Acuan Kerja (KAK)
+Identifikasi Kebutuhan
+Specify Need (Penentuan Kebutuhan)
+• Untuk menghindari duplikasi data, cek terlebih dahulu ketersediaan
+data pada berbagai portal data yang menjadi rujukan statistik,
+seperti: sirusa.web.bps.go.id, romantik.bps.go.id, portal SDI, dll
+• Apakah data statistik yang tersedia saat ini sesuai kebutuhan
+✓ Jika data sesuai kebutuhan, maka kegiatan statistik (yang akan
+dilakukan) bersifat kompilasi data.
+✓ Jika data yang tersedia belum sesuai kebutuhan, maka kegiatan
+statistik dapat berupa sensus/survei
+• Data yang tersedia dapat digunakan sebagai data pendukung
+terhadap hasil sensus/survei
+
+===== PAGE 16 =====
+16
+TAHAPAN GSBPM
+Konsultasi & Konfirmasi
+Kebutuhan
+Penetapan Tujuan Output
+Identifikasi Konsep Definisi
+Pemeriksaan Ketersediaan &
+Kelayakan Data
+Penyusunan Proposal Kegiatan/
+Kerangka Acuan Kerja (KAK)
+Identifikasi Kebutuhan
+Specify Need (Penentuan Kebutuhan)
+• Aktivitas pada tahapan subproses ini adalah
+mendokumentasikan hasil temuan ataupun kesimpulan yang
+diperoleh dari subproses-subproses lain pada tahapan proses
+penentuan kebutuhan dalam bentuk proposal kegiatan untuk
+mendapatkan persetujuan untuk menerapkan proses bisnis
+statistik yang baru atau yang telah dimodifikasi.
+• Proposal berisi:
+- Uraian tentang proses bisnis statistik yang sedang berjalan
+- Uraian tentang solusi atau proses bisnis yang diusulkan
+- Penilaian terkait biaya dan manfaat, serta kendala eksternal
+yang mungkin terjadi
+
+===== PAGE 17 =====
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analyse
+Dissemi
+nate
+Evaluate
+17
+DESIGN (PERANCANGAN)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Rancangan tabel/layout publikasi/infografis
+• Formulasi indikator statistik yang akan dihasilkan
+• Rancangan sistem alur kerja (SOP)
+• Rancangan Kegiatan Statistik
+• Merancang detail output, produk, dan layanan
+statistik
+• Menentukan sistem, alat, dan prosedur
+diseminasi
+• Menentukan instrumen dan metode
+pengumpulan data serta variabel yang akan
+dikumpulkan
+• Menyusun kerangka sampel atau basis register
+• Merancang metode pengolahan dan analisis
+data
+• Menyusun alur kerja (SOP) dari pengumpulan
+hingga diseminasi
+• Mengajukan permintaan rekomendasi Kegiatan
+statistik Ke BPS (khusus Penyelenggara Statistik
+Sektoral)
+Aktivitas
+Output
+Sub Proses
+Merancang Output & Diseminasi
+Merancang Variabel
+Merancang Pengumpulan Data
+Merancang Kerangka Sampel
+Merancang Sistem Produksi & Alur
+Kerja
+Merancang Pengolahan & Analisis
+
+===== PAGE 18 =====
+18
+DESIGN (PERANCANGAN)
+TAHAPAN GSBPM
+Merancang Output & Diseminasi
+Merancang Variabel
+Merancang Pengumpulan Data
+Merancang Kerangka Sampel
+Merancang Sistem Produksi & Alur
+Kerja
+Merancang Pengolahan & Analisis
+• Rancangan tabel
+• Formulasi indikator statistik yang akan
+dihasilkan
+Contoh Rancangan Tabulasi
+
+===== PAGE 19 =====
+19
+DESIGN (PERANCANGAN)
+TAHAPAN GSBPM
+Merancang Output & Diseminasi
+Merancang Variabel
+Merancang Pengumpulan Data
+Merancang Kerangka Sampel
+Merancang Sistem Produksi & Alur
+Kerja
+Merancang Pengolahan & Analisis
+• Merancang variabel yang akan dikumpulkan.
+Misal: nama, umur, jenis kelamin, tingkat pendidikan, pekerjaan
+utama, instansi, dll
+• Cek Standar Data Statistik Nasional untuk setiap variabel
+• Cek ketersedian variabel
+
+===== PAGE 20 =====
+20
+DESIGN (PERANCANGAN)
+TAHAPAN GSBPM
+Merancang Output & Diseminasi
+Merancang Variabel
+Merancang Pengumpulan Data
+Merancang Kerangka Sampel
+Merancang Sistem Produksi & Alur
+Kerja
+Merancang Pengolahan & Analisis
+Cara Pengumpulan
+Data
+Metode
+Pengumpulan
+Data
+Moda Pengumpulan
+Data
+•Sensus/pendataan
+lengkap
+•Survei
+•Kompilasi Produk
+Administratif
+(kompromin)
+•Lainnya; Misal: big
+data
+• Wawancara
+• Self
+Enumeration
+• Observasi
+•Paper and Pencil
+Interviewing (PAPI)
+•Computer Assisted
+Personal Interviewing
+(CAPI)
+•Computer Assisted
+Telephones Interviewing
+(CATI)
+•Computer Aided Web
+Interviewing (CAWI)
+
+===== PAGE 21 =====
+21
+DESIGN (PERANCANGAN)
+TAHAPAN GSBPM
+Merancang Output & Diseminasi
+Merancang Variabel
+Merancang Pengumpulan Data
+Merancang Kerangka Sampel
+Merancang Sistem Produksi & Alur
+Kerja
+Merancang Pengolahan & Analisis
+Metode Sampling
+Probability Sampling
+• Simple Random Sampling
+• Stratified Sampling
+• Systematic Sampling
+• Cluster Sampling
+• Probability Proportional to Size
+Sampling
+Non Probability Sampling
+• Quota Sampling
+• Accidential sampling
+• Purposive sampling
+• Snowball sampling
+Subproses ini tidak dilakukan,
+jika pengumpulan data dilakukan secara Sensus/Pendataan
+Lengkap dan Kompilasi Produk Administrasi (Kompromin)
+
+===== PAGE 22 =====
+22
+DESIGN (PERANCANGAN)
+TAHAPAN GSBPM
+Merancang Output & Diseminasi
+Merancang Variabel
+Merancang Pengumpulan Data
+Merancang Kerangka Sampel
+Merancang Sistem Produksi & Alur
+Kerja
+Merancang Pengolahan & Analisis
+• Rancangan penyuntingan (editing), pengkodean
+(coding), pensahihan (validasi)
+• Rancangan analisis: deskriptif (hanya narasi) atau
+inferensia (mengunakan metode analisis lebih lanjut)
+
+===== PAGE 23 =====
+23
+DESIGN (PERANCANGAN)
+TAHAPAN GSBPM
+Merancang Output & Diseminasi
+Merancang Variabel
+Merancang Pengumpulan Data
+Merancang Kerangka Sampel
+Merancang Sistem Produksi & Alur
+Kerja
+Merancang Pengolahan & Analisis
+No. Kegiatan Waktu
+1 Identifikasi
+kebutuhan Juli – Agustus
+2 Perancangan
+instrumen Agustus – September
+3 Pelatihan petugas September
+4 Pengumpulan data September – Oktober
+5 Pengolahan data November
+6 Analisis hasil SKM November – Desember
+7 Penyusunan
+laporan Desember
+8 Evaluasi Desember
+❑ Menyusun Jadwal Kegiatan ❑ Menyusun Standar
+Operasional Prosedur
+(SOP)
+❑ Mengajukan rekomendasi
+kegiatan Statistik
+
+===== PAGE 24 =====
+• Sistem alur kerja (SOP)
+• Instrumen (Kuesioner/Panduan Teknis Kegiatan)
+• Sistem Pengumpulan, Pengolahan dan Diseminasi
+Data yang siap digunakan
+• Surat Rekomendasi Kegiatan Statistik
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analyse
+Dissemi
+nate
+Evaluat
+e
+24
+BUILD (PEMBANGUNAN)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Membangun atau menggunakan kembali instrumen
+pengumpulan data (panduan, kuesioner, dll)
+• Menggunakan kembali atau membangun layanan
+transformasi data, dashboard, geospasial, workflow,
+dan komponen pengolahan analisis diseminasi
+lainnya.
+• Mengonfigurasi alur kerja dari pengumpulan hingga
+diseminasi
+• Melakukan uji coba instrumen pengumpulan data,
+pengolahan, analisis, dan diseminasi
+• Melakukan uji coba keseluruhan tahapan proses
+kegiatan statistik (skala kecil)
+• Menyiapkan sistem agar siap digunakan secara
+operasional
+• Menyusun dokumentasi teknis dan panduan pengguna
+Aktivitas
+Output
+Sub Proses
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+
+===== PAGE 25 =====
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Susunan pertanyaan saling berkaitan satu sama lain secara logis, runtun,
+dan tidak meloncat- loncat
+• Pertanyaan yang mudah sebaiknya pada bagian awal kuesioner
+• Pertanyaan sensitif dan jawaban terbuka sebaiknya di bagian akhir
+kuesioner;
+• Gunakan pertanyaan secara singkat dan jelas, tidak bertele-tele.
+• Jangan gunakan pasangan pertanyaan yang mengecek reliabilitas. Misal,
+setujukah Anda terhadap aborsi? Sementara itu di tempat lain, ada
+pertanyaan, tidak setujukah Anda terhadap aborsi?
+Perlu diperhatikan:
+• Relevansi pertanyaan di kuesioner (tujuan, responden, jenis studi)
+• Uji coba (validitas & reliabilitas)
+• Penyusun buku pedoman
+• Hindari:
+✓Pertanyaan ganda
+✓Pertanyaan yang mengarahkan
+✓Pertanyaan sensitif
+✓Pertanyaan yang menakut-nakuti.
+
+===== PAGE 26 =====
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Membangun aplikasi sesuai rancangan (SPSS, EXCEL, desktop-based application,
+desktop-based application)
+• Membangun aturan editing, coding, dan validation pada aplikasi
+• Menyusun aturan integrasi data
+Contoh Aturan Validasi
+
+===== PAGE 27 =====
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Mencakup pengaturan dan sistem penyebarluasan dan akses data, tampilan pada
+halaman website, layanan bagi penyedia data dan pengguna data, dan fungsi lain
+yang mendukung kegiatan diseminasi output statistik
+• Menyusun rencana produk diseminasi (buku, brosur, leaflet, booklet, banner, dsb)
+Contoh Aturan Tabulasi
+
+===== PAGE 28 =====
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi Struktur Organisasi Pengelolaan Data Hortikultura
+❑ Struktur organisasi kegiatan
+❑ Alur dokumen
+CONTOH
+:
+Alur Laporan Dokumen Data Hortikultura
+
+===== PAGE 29 =====
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Pengujian terhadap komponen dan alur kerja terkait yang sudah
+dibangun/diatur.
+• Pengujian tidak hanya dilakukan secara individual pada masing-masing komponen,
+tetapi juga mencakup pengujian terhadap interaksi antar komponen, dan
+memastikan bahwa sistem produksi dapat bekerja dan berfungsi dengan baik.
+
+===== PAGE 30 =====
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Mencakup uji coba kuesioner, uji coba metodologi, dan uji coba pengolahan
+data.
+• Uji coba kuesioner: apakah kondef dari variabel sudah dapat diaplikasikan
+seluruhnya di lapangan.
+• Uji coba metodologi, mencakup organisasi survei/organisasi lapangan, dan
+pelatihan petugas, apakah rancangan organisasi lapangan sudah memadai
+(beban tugas, koordinasi kerja, durasi setiap kegiatan dsb.
+• Uji coba pengolahan data: editing, coding, data entry, aturan validasi, dan
+dummy table, apakah pedoman editing & coding, program entry data, validasi
+dapat berjalan sesuai yang diharapkan. Dapat diketahui rata-rata lamanya
+editing per dokumen, rata-rata entry data per dokumen dan ukuran lain yang
+diperlukan dalam kegiatan pengolahan data.
+
+===== PAGE 31 =====
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Memastikan bahwa semua komponen yang telah dibangun, baik yang sudah ada
+maupun yang baru dibuat, berfungsi dengan baik dan siap digunakan pada proses
+produksi statistik.
+• Aktivitas-aktivitas yang dilakukan pada subproses ini mencakup:
+✓ Penyusunan dokumentasi tentang komponen proses bisnis, termasuk
+penyusunan dokumentasi teknis dan panduan pengguna proses bisnis.
+✓ Pemindahan komponen-komponen proses bisnis ke lingkungan produksi dan
+memastikan bahwa proses bisnis tersebut berjalan atau berfungsi sesuai
+harapan.
+
+===== PAGE 32 =====
+• Daftar sampel (unit observasi)
+• Surat Perjanjian Penggunaan Data (PKS/LADU)
+• Dokumentasi Pelaksanaan Pelatihan Petugas
+• Dokumentasi Rapat Monitoring Pelaksanaan dan
+Pemantauan Kualitas Pengumpulan Data
+• Metadata Statistik Kegiatan
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analyse
+Dissemi
+nate
+Evaluat
+e
+32
+COLLECT (PENGUMPULAN DATA)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Menetapkan kerangka dan memilih sampel sesuai
+desain
+• Melakukan pelatihan petugas & sistem (termasuk ML
+bila ada)
+• Jika non Survei : menyiapkan proses dan perjanjian
+dengan penyedia data
+• Mengumpulkan data menggunakan instrumen yang
+ditetapkan dan menyusun metadata kegiatan
+statistik
+• Entri data lapangan & manajemen kegiatan lapangan
+• Monitoring kemajuan dan Kualitas pengumpulan data
+• Finalisasi data (Digitalisasi data, Konversi format dan
+pengodean variabel) yang telah dikumpulkan
+Aktivitas
+Output
+Sub Proses
+Menyusun Kerangka dan
+Memilih Sampel
+Menyiapkan Pengumpulan Data
+Melaksanakan Pengumpulan Data
+Finalisasi Pengumpulan
+
+===== PAGE 33 =====
+33
+COLLECT (PENGUMPULAN DATA)
+TAHAPAN GSBPM
+Menyusun Kerangka dan
+Memilih Sampel
+Menyiapkan Pengumpulan Data
+Melaksanakan Pengumpulan Data
+Finalisasi Pengumpulan
+❑ Menyiapkan Kerangka sampel
+❑ Melakukan Penarikan sampel
+Subproses ini tidak dilakukan,
+jika pengumpulan data dilakukan secara
+Sensus/Pendataan Lengkap dan Kompilasi
+Produk Administrasi (Kompromin)
+
+===== PAGE 34 =====
+34
+COLLECT (PENGUMPULAN DATA)
+TAHAPAN GSBPM
+Menyusun Kerangka dan
+Memilih Sampel
+Menyiapkan Pengumpulan Data
+Melaksanakan Pengumpulan Data
+Finalisasi Pengumpulan
+❑ Menyiapkan Petugas
+❑ Melatih Petugas
+❑ Menyiapkan Sumber Daya dan instrument pengumpulan
+data sesuai rancangan
+❑ Menyiapkan Sumber Daya penjaminan kualitas
+❑ Menyiapkan protokol manajemen data
+
+===== PAGE 35 =====
+35
+COLLECT (PENGUMPULAN DATA)
+TAHAPAN GSBPM
+Menyusun Kerangka dan
+Memilih Sampel
+Menyiapkan Pengumpulan Data
+Melaksanakan Pengumpulan Data
+Finalisasi Pengumpulan
+❑ Sosialisasi mengenai pengumpulan data
+❑ Mengumpulkan data
+❑ Melakukan monitoring dan penyusunan laporan progress
+pengumpulan data
+❑ Melakukan tindak lanjut terhadap kasus non-respon
+
+===== PAGE 36 =====
+36
+COLLECT (PENGUMPULAN DATA)
+TAHAPAN GSBPM
+Menyusun Kerangka dan
+Memilih Sampel
+Menyiapkan Pengumpulan Data
+Melaksanakan Pengumpulan Data
+Finalisasi Pengumpulan
+❑ Penginputan dan penyimpanan data (data capture) secara manual
+ataupun otomatis
+❑ Analisis metadata dan paradata terkait dengan pengumpulan data
+
+===== PAGE 37 =====
+• Dataset mikro atau makro, baik data final
+maupun sementara.
+• Metadata Statistik Variabel
+Specify
+Need
+Design
+Build
+Collect
+Proce
+ss
+Analyse
+Dissemi
+nate
+Evaluat
+e
+37
+PROCESS (PENGOLAHAN DATA)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Menggabungkan data dari satu atau lebih
+sumber
+• Mengolah data input agar siap dianalisis,
+meliputi : integrasi, klasifikasi, validasi, imputasi,
+editing, pembersihan, dan transformasi data.
+• Pembentukan variabel/unit baru, tidak
+disediakan dalam pengumpulan data tetapi
+diperlukan untuk menghasilkan output yang
+dibutuhkan
+• Menghitung dan menerapkan bobot unit data
+sesuai metodologi.
+• Menghitung agregat, seperti : jumlah, rata-rata,
+dan sebaran.
+• Menyusun Metadata statistik variabel dari
+dataset
+Aktivitas
+Output
+Sub Proses
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+
+===== PAGE 38 =====
+38
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+Aktivitas yang
+bertujuan
+menggabungkAn
+data yang
+berasal dari dua
+atau lebih
+sumber data,
+baik bersumber
+dari internal
+maupun
+eksternal
+Data internal
+adalah data yang
+diperoleh dari
+dalam,
+sedangkan data
+eksternal adalah
+data yang
+diperoleh dari
+luar organisasi
+penyelenggara
+kegiatan statistik
+Data yang telah diintegrasikan lalu
+dicatat dalam suatu daftar penerimaan
+data oleh unit kerja yang melaksanakan
+penerimaan data. Kegiatan
+penerimaan data meliputi:
+1. Menerima data dari petugas
+lapangan/pengumpul data;
+2.Memeriksa kelengkapan jumlah data;
+3.Membuat laporan perkembangan
+penerimaan data.
+
+===== PAGE 39 =====
+39
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+Data yang diperoleh, baik dari
+pengumpulan data maupun
+akuisisi data dilakukan klasifikasi
+dan/atau dilakukan
+pengkodean/coding pada variabel
+tertentu (jika diperlukan untuk
+memudahlan dalam pengolahan
+lebih lanjut).
+Contoh:
+❑ mengubah pilihan (centang/
+silang) pada pertanyaan tertutup
+menjadi kode (angka/ huruf).
+❑ Menambahkan kode klasifikasi
+(angka/huruf) pada isian variabel
+yang diperoleh dari akuisisi data
+Proses pemeriksaan
+dan memperbaiki
+penulisan yang
+salah/kurang jelas
+dan pemberian kode
+pada isian dokumen
+hasil pencacahan
+dengan
+memperhatikan
+kaidah-kaidah
+editing dan coding
+(penyuntingan/
+penyandian) yang
+telah ditetapkan
+Hasil editing
+dan coding
+sangat
+mempengaru
+hi kualitas
+data dan
+proses
+pengolahan
+selanjutnya
+
+===== PAGE 40 =====
+40
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+❑ Reviu dan pengujian data (validasi) terhadap data-data yang telah diinput
+untuk mengidentifikasi potensi masalah, kesalahan, dan ketidaksesuaian,
+seperti pencilan (outlier), nonresponse item, atau terjadinya kesalahan
+pemberian kode.
+❑ Validasi dapat dilakukan berulang kali sesuai aturan yang telah ditetapkan
+sebelumnya.
+❑ Meskipun validasi dikategorikan dalam tahapan pengolahan, namun dalam
+prakteknya, beberapa elemen validasi dapat diterapkan pada tahap
+pengumpulan data, terutama pada moda pengumpulan data yang
+menggunakan bantuan komputer, seperti menggunakan CAPI atau CAWI.
+
+===== PAGE 41 =====
+41
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+Edit dan Imputasi diperlukan ketika data dianggap tidak benar, tidak ada isian
+(missing), tidak wajar, sehingga dapat dimasukkan suatu nilai baru atau dilakukan
+penghapusan pada data yang tidak wajar.
+Aktivitas-aktivitas yang dilakukan pada subproses ini meliputi:
+• Menentukan apakah akan menambah atau mengubah data.
+• Memilih metode yang akan digunakan.
+• Menambah/mengubah nilai data.
+• Menuliskan kembali nilai data baru ke dalam set data dan menandainya (flag)
+sebagai penanda bahwa data yang ada telah diubah.
+• Membuat metadata pada proses editing dan imputasi.
+
+===== PAGE 42 =====
+42
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+Pembentukan Variabel Baru dan Unit Statistik Baru (yang secara eksplisit tidak
+disediakan dalam pengumpulan data atau akuisisi data) mungkin diperlukan
+untuk menghasilkan data sesuai dengan output yang dibutuhkan.
+• Pembentukan Variabel Baru dilakukan dengan menerapkan rumus
+aritmatika ke satu variabel atau lebih yang sudah ada di dalam set data atau
+dengan menerapkan asumsi model yang berbeda. Pembentukan variabel
+baru dapat terjadi secara berulang karena ada kemungkinan beberapa
+variabel turunan diperoleh dari variabel turunan lainnya. Oleh karena itu,
+penting untuk memastikan bahwa variabel diturunkan dilakukan dengan
+urutan yang benar.
+• Pembentukan Unit Statistik Baru dapat diperoleh dengan menggabungkan
+atau memisahkan data yang ada atau dengan berbagai metode estimasi
+lainnya. Contoh: pembentukan unit statistik baru berupa rumah tangga dari
+unit observasi yang dikumpulkan berupa individu.
+
+===== PAGE 43 =====
+43
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+❑ Menghitung penimbang
+❑ Mendapatkan tolok ukur eksternal dan melakukan estimasi
+kalibrasi
+Subproses ini tidak dilakukan,
+jika pengumpulan data dilakukan secara
+Sensus/Pendataan Lengkap dan Kompilasi Produk
+Administrasi (Kompromin)
+
+===== PAGE 44 =====
+44
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+•Menggunakan penimbang yang telah ditetapkan (jika Survei)
+•Menghitung data/tabulasi agregat
+•Menyusun data set turunan untuk kebutuhan analisis khusus
+•Menghitung sampling error (jika Survei)
+•Melakukan estimasi (jika Survei)
+•Melakukan rekonsiliasi data/tabulasi antar wilayah
+
+===== PAGE 45 =====
+45
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+❑ Menyiapkan data untuk dilanjutkan ke tahap berikutnya
+❑ Menyerahkan data final untuk digunakan di tahap
+analisis
+
+===== PAGE 46 =====
+• Output kegiatan layak digunakan sebelum diseminasi
+• Mikro data final (sudah anonimisasi)
+• Dokumentasi Pembahasan validasi output, diskusi pra
+rilis, persetujuan rilis, dll
+• Metadata Statistik Indikator
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analys
+e
+Dissemi
+nate
+Evaluat
+e
+46
+ANALYSE (ANALISIS DATA)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Mengubah hasil pengolahan menjadi output statistik,
+seperti membangun tabel analisis, indeks, mikro data, dll.
+• Memvalidasi dan membandingkan output yang dihasilkan
+dengan periode sebelumnya (jika ada) dan/atau sumber
+lain.
+• Melakukan identifikasi anomali dan inkonsistensi
+• Menafsirkan makna statistik yang dihasilkan
+• Melakukan analisis mendalam (time series, ekonometrika,
+dll)
+• Menerapkan dan menjaga kerahasiaan data individu.
+• Pemeriksaan konsistensi akhir
+• Menentukan tingkat rilis & catatan kehati-hatian
+• Melengkapi interpretasi, catatan teknis, dan menyusun
+metadata statistik Indikator
+• Diskusi pra-rilis dengan pakar internal
+• Membuat dan menyepakati persetujuan konten untuk
+diseminasi
+Aktivitas
+Output
+Sub Proses
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+
+===== PAGE 47 =====
+ANALYSE (ANALISIS DATA)
+TAHAPAN GSBPM
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+Pada subproses ini, data mentah (raw data) hasil dari tahap pengolahan
+dilakukan transformasi sesuai dengan output ataupun Indikator yang akan
+ditampilkan (berupa tabulasi/grafik/peta), sehingga dapat dilakukan
+penyahihan (validasi) pada subproses berikutnya.
+
+===== PAGE 48 =====
+ANALYSE (ANALISIS DATA)
+TAHAPAN GSBPM
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+Validasi Output merupakan subproses berupa pemeriksaan dan validasi atas
+kualitas output yang dihasilkan sesuai dengan pedoman kualitas standar yang
+berlaku dan target kualitas yang telah ditetapkan sebelumnya.
+Aktivitas-aktivitas yang dilakukan dalam subproses ini mencakup:
+• Memeriksa konsistensi;
+• Memeriksa dan memastikan cakupan populasi dan tingkat respon sesuai
+dengan kebutuhan.
+• Membandingkan output statistik dengan periode sebelumnya (jika ada).
+• Memeriksa dan memastikan bahwa metadata, paradata, dan indikator kualitas
+tersedia dan sesuai dengan harapan.
+• Membandingkan output statistik dengan data relevan lainnya, baik internal
+maupun eksternal (koherensi).
+• Menyelidiki ketidakkonsistenan pada output statistik.
+• Memeriksa dan melakukan penyuntingan pada tingkat agregat atau makro.
+• Memeriksa dan memastikan bahwa output statistik telah sesuai ekspektasi
+dan keilmuan terkait.
+
+===== PAGE 49 =====
+ANALYSE (ANALISIS DATA)
+TAHAPAN GSBPM
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+Interpretasi dan Menjelaskan Output merupakan subproses berupa
+pemberian pemahaman yang mendalam mengenai output statistik yang
+dihasilkan. Pemahaman ini diperlukan untuk menginterpretasikan dan
+menjelaskan output statistik tersebut.
+Aktivitas-aktivitas yang dilakukan dalam subproses ini mencakup:
+• mengevaluasi seberapa baik output statistik tersebut mencerminkan
+ekspektasi (hipotesis awal),
+• melihat statistik dari berbagai perspektif dengan menggunakan alat
+dan media yang berbeda, dan
+• melakukan analisis secara mendalam, seperti analisis deret waktu,
+analisis dampak, analisis keterbandingan, analisis hasil revisi (analisis
+perbedaan antara angka estimasi awal dengan hasil revisi), analisis
+asimetri, dan lain-lain.
+
+===== PAGE 50 =====
+ANALYSE (ANALISIS DATA)
+TAHAPAN GSBPM
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+Penerapan Disclosure Control merupakan subproses untuk memastikan bahwa data
+dan metadata yang akan dipublikasikan tidak melanggar kerahasiaan. Penerapan
+disclosure control bervariasi untuk setiap output. Sebagai contoh, disclosure control
+untuk micro data yang akan dipublikasikan akan berbeda dengan disclosure control
+untuk tabulasi yang akan dipublikasi.
+1.Disclosure control data hasil survey
+• Data individu yang disajikan harus dianonimisasi (diubah dengan sandi tertentu) terlebih
+dahulu
+• Data agregat yang unit sampelnya dapat ditelusuri/diungkap tidak dapat disajikan (misal:
+jumlah sampel yang kurang dari 3 unit pada suatu wilayah)
+2.Disclosure control data hasil kompilasi
+• Data yang berpotensi sensitif dan dapat diungkap dari karakteristiknya harus dianonimkan
+atau dihilangkan.
+
+===== PAGE 51 =====
+ANALYSE (ANALISIS DATA)
+TAHAPAN GSBPM
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+• Melengkapi pemeriksaan konsistensi (pengecekan ulang konsistensi).
+• Mengumpulkan informasi pendukung yang diperlukan, termasuk interpretasi,
+pendapat pakar, catatan teknis, penjelasan, ukuran ketidakpastian dan
+metadata lainnya yang diperlukan.
+• Melakukan diskusi pra-rilis dengan para ahli atau pakar dibidangnya.
+Menyetujui konten statistik yang akan dirilis.
+• Menetapkan level penyajian rilis dan menyusun catatan khusus atau kondisi
+tertentu yang harus diperhatikan agar pemahaman terhadap informasi yang
+diberikan menjadi lebih lengkap dan akurat.
+• Menyusun dokumen pendukung internal.
+• Menerjemahkan output statistik dalam bahasa lain (jika diperlukan).
+
+===== PAGE 52 =====
+• Produk statis & dinamis yang disajikan melalui
+berbagai kanal
+• Dokumentasi rilis dan promosi hasil kegiatan
+• Data dan Metadata Statistik sesuai format baku
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analyse
+Disse
+minat
+e
+Evaluat
+e
+52
+DISSEMINATE (PENYAJIAN DAN
+PENYEBARLUASAN DATA)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Memformat data dan metadata untuk diseminasi
+• Memuat dan menautkan data dan metadata ke sistem
+output
+• Memastikan kelengkapan metdata sebelum rilis
+• Menghasilkan produk sesuai desain output, bisa
+berbentuk publikasi, siaran pers, web, tabel, peta, grafik
+interaktif, microdata
+• Mengelola waktu dan mekanisme rilis
+• Briefing pra rilis bagi pimpinan dan atau pemangku
+kepentingan
+• Mempromosikan produk agar menjangkau pengguna
+luas, dapat melalui website, media sosial, dan platform
+digital
+• Mencatat, menindaklanjuti dan mengelola
+pertanyaan/permintaan data pengguna
+• Menyediakan dan mengelola FAQ dan basis
+pengetahuan
+Aktivitas
+Output
+Sub Proses
+Memutakhirkan Sistem Output
+Menghasilkan produk diseminasi
+Merilis Produk Statistik
+Mempromosikan Produk Statistik
+Layanan dan Dukungan Pengguna
+
+===== PAGE 53 =====
+53
+TAHAPAN GSBPM
+Memutakhirkan Sistem Output
+Menghasilkan produk diseminasi
+Merilis Produk Statistik
+Mempromosikan Produk Statistik
+Layanan dan Dukungan Pengguna
+DISSEMINATE (PENYAJIAN DAN PENYEBARLUASAN DATA)
+• Memformat data dan metadata agar siap dimasukkan ke dalam sistem
+output (database).
+• Memasukkan data dan metadata agar siap dimasukkan ke dalam sistem
+output (database).
+• Memastikan bahwa data sudah terhubung dengan metadata yang
+sesuai.
+
+===== PAGE 54 =====
+54
+TAHAPAN GSBPM
+Memutakhirkan Sistem Output
+Menghasilkan produk diseminasi
+Merilis Produk Statistik
+Mempromosikan Produk Statistik
+Layanan dan Dukungan Pengguna
+DISSEMINATE (PENYAJIAN DAN PENYEBARLUASAN DATA)
+Menghasilkan produk diseminasi (berupa Publikasi Cetak/Elektronik atau
+Tabulasi/Grafik/Peta), sebagaimana yang telah direncanakan pada tahap
+pembangunan (design), untuk memenuhi kebutuhan pengguna.
+Aktivitas:
+❑ Menyiapkan komponen-komponen dari produk diseminasi, seperti
+catatan atau penjelasan teknis, tabel, grafik, peta, pernyataan kualitas,
+dan lain-lain.
+❑ Menyusun atau menyatukan komponen-komponen dari produk
+diseminasi menjadi suatu produk diseminasi.
+❑ Memeriksa dan menyunting produk diseminasi agar memenuhi standar
+publikasi.
+
+===== PAGE 55 =====
+55
+TAHAPAN GSBPM
+Memutakhirkan Sistem Output
+Menghasilkan produk diseminasi
+Merilis Produk Statistik
+Mempromosikan Produk Statistik
+Layanan dan Dukungan Pengguna
+DISSEMINATE (PENYAJIAN DAN PENYEBARLUASAN DATA)
+❑ Memastikan bahwa seluruh produk diseminasi sudah siap dan tersedia
+untuk dirilis atau diterbitkan
+❑ Mengatur jadwal dan mekanisme rilis produk diseminasi
+❑ Mengatur mekanisme ketika ditemukan kesalahan pada produk diseminasi
+yang telah diterbitkan ke masyarakat
+
+===== PAGE 56 =====
+56
+TAHAPAN GSBPM
+Memutakhirkan Sistem Output
+Menghasilkan produk diseminasi
+Merilis Produk Statistik
+Mempromosikan Produk Statistik
+Layanan dan Dukungan Pengguna
+DISSEMINATE (PENYAJIAN DAN PENYEBARLUASAN DATA)
+Mempromosikan produk diseminasi secara aktif untuk menjangkau
+masyarakat seluas mungkin (misal: melalui media sosial ataupun situs web).
+
+===== PAGE 57 =====
+57
+TAHAPAN GSBPM
+Memutakhirkan Sistem Output
+Menghasilkan produk diseminasi
+Merilis Produk Statistik
+Mempromosikan Produk Statistik
+Layanan dan Dukungan Pengguna
+DISSEMINATE (PENYAJIAN DAN PENYEBARLUASAN DATA)
+Memastikan bahwa permohonan atau pertanyaan terhadap suatu
+layanan, seperti layanan data mikro (rawdata yang telah dianonimisasi),
+dicatat serta dipenuhi dalam batas waktu yang telah ditentukan
+
+===== PAGE 58 =====
+METADATA STATISTIK
+Data yang
+dihasilkan oleh
+produsen data
+harus dilengkapi
+dengan metadata
+Struktur dan format
+metadata baku dari
+data statistik
+ditetapkan oleh
+BPS sebagai
+pembina data
+tingkat pusat
+Peraturan Badan Pusat Statistik nomor 5 Tahun 2020
+tentang Petunjuk Teknis Metadata Statistik
+“ Informasi dalam bentuk struktur dan format yang baku untuk
+menggambarkan data, menjelaskan data, serta memudahkan pencarian,
+penggunaan, dan pengelolaan informasi data ”
+.
+Informasi dalam
+metadata harus
+mengikuti struktur
+dan format yang
+baku
+
+===== PAGE 59 =====
+59
+Jenis Metadata Statistik
+sekumpulan atribut informasi yang
+memberikan gambaran/ dokumentasi
+dasar terbentuknya suatu indikator
+sekumpulan atribut informasi
+yang memberikan gambaran/
+dokumentasi dari
+penyelenggaraan kegiatan
+statistik.
+Metadata Statistik - Kegiatan
+(MS-Keg)
+sekumpulan atribut informasi
+yang memberikangambaran atau
+dokumentasi penyusunan suatu
+variabel dalam kegiatan statistik.
+Metadata Statistik - Variabel
+(MS-Var)
+Metadata Statistik - Indikator
+(MS-Ind)
+Manfaat Metadata Statistik
+Pembina Data Produsen Data Walidata Pengguna Data
+Mengukur kematangan
+penyelenggaraan statistik,
+dan arah strategi
+pembinaan statistik
+Menghindari duplikasi
+kegiatan, efisiensi
+anggaran, peningkatan
+nilai organisasi tentang
+tata kelola informasi
+Memudahkan interpretasi
+data, pengelolaan data,
+dokumentasi,
+pengendalian mutu
+Memudahkan interpretasi
+data, ketepatan
+perumusan kesimpulan,
+memudahkan pencarian
+data
+
+===== PAGE 60 =====
+• Dokumentasi Rapat/Diskusi Penyusunan Rencana
+Tindak Lanjut dan aksi perbaikan siklus berikutnya
+• Tingkat kepuasan pengguna data
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analyse
+Dissemi
+nate
+Evaluat
+e
+60
+EVALUATE (EVALUASI)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Mengumpulkan masukan evaluasi dari seluruh
+fase, bisa bersumber dari umpan balik
+pengguna, paradata, metrik sistem, masukan staf
+• Menganalisis hasil evaluasi dan membandingkan
+dengan target
+• Menyusun laporan evaluasi
+• Menetapkan rencana aksi berdasarkan hasil
+evaluasi
+• Menyepakati prioritas dan penanggung jawab
+• Menentukan mekanisme pemantauan dampak
+perbaikan sebagai masukin siklus berikutnya
+Aktivitas
+Output
+Sub Proses
+Menghimpun Bahan Evaluasi
+Melakukan Evaluasi
+Menyepakati Rencana Tindak
+Lanjut
+
+===== PAGE 61 =====
+61
+EVALUATE (EVALUASI)
+TAHAPAN GSBPM
+Menghimpun Bahan Evaluasi
+Melakukan Evaluasi
+Menyepakati Rencana Tindak
+Lanjut
+❑ Mengumpulkan dan menyusun bahan evaluasi agar siap untuk diproses oleh tim
+evaluasi.
+❑ Pengumpulan bahan-bahan evaluasi dapat dilakukan secara manual atau otomatis
+serta dilakukan secara berkelanjutan pada setiap tahapan.
+
+===== PAGE 62 =====
+62
+EVALUATE (EVALUASI)
+TAHAPAN GSBPM
+Menghimpun Bahan Evaluasi
+Melakukan Evaluasi
+Menyepakati Rencana Tindak
+Lanjut
+❑ Setelah bahan evaluasi dikumpulkan, bahan tersebut dianalisis dan disusun menjadi
+laporan evaluasi.
+❑ Laporan evaluasi yang disusun harus memuat setiap permasalahan yang terjadi pada
+iterasi tahapan penyelenggaraan kegiatan statistik dan ketidaksesuaian antara kinerja
+dan harapan.
+❑ Selain itu, jika diperlukan, laporan evaluasi juga memuat rekomendasi perubahan.
+
+===== PAGE 63 =====
+63
+EVALUATE (EVALUASI)
+TAHAPAN GSBPM
+Menghimpun Bahan Evaluasi
+Melakukan Evaluasi
+Menyepakati Rencana Tindak
+Lanjut
+❑ Menyusun dan mendokumentasikan rencana aksi
+❑ Mendapatkan persetujuan terhadap rencana aksi yang telah
+disusun.
+
+===== PAGE 64 =====
+Terima
+Kasih64

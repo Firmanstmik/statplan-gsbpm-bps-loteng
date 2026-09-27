@@ -1,0 +1,12 @@
+ANALYSE (ANALISIS DATA)
+TAHAPAN GSBPM
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+Pada subproses ini, data mentah (raw data) hasil dari tahap pengolahan
+dilakukan transformasi sesuai dengan output ataupun Indikator yang akan
+ditampilkan (berupa tabulasi/grafik/peta), sehingga dapat dilakukan
+penyahihan (validasi) pada subproses berikutnya.

@@ -1,0 +1,43 @@
+• Daftar sampel (unit observasi)
+• Surat Perjanjian Penggunaan Data (PKS/LADU)
+• Dokumentasi Pelaksanaan Pelatihan Petugas
+• Dokumentasi Rapat Monitoring Pelaksanaan dan
+Pemantauan Kualitas Pengumpulan Data
+• Metadata Statistik Kegiatan
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analyse
+Dissemi
+nate
+Evaluat
+e
+32
+COLLECT (PENGUMPULAN DATA)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Menetapkan kerangka dan memilih sampel sesuai
+desain
+• Melakukan pelatihan petugas & sistem (termasuk ML
+bila ada)
+• Jika non Survei : menyiapkan proses dan perjanjian
+dengan penyedia data
+• Mengumpulkan data menggunakan instrumen yang
+ditetapkan dan menyusun metadata kegiatan
+statistik
+• Entri data lapangan & manajemen kegiatan lapangan
+• Monitoring kemajuan dan Kualitas pengumpulan data
+• Finalisasi data (Digitalisasi data, Konversi format dan
+pengodean variabel) yang telah dikumpulkan
+Aktivitas
+Output
+Sub Proses
+Menyusun Kerangka dan
+Memilih Sampel
+Menyiapkan Pengumpulan Data
+Melaksanakan Pengumpulan Data
+Finalisasi Pengumpulan

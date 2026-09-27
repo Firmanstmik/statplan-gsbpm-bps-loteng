@@ -1,0 +1,43 @@
+38
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+Aktivitas yang
+bertujuan
+menggabungkAn
+data yang
+berasal dari dua
+atau lebih
+sumber data,
+baik bersumber
+dari internal
+maupun
+eksternal
+Data internal
+adalah data yang
+diperoleh dari
+dalam,
+sedangkan data
+eksternal adalah
+data yang
+diperoleh dari
+luar organisasi
+penyelenggara
+kegiatan statistik
+Data yang telah diintegrasikan lalu
+dicatat dalam suatu daftar penerimaan
+data oleh unit kerja yang melaksanakan
+penerimaan data. Kegiatan
+penerimaan data meliputi:
+1. Menerima data dari petugas
+lapangan/pengumpul data;
+2.Memeriksa kelengkapan jumlah data;
+3.Membuat laporan perkembangan
+penerimaan data.

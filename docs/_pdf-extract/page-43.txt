@@ -1,0 +1,18 @@
+43
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+❑ Menghitung penimbang
+❑ Mendapatkan tolok ukur eksternal dan melakukan estimasi
+kalibrasi
+Subproses ini tidak dilakukan,
+jika pengumpulan data dilakukan secara
+Sensus/Pendataan Lengkap dan Kompilasi Produk
+Administrasi (Kompromin)

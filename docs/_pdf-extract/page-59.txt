@@ -1,0 +1,40 @@
+59
+Jenis Metadata Statistik
+sekumpulan atribut informasi yang
+memberikan gambaran/ dokumentasi
+dasar terbentuknya suatu indikator
+sekumpulan atribut informasi
+yang memberikan gambaran/
+dokumentasi dari
+penyelenggaraan kegiatan
+statistik.
+Metadata Statistik - Kegiatan
+(MS-Keg)
+sekumpulan atribut informasi
+yang memberikangambaran atau
+dokumentasi penyusunan suatu
+variabel dalam kegiatan statistik.
+Metadata Statistik - Variabel
+(MS-Var)
+Metadata Statistik - Indikator
+(MS-Ind)
+Manfaat Metadata Statistik
+Pembina Data Produsen Data Walidata Pengguna Data
+Mengukur kematangan
+penyelenggaraan statistik,
+dan arah strategi
+pembinaan statistik
+Menghindari duplikasi
+kegiatan, efisiensi
+anggaran, peningkatan
+nilai organisasi tentang
+tata kelola informasi
+Memudahkan interpretasi
+data, pengelolaan data,
+dokumentasi,
+pengendalian mutu
+Memudahkan interpretasi
+data, ketepatan
+perumusan kesimpulan,
+memudahkan pencarian
+data

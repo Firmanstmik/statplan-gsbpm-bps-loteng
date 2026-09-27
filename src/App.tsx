@@ -36,9 +36,21 @@ const SearchPage = lazy(() =>
   import('@/features/search/SearchPage').then((m) => ({ default: m.SearchPage })),
 )
 
+const ExampleWalkthroughPage = lazy(() =>
+  import('@/features/examples/ExampleWalkthroughPage').then((m) => ({
+    default: m.ExampleWalkthroughPage,
+  })),
+)
+const GuidedPhasePage = lazy(() =>
+  import('@/features/planner/guided/GuidedPhasePage').then((m) => ({
+    default: m.GuidedPhasePage,
+  })),
+)
+
 function RouteFallback() {
   return (
-    <div className="space-y-4 py-6" role="status" aria-label="Memuat modul">
+    <div className="space-y-4 py-6" role="status" aria-live="polite" aria-label="Menyiapkan halaman">
+      <p className="text-sm text-ink-600">Menyiapkan halaman…</p>
       <Skeleton className="h-8 w-48" />
       <Skeleton className="h-4 w-full max-w-xl" />
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -57,6 +69,7 @@ export default function App() {
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/contoh/:slug" element={<ExampleWalkthroughPage />} />
           <Route path="/app" element={<AppShell />}>
             <Route index element={<DashboardPage />} />
             <Route path="new" element={<NewProjectPage />} />
@@ -66,6 +79,7 @@ export default function App() {
             <Route path="help" element={<HelpPage />} />
             <Route path="presentation" element={<PresentationPage />} />
             <Route path="search" element={<SearchPage />} />
+            <Route path="projects/:id/guided" element={<GuidedPhasePage />} />
             <Route path="projects/:id" element={<ProjectWorkspacePage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />

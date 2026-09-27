@@ -1,0 +1,26 @@
+21
+DESIGN (PERANCANGAN)
+TAHAPAN GSBPM
+Merancang Output & Diseminasi
+Merancang Variabel
+Merancang Pengumpulan Data
+Merancang Kerangka Sampel
+Merancang Sistem Produksi & Alur
+Kerja
+Merancang Pengolahan & Analisis
+Metode Sampling
+Probability Sampling
+• Simple Random Sampling
+• Stratified Sampling
+• Systematic Sampling
+• Cluster Sampling
+• Probability Proportional to Size
+Sampling
+Non Probability Sampling
+• Quota Sampling
+• Accidential sampling
+• Purposive sampling
+• Snowball sampling
+Subproses ini tidak dilakukan,
+jika pengumpulan data dilakukan secara Sensus/Pendataan
+Lengkap dan Kompilasi Produk Administrasi (Kompromin)

@@ -1,0 +1,17 @@
+13
+TAHAPAN GSBPM
+Konsultasi & Konfirmasi
+Kebutuhan
+Penetapan Tujuan Output
+Identifikasi Konsep Definisi
+Pemeriksaan Ketersediaan &
+Kelayakan Data
+Penyusunan Proposal Kegiatan/
+Kerangka Acuan Kerja (KAK)
+Identifikasi Kebutuhan
+Specify Need (Identifikasi Kebutuhan)
+• Tujuan dapat berisi output statistik yang diperlukan.
+• Output statistik dirumuskan untuk menjawab kebutuhan pengguna.
+• Setelah tujuan ditentukan, perlu dilakukan kesesuaian antara output
+statistik yang diusulkan dalam tujuan dengan langkah-langkah yang
+akan dilakukan

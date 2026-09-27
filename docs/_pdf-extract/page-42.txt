@@ -1,0 +1,25 @@
+42
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+Pembentukan Variabel Baru dan Unit Statistik Baru (yang secara eksplisit tidak
+disediakan dalam pengumpulan data atau akuisisi data) mungkin diperlukan
+untuk menghasilkan data sesuai dengan output yang dibutuhkan.
+• Pembentukan Variabel Baru dilakukan dengan menerapkan rumus
+aritmatika ke satu variabel atau lebih yang sudah ada di dalam set data atau
+dengan menerapkan asumsi model yang berbeda. Pembentukan variabel
+baru dapat terjadi secara berulang karena ada kemungkinan beberapa
+variabel turunan diperoleh dari variabel turunan lainnya. Oleh karena itu,
+penting untuk memastikan bahwa variabel diturunkan dilakukan dengan
+urutan yang benar.
+• Pembentukan Unit Statistik Baru dapat diperoleh dengan menggabungkan
+atau memisahkan data yang ada atau dengan berbagai metode estimasi
+lainnya. Contoh: pembentukan unit statistik baru berupa rumah tangga dari
+unit observasi yang dikumpulkan berupa individu.

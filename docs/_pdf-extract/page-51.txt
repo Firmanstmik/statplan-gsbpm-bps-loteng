@@ -1,0 +1,19 @@
+ANALYSE (ANALISIS DATA)
+TAHAPAN GSBPM
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+• Melengkapi pemeriksaan konsistensi (pengecekan ulang konsistensi).
+• Mengumpulkan informasi pendukung yang diperlukan, termasuk interpretasi,
+pendapat pakar, catatan teknis, penjelasan, ukuran ketidakpastian dan
+metadata lainnya yang diperlukan.
+• Melakukan diskusi pra-rilis dengan para ahli atau pakar dibidangnya.
+Menyetujui konten statistik yang akan dirilis.
+• Menetapkan level penyajian rilis dan menyusun catatan khusus atau kondisi
+tertentu yang harus diperhatikan agar pemahaman terhadap informasi yang
+diberikan menjadi lebih lengkap dan akurat.
+• Menyusun dokumen pendukung internal.
+• Menerjemahkan output statistik dalam bahasa lain (jika diperlukan).

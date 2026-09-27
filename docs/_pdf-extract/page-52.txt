@@ -1,0 +1,47 @@
+• Produk statis & dinamis yang disajikan melalui
+berbagai kanal
+• Dokumentasi rilis dan promosi hasil kegiatan
+• Data dan Metadata Statistik sesuai format baku
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analyse
+Disse
+minat
+e
+Evaluat
+e
+52
+DISSEMINATE (PENYAJIAN DAN
+PENYEBARLUASAN DATA)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Memformat data dan metadata untuk diseminasi
+• Memuat dan menautkan data dan metadata ke sistem
+output
+• Memastikan kelengkapan metdata sebelum rilis
+• Menghasilkan produk sesuai desain output, bisa
+berbentuk publikasi, siaran pers, web, tabel, peta, grafik
+interaktif, microdata
+• Mengelola waktu dan mekanisme rilis
+• Briefing pra rilis bagi pimpinan dan atau pemangku
+kepentingan
+• Mempromosikan produk agar menjangkau pengguna
+luas, dapat melalui website, media sosial, dan platform
+digital
+• Mencatat, menindaklanjuti dan mengelola
+pertanyaan/permintaan data pengguna
+• Menyediakan dan mengelola FAQ dan basis
+pengetahuan
+Aktivitas
+Output
+Sub Proses
+Memutakhirkan Sistem Output
+Menghasilkan produk diseminasi
+Merilis Produk Statistik
+Mempromosikan Produk Statistik
+Layanan dan Dukungan Pengguna

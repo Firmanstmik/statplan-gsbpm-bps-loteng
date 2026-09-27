@@ -1,0 +1,23 @@
+16
+TAHAPAN GSBPM
+Konsultasi & Konfirmasi
+Kebutuhan
+Penetapan Tujuan Output
+Identifikasi Konsep Definisi
+Pemeriksaan Ketersediaan &
+Kelayakan Data
+Penyusunan Proposal Kegiatan/
+Kerangka Acuan Kerja (KAK)
+Identifikasi Kebutuhan
+Specify Need (Penentuan Kebutuhan)
+• Aktivitas pada tahapan subproses ini adalah
+mendokumentasikan hasil temuan ataupun kesimpulan yang
+diperoleh dari subproses-subproses lain pada tahapan proses
+penentuan kebutuhan dalam bentuk proposal kegiatan untuk
+mendapatkan persetujuan untuk menerapkan proses bisnis
+statistik yang baru atau yang telah dimodifikasi.
+• Proposal berisi:
+- Uraian tentang proses bisnis statistik yang sedang berjalan
+- Uraian tentang solusi atau proses bisnis yang diusulkan
+- Penilaian terkait biaya dan manfaat, serta kendala eksternal
+yang mungkin terjadi

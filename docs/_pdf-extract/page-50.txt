@@ -1,0 +1,21 @@
+ANALYSE (ANALISIS DATA)
+TAHAPAN GSBPM
+Menyusun output awal
+Validasi output
+Interpretasi dan penjelasan
+Pengendalian Kerahasiaan
+(Disclosure Control)
+Finalisasi Output
+Penerapan Disclosure Control merupakan subproses untuk memastikan bahwa data
+dan metadata yang akan dipublikasikan tidak melanggar kerahasiaan. Penerapan
+disclosure control bervariasi untuk setiap output. Sebagai contoh, disclosure control
+untuk micro data yang akan dipublikasikan akan berbeda dengan disclosure control
+untuk tabulasi yang akan dipublikasi.
+1.Disclosure control data hasil survey
+• Data individu yang disajikan harus dianonimisasi (diubah dengan sandi tertentu) terlebih
+dahulu
+• Data agregat yang unit sampelnya dapat ditelusuri/diungkap tidak dapat disajikan (misal:
+jumlah sampel yang kurang dari 3 unit pada suatu wilayah)
+2.Disclosure control data hasil kompilasi
+• Data yang berpotensi sensitif dan dapat diungkap dari karakteristiknya harus dianonimkan
+atau dihilangkan.

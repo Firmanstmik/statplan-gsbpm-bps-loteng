@@ -1,0 +1,17 @@
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Mencakup pengaturan dan sistem penyebarluasan dan akses data, tampilan pada
+halaman website, layanan bagi penyedia data dan pengguna data, dan fungsi lain
+yang mendukung kegiatan diseminasi output statistik
+• Menyusun rencana produk diseminasi (buku, brosur, leaflet, booklet, banner, dsb)
+Contoh Aturan Tabulasi

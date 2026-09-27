@@ -1,0 +1,37 @@
+• Dokumentasi Rapat/Diskusi Penyusunan Rencana
+Tindak Lanjut dan aksi perbaikan siklus berikutnya
+• Tingkat kepuasan pengguna data
+Specify
+Need
+Design
+Build
+Collect
+Process
+Analyse
+Dissemi
+nate
+Evaluat
+e
+60
+EVALUATE (EVALUASI)
+GSBPM
+5.2
+TAHAPAN GSBPM
+• Mengumpulkan masukan evaluasi dari seluruh
+fase, bisa bersumber dari umpan balik
+pengguna, paradata, metrik sistem, masukan staf
+• Menganalisis hasil evaluasi dan membandingkan
+dengan target
+• Menyusun laporan evaluasi
+• Menetapkan rencana aksi berdasarkan hasil
+evaluasi
+• Menyepakati prioritas dan penanggung jawab
+• Menentukan mekanisme pemantauan dampak
+perbaikan sebagai masukin siklus berikutnya
+Aktivitas
+Output
+Sub Proses
+Menghimpun Bahan Evaluasi
+Melakukan Evaluasi
+Menyepakati Rencana Tindak
+Lanjut

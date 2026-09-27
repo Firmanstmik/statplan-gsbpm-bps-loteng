@@ -1,0 +1,42 @@
+7
+PENYEMPURNAAN
+GSBPM 5.1 MENJADI 5.2
+• Penekanan pada sumber data administratif dan non-survei
+• Lebih detail pada pendekatan kepada responden dan pengguna
+• Penegasan antara data dan produk.
+Penyempurnaan
+Deskripsi
+• Pembaharuan istilah agar relevan dengan perkembangan
+Teknologi
+Terminologi di
+Modernisasi
+• Tidak ada pengurangan fase/sub proses baru hanya beberapa
+penamaan diperjelas
+Penyesuaian
+Struktur
+Sub
+Proses
+5.1
+Sub
+Proses
+5.2
+2.1 Design Outputs 2.1 Design Outputs and
+Dissemination
+2.2 Design Variable
+Description 2.2 Design Variabel
+7.3 Manage Release
+Dissemination Products
+7.3 Release Dissemination
+Products
+7.5 Manage User
+Support 7.5 Provide User Support
+Pada fase “Specify Need“, Output yang
+dirancang lebih difokuskkan kepada kebutuhan
+pengguna berdasarkan hasil konsultasi dan
+konfirmasi kepada pengguna data, sehingga
+sumber data administratiF menjadi sumber
+data yang ditelaah lebih dahulu ketersediaan
+dan kelayakannya sebelum merancang fase
+lanjutannya, sehingga metodologi yang akan
+digunakan di selarasakan dengan data dan
+produk yang akan dihasilkan.

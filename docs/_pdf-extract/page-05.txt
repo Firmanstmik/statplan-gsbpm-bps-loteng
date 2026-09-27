@@ -1,0 +1,37 @@
+Generic Statistical Business Process Model
+Bersifat fleksibel dan tidak kaku, dengan tahapan yang saling terkait
+dalam proses bisnis statistik.
+GSBPM
+Merupakan suatu kerangka kerja standar internasional yang digunakan
+untuk menjelaskan serangkaian proses bisnis yang dibutuhkan untuk
+menghasilkan statistik.
+MANFAAT GSBPM
+Menyediakan struktur
+untuk dokumentasi
+proses statistik secara
+koheren (berkaitan/
+berkesesuaian
+Untuk membandingkan
+dan mencari
+benchmark proses di
+dalam maupun antar
+organisasi/unit kerja
+Untuk membuat
+keputusan yang lebih
+baik terkait sistem
+produksi dan
+kebutuhan sumber
+daya
+menyediakan suatu
+framework yang
+dapat digunakan
+dalam penilaian dan
+perbaikan kualitas
+proses
+Generic Statistical
+Business Process Model
+(GSBPM) yang
+ditetapkan oleh UNECE
+dan telah diadopsi oleh
+National Statistics
+Office (NSO) di dunia.

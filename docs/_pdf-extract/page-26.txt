@@ -1,0 +1,17 @@
+BUILD (PEMBANGUNAN)
+TAHAPAN GSBPM
+Membangun Instrumen
+Pengumpulan
+Membangun Komponen
+Pengolahan & Analisis
+Membangun Komponen
+Diseminasi
+Konfigurasi Alur Kerja
+Uji Proses Bisnis Statistik (Pilot)
+Pengujian Sistem Produksi
+Finalisasi Sistem Produksi
+• Membangun aplikasi sesuai rancangan (SPSS, EXCEL, desktop-based application,
+desktop-based application)
+• Membangun aturan editing, coding, dan validation pada aplikasi
+• Menyusun aturan integrasi data
+Contoh Aturan Validasi

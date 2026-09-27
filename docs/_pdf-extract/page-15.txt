@@ -1,0 +1,22 @@
+15
+TAHAPAN GSBPM
+Konsultasi & Konfirmasi
+Kebutuhan
+Penetapan Tujuan Output
+Identifikasi Konsep Definisi
+Pemeriksaan Ketersediaan &
+Kelayakan Data
+Penyusunan Proposal Kegiatan/
+Kerangka Acuan Kerja (KAK)
+Identifikasi Kebutuhan
+Specify Need (Penentuan Kebutuhan)
+• Untuk menghindari duplikasi data, cek terlebih dahulu ketersediaan
+data pada berbagai portal data yang menjadi rujukan statistik,
+seperti: sirusa.web.bps.go.id, romantik.bps.go.id, portal SDI, dll
+• Apakah data statistik yang tersedia saat ini sesuai kebutuhan
+✓ Jika data sesuai kebutuhan, maka kegiatan statistik (yang akan
+dilakukan) bersifat kompilasi data.
+✓ Jika data yang tersedia belum sesuai kebutuhan, maka kegiatan
+statistik dapat berupa sensus/survei
+• Data yang tersedia dapat digunakan sebagai data pendukung
+terhadap hasil sensus/survei

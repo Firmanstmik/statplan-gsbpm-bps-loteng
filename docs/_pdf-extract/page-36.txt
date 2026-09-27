@@ -1,0 +1,11 @@
+36
+COLLECT (PENGUMPULAN DATA)
+TAHAPAN GSBPM
+Menyusun Kerangka dan
+Memilih Sampel
+Menyiapkan Pengumpulan Data
+Melaksanakan Pengumpulan Data
+Finalisasi Pengumpulan
+❑ Penginputan dan penyimpanan data (data capture) secara manual
+ataupun otomatis
+❑ Analisis metadata dan paradata terkait dengan pengumpulan data

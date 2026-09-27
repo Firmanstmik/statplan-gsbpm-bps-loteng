@@ -1,0 +1,21 @@
+40
+PROCESS (PENGOLAHAN DATA)
+TAHAPAN GSBPM
+Integrasi Data
+Klasifikasi dan Pengodean
+Review & Validasi Data
+Editing & Imputasi
+Perhitungan Bobot
+Penurunan Variabel & Unit
+Finalisasi File Data
+Perhitungan Agregat
+❑ Reviu dan pengujian data (validasi) terhadap data-data yang telah diinput
+untuk mengidentifikasi potensi masalah, kesalahan, dan ketidaksesuaian,
+seperti pencilan (outlier), nonresponse item, atau terjadinya kesalahan
+pemberian kode.
+❑ Validasi dapat dilakukan berulang kali sesuai aturan yang telah ditetapkan
+sebelumnya.
+❑ Meskipun validasi dikategorikan dalam tahapan pengolahan, namun dalam
+prakteknya, beberapa elemen validasi dapat diterapkan pada tahap
+pengumpulan data, terutama pada moda pengumpulan data yang
+menggunakan bantuan komputer, seperti menggunakan CAPI atau CAWI.

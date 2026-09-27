@@ -1,0 +1,35 @@
+• Kerangka Acuan Kerja
+• Dokumentasi rapat pembahasan kebutuhan data
+• Daftar Kebutuhan Data (Daftar Data dan Data
+Prioritas)
+10
+Specify Need (Identifikasi Kebutuhan)
+GSBPM
+5.2
+• Mengidentifikasi statistik yang dibutuhkan
+dan tujuan penggunaannya.
+• Melakukan konsultasi serta konfirmasi dengan
+pemangku kepentingan internal dan eksternal.
+• Menetapkan statistik tujuan dan bentuk
+output.
+• Mengidentifikasi dan mengkonfirmasi konsep
+definisi yang akan diukur sesuai kebutuhan
+pengguna.
+• Memeriksa sumber data yang tersedia saat ini
+apakah dapat memenuhi kebutuhan
+pengguna.
+• mendokumentasikan hasil seluruh analisis
+kebutuhan meliputi analisis dampak, manfaat
+dan biaya.
+Sub Proses Aktivitas
+Output
+Identifikasi Kebutuhan
+Konsultasi & Konfirmasi
+Kebutuhan
+Penetapan Tujuan Output
+Identifikasi Konsep Definisi
+Penyusunan & Pengajuan Proposal
+Kegiatan/ Kerangka Acuan Kerja (KAK)
+Pemeriksaan Ketersediaan &
+Kelayakan Data
+TAHAPAN GSBPM
