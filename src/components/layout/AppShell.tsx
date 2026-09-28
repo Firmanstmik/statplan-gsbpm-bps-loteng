@@ -4,7 +4,6 @@ import {
   Category,
   Add,
   Setting2,
-  MagicStar,
   Book1,
   InfoCircle,
   PresentionChart,
@@ -20,14 +19,13 @@ import { isOnboardingDone } from '@/demo/seed'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 
+/** Primary destinations. Search and settings live as icon buttons; “Tentang” in the footer.
+ *  The rule-based Asisten duplicates the intake suggestion, so it lives under Pengaturan, not here. */
 const nav: { to: string; label: string; icon: Icon; end?: boolean }[] = [
-  { to: '/app', label: 'Beranda', icon: Category, end: true },
-  { to: '/app/search', label: 'Cari', icon: SearchNormal1 },
-  { to: '/app/new', label: 'Proyek baru', icon: Add },
-  { to: '/app/assistant', label: 'Asisten', icon: MagicStar },
+  { to: '/app', label: 'Proyek saya', icon: Category, end: true },
+  { to: '/contoh/skm', label: 'Contoh', icon: Book1 },
   { to: '/app/presentation', label: 'Presentasi', icon: PresentionChart },
-  { to: '/app/help', label: 'Bantuan', icon: InfoCircle },
-  { to: '/app/settings', label: 'Pengaturan', icon: Setting2 },
+  { to: '/app/faq', label: 'FAQ', icon: InfoCircle },
 ]
 
 const mobileNav: {
@@ -37,10 +35,10 @@ const mobileNav: {
   end?: boolean
   primary?: boolean
 }[] = [
-  { to: '/app', label: 'Beranda', icon: Category, end: true },
+  { to: '/app', label: 'Proyek', icon: Category, end: true },
+  { to: '/contoh/skm', label: 'Contoh', icon: Book1 },
+  { to: '/app/new', label: 'Baru', icon: Add, primary: true },
   { to: '/app/search', label: 'Cari', icon: SearchNormal1 },
-  { to: '/app/new', label: 'Proyek', icon: Add, primary: true },
-  { to: '/app/presentation', label: 'Presentasi', icon: PresentionChart },
   { to: '/app/settings', label: 'Atur', icon: Setting2 },
 ]
 
@@ -55,14 +53,8 @@ export function AppShell() {
       {showOnboarding ? <OnboardingOverlay onDone={() => setShowOnboarding(false)} /> : null}
       <ToastHost />
 
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -left-24 top-0 h-[28rem] w-[28rem] rounded-full bg-ink-900/6 blur-3xl" />
-        <div className="absolute right-0 top-32 h-96 w-96 rounded-full bg-bps-blue/10 blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-bps-orange/8 blur-3xl" />
-      </div>
-
-      <header className="sticky top-0 z-40 border-b border-border/50 bg-white/85 pt-[env(safe-area-inset-top)] shadow-[0_1px_0_rgb(0_147_221/0.08)] backdrop-blur-2xl">
-        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between gap-2 px-3 sm:h-[4.25rem] sm:gap-4 sm:px-6">
+      <header className="sticky top-0 z-40 border-b border-border bg-surface/92 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between gap-2 px-3 sm:h-16 sm:gap-6 sm:px-6">
           <button
             type="button"
             onClick={() => navigate('/')}
@@ -72,7 +64,7 @@ export function AppShell() {
             <BrandLockup size="sm" compact className="sm:gap-2.5" />
           </button>
 
-          <nav className="hidden items-center gap-0.5 rounded-2xl bg-ink-50/80 p-1 ring-1 ring-border/80 xl:flex">
+          <nav aria-label="Navigasi utama" className="hidden flex-1 items-center gap-1 xl:flex">
             {nav.map((item) => (
               <NavLink
                 key={item.to}
@@ -80,14 +72,13 @@ export function AppShell() {
                 end={item.end}
                 className={({ isActive }) =>
                   cn(
-                    'focus-ring inline-flex items-center gap-1.5 rounded-xl px-2.5 py-2 text-sm font-medium transition-colors duration-200',
+                    'focus-ring relative inline-flex h-16 items-center px-3 text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-ink-900 text-white'
-                      : 'text-ink-700 hover:bg-white hover:text-ink-950',
+                      ? 'text-ink-950 after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:rounded-full after:bg-ink-900'
+                      : 'text-ink-600 hover:text-ink-950',
                   )
                 }
               >
-                <item.icon size={16} variant="Bold" color="currentColor" aria-hidden />
                 {item.label}
               </NavLink>
             ))}
@@ -96,33 +87,40 @@ export function AppShell() {
           <div className="flex shrink-0 items-center gap-1 sm:gap-1.5">
             <button
               type="button"
-              className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-xl text-ink-700 transition-colors hover:bg-ink-50 hover:text-ink-950 active:bg-ink-100 xl:hidden"
-              aria-label="Bantuan"
-              onClick={() => navigate('/app/help')}
+              className="focus-ring hidden h-10 w-10 items-center justify-center rounded-xl text-ink-600 transition-colors hover:bg-ink-100/70 hover:text-ink-950 xl:inline-flex"
+              aria-label="Cari"
+              onClick={() => navigate('/app/search')}
             >
-              <InfoCircle size={20} variant="Bold" color="currentColor" aria-hidden />
+              <SearchNormal1 size={18} color="currentColor" aria-hidden />
             </button>
             <button
               type="button"
-              className="focus-ring hidden h-10 items-center rounded-xl px-2.5 text-sm font-medium text-ink-700 transition-colors hover:bg-ink-50 hover:text-ink-950 active:bg-ink-100 sm:inline-flex"
-              onClick={() => navigate('/app/about')}
+              className="focus-ring hidden h-10 w-10 items-center justify-center rounded-xl text-ink-600 transition-colors hover:bg-ink-100/70 hover:text-ink-950 xl:inline-flex"
+              aria-label="Pengaturan"
+              onClick={() => navigate('/app/settings')}
             >
-              Tentang
+              <Setting2 size={18} color="currentColor" aria-hidden />
             </button>
-            <Button
-              size="sm"
-              className="landing-btn-blue hidden h-10 min-h-10 px-3 text-sm sm:inline-flex xl:min-h-11"
-              leftIcon={<Add size={16} variant="Bold" color="currentColor" aria-hidden />}
-              onClick={() => navigate('/app/new')}
+            <button
+              type="button"
+              className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-xl text-ink-600 transition-colors hover:bg-ink-100/70 hover:text-ink-950 xl:hidden"
+              aria-label="FAQ"
+              onClick={() => navigate('/app/faq')}
             >
-              Proyek
-            </Button>
+              <InfoCircle size={20} color="currentColor" aria-hidden />
+            </button>
+            <div className="hidden sm:block">
+              <Button
+                size="sm"
+                className="h-10 min-h-10 px-3.5"
+                leftIcon={<Add size={16} color="currentColor" aria-hidden />}
+                onClick={() => navigate('/app/new')}
+              >
+                Rencana baru
+              </Button>
+            </div>
           </div>
         </div>
-        <div
-          className="h-px bg-gradient-to-r from-transparent via-bps-blue/35 to-transparent"
-          aria-hidden
-        />
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-5 pb-[calc(5.75rem+env(safe-area-inset-bottom))] sm:px-6 sm:py-8 xl:pb-10">
@@ -141,13 +139,9 @@ export function AppShell() {
       </main>
 
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-white/94 pb-[env(safe-area-inset-bottom)] shadow-[0_-10px_32px_rgb(7_24_36/0.07)] backdrop-blur-xl xl:hidden"
-        aria-label="Navigasi utama"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl xl:hidden"
+        aria-label="Navigasi utama (seluler)"
       >
-        <div
-          className="mx-auto h-px max-w-md bg-gradient-to-r from-transparent via-bps-blue/30 to-transparent"
-          aria-hidden
-        />
         <div className="grid grid-cols-5 items-end gap-0.5 px-1.5 pb-1.5 pt-1.5">
           {mobileNav.map((item) => {
             if (item.primary) {
@@ -155,30 +149,13 @@ export function AppShell() {
                 <NavLink
                   key={item.to}
                   to={item.to}
+                  aria-label="Rencana baru"
                   className="focus-ring group relative flex min-h-14 flex-col items-center justify-end gap-1 rounded-xl px-1 pb-1 text-[10px] font-semibold text-ink-700"
                 >
-                  {({ isActive }) => (
-                    <>
-                      <span
-                        className={cn(
-                          'absolute -top-4 flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-[0_10px_24px_rgb(0_147_221/0.35)] transition-transform active:scale-95',
-                          isActive
-                            ? 'bg-bps-blue ring-4 ring-bps-blue/20'
-                            : 'bg-ink-900 group-hover:bg-ink-800',
-                        )}
-                      >
-                        <item.icon size={24} variant="Bold" color="currentColor" aria-hidden />
-                      </span>
-                      <span
-                        className={cn(
-                          'mt-8 leading-none',
-                          isActive ? 'text-bps-blue' : 'text-ink-600',
-                        )}
-                      >
-                        {item.label}
-                      </span>
-                    </>
-                  )}
+                  <span className="absolute -top-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-900 text-white shadow-[0_6px_16px_rgb(21_50_75/0.25)] transition-transform active:scale-95">
+                    <item.icon size={22} color="currentColor" aria-hidden />
+                  </span>
+                  <span className="mt-8 leading-none">{item.label}</span>
                 </NavLink>
               )
             }
@@ -191,7 +168,7 @@ export function AppShell() {
                 className={({ isActive }) =>
                   cn(
                     'focus-ring flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl px-1 py-1.5 text-[10px] font-semibold transition-colors active:bg-ink-50',
-                    isActive ? 'text-bps-blue' : 'text-ink-600',
+                    isActive ? 'text-ink-950' : 'text-ink-500',
                   )
                 }
               >
@@ -199,11 +176,16 @@ export function AppShell() {
                   <>
                     <span
                       className={cn(
-                        'flex h-9 w-9 items-center justify-center rounded-xl transition-colors',
-                        isActive ? 'bg-bps-blue/12 text-bps-blue' : 'text-ink-600',
+                        'flex h-8 w-12 items-center justify-center rounded-full transition-colors',
+                        isActive ? 'bg-brand-soft' : '',
                       )}
                     >
-                      <item.icon size={20} variant="Bold" color="currentColor" aria-hidden />
+                      <item.icon
+                        size={20}
+                        variant={isActive ? 'Bold' : 'Linear'}
+                        color="currentColor"
+                        aria-hidden
+                      />
                     </span>
                     <span className="leading-none">{item.label}</span>
                   </>
@@ -214,12 +196,11 @@ export function AppShell() {
         </div>
       </nav>
 
-      <footer className="mx-auto hidden max-w-7xl px-6 pb-10 pt-2 text-xs text-ink-600/60 xl:block">
-        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/50 px-3 py-2 ring-1 ring-border/60">
-          <span className="inline-flex items-center gap-2">
-            <Book1 size={14} variant="Bold" color="currentColor" aria-hidden />
-            Kerangka proses: GSBPM 5.2 · Modul Proses Bisnis Statistik BPS · BPS Kabupaten Lombok
-            Tengah
+      <footer className="mx-auto hidden max-w-7xl px-6 pb-10 pt-2 text-xs text-ink-500 xl:block">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border pt-4">
+          <span>
+            StatPlan · simulator perencanaan kegiatan statistik · kerangka GSBPM 5.2 (Materi Proses
+            Bisnis) · keluaran berupa draf, bukan dokumen resmi BPS
           </span>
           <button
             type="button"

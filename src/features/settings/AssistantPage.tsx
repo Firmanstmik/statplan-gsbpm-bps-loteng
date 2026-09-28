@@ -259,7 +259,7 @@ export function AssistantPage() {
               </li>
               <li className="flex gap-2">
                 <TickCircle size={16} variant="Bold" color="#0f7b4c" />
-                Sektoral: siapkan draf rekomendasi kegiatan ke BPS (Design 2.5).
+                Sektoral: siapkan draf rekomendasi kegiatan ke BPS (Design 2.6).
               </li>
             </ul>
             <div className="mt-5 flex flex-wrap gap-2">

@@ -29,30 +29,30 @@ function hasNamedRows(
 
 export const GUIDED_COLLECT_PREPARATIONS: GuidedPreparationDef[] = [
   {
-    cardId: 'collect-4.1',
-    title: 'Siapkan penyiapan sasaran/sampel',
+    cardId: 'gsbpm-4.1',
+    title: 'Siapkan kerangka & penarikan sampel',
     explanation:
-      'Jika kegiatan memakai sampel, catat sasaran yang akan dicakup dan sumber daftarnya. Bagian ini dapat ditandai tidak relevan untuk sensus lengkap atau kompilasi.',
+      'Jika kegiatan memakai sampel, catat kerangka sampel dan cara penarikannya. Tandai tidak relevan untuk sensus lengkap atau kompromin.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 33',
     disclaimer:
       'Format kerja StatPlan. Tidak menghitung ukuran sampel dan tidak menarik sampel otomatis.',
     exampleBody:
-      'Jika Ya: tuliskan sasaran dan sumber daftar. Jika Tidak: catat mengapa bagian ini tidak dipakai. Jika Belum ditentukan: tuliskan hal yang masih perlu diputuskan.',
-    exampleClass: 'B',
+      'Relevan: Ya.\nSasaran: pengguna layanan perizinan bulan berjalan.\nSumber daftar: sistem antrean loket.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     educationalNote:
-      'Jika kegiatan menggunakan sampel, sebelum pengumpulan dilakukan perlu disiapkan sasaran yang akan dicakup. Tidak setiap kegiatan membutuhkan sampel.',
-    educationalNoteClass: 'B',
+      'Subproses ini tidak dilakukan jika pengumpulan data dilakukan secara sensus/pendataan lengkap dan kompilasi produk administrasi (kompromin).',
+    educationalNoteClass: 'A',
     educationalNotePage: 33,
     fields: [
       {
         id: 'relevan',
-        label: 'Apakah bagian ini relevan?',
+        label: 'Apakah subproses ini dilakukan?',
         kind: 'select',
         required: true,
         options: [
-          { value: 'ya', label: 'Ya' },
-          { value: 'tidak', label: 'Tidak' },
+          { value: 'ya', label: 'Ya (survei)' },
+          { value: 'tidak', label: 'Tidak (sensus / kompromin)' },
           { value: 'belum', label: 'Belum ditentukan' },
         ],
       },
@@ -60,25 +60,24 @@ export const GUIDED_COLLECT_PREPARATIONS: GuidedPreparationDef[] = [
         id: 'sasaran',
         label: 'Sasaran yang akan dicakup',
         kind: 'textarea',
-        placeholder: 'Misalnya: rumah tangga terpilih di wilayah kerja…',
         visibleWhen: { fieldId: 'relevan', values: ['ya'] },
       },
       {
         id: 'sumber_daftar',
-        label: 'Sumber daftar sasaran',
+        label: 'Sumber kerangka sampel',
         kind: 'text',
-        placeholder: 'Misalnya: kerangka sampel yang sudah disiapkan…',
         visibleWhen: { fieldId: 'relevan', values: ['ya'] },
       },
       {
         id: 'catatan_penyiapan',
-        label: 'Catatan penyiapan',
+        label: 'Cara penarikan sampel',
         kind: 'textarea',
+        placeholder: 'Sesuai metode yang dirancang di 2.4…',
         visibleWhen: { fieldId: 'relevan', values: ['ya'] },
       },
       {
         id: 'catatan_tidak',
-        label: 'Catatan mengapa bagian ini tidak digunakan',
+        label: 'Catatan mengapa subproses ini tidak dilakukan',
         kind: 'textarea',
         visibleWhen: { fieldId: 'relevan', values: ['tidak'] },
       },
@@ -90,79 +89,83 @@ export const GUIDED_COLLECT_PREPARATIONS: GuidedPreparationDef[] = [
       },
     ],
     evidence: [
-      {
-        id: 'e-4.1-a',
-        label: 'Daftar sasaran/sample yang akan digunakan, jika relevan',
-      },
+      { id: 'e-4.1-a', label: 'Daftar sasaran/sampel yang akan digunakan, jika relevan' },
       { id: 'e-4.1-b', label: 'Catatan sumber daftar sasaran' },
+      { id: 'ev-4.1-out', label: 'Daftar sampel (unit observasi)', pdfPage: 32 },
     ],
     isReady: (v) => {
       const choice = typeof v.relevan === 'string' ? v.relevan : ''
       if (!choice) return false
-      if (choice === 'ya') {
-        return hasText(v.sasaran) && hasText(v.sumber_daftar)
-      }
+      if (choice === 'ya') return hasText(v.sasaran) && hasText(v.sumber_daftar)
       if (choice === 'tidak') return hasText(v.catatan_tidak)
       return hasText(v.catatan_belum)
     },
   },
   {
-    cardId: 'collect-4.2',
-    title: 'Siapkan peran petugas pelaksana',
+    cardId: 'gsbpm-4.2',
+    title: 'Siapkan petugas & sumber daya',
     explanation:
-      'Tuliskan siapa yang berperan dalam pengumpulan dan apa tugasnya. Ini draft perencanaan — bukan akun pegawai atau penugasan sistem.',
+      'Tuliskan peran petugas dan tugasnya, rencana pelatihan, serta — untuk kegiatan non-survei — perjanjian dengan penyedia data.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 32–36',
-    disclaimer:
-      'Contoh peran bersifat ilustratif StatPlan. PKS-LADU disebut sebagai referensi sumber untuk konteks non-survei — tanpa memperluas kepanjangan di luar materi.',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 34',
+    disclaimer: 'Contoh peran bersifat ilustratif StatPlan — bukan struktur organisasi resmi BPS.',
     exampleBody:
-      'Materi Collect membahas penyiapan petugas; untuk non-survei juga menyebut PKS-LADU. Contoh ilustratif StatPlan: “Petugas pengumpulan — mewawancarai responden sesuai instrumen.”',
-    exampleClass: 'A',
-    educationalNote:
-      'Pengumpulan data perlu disiapkan siapa yang akan melaksanakan kegiatan dan apa perannya.',
-    educationalNoteClass: 'B',
+      'Peran: petugas wawancara · Tugas: mewawancarai pengguna layanan sesuai daftar sampel.\nPelatihan: 1 hari sebelum lapangan.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     fields: [
       {
         id: 'roles',
         label: 'Daftar peran',
         kind: 'repeatableRole',
         required: true,
-        hint: 'Contoh ilustratif: Petugas pengumpulan, Koordinator, Pemeriksa — bukan struktur organisasi resmi BPS.',
+      },
+      {
+        id: 'rencana_pelatihan',
+        label: 'Rencana pelatihan petugas',
+        kind: 'textarea',
+        placeholder: 'Kapan, berapa lama, materi apa…',
+      },
+      {
+        id: 'protokol_data',
+        label: 'Protokol manajemen data & penjaminan kualitas',
+        kind: 'textarea',
+        placeholder: 'Siapa mengakses data, cara backup, cara pemeriksaan mutu…',
       },
       {
         id: 'catatan_pks',
-        label: 'Catatan PKS-LADU (jika relevan)',
+        label: 'Perjanjian dengan penyedia data — PKS/LADU (non-survei)',
         kind: 'textarea',
-        placeholder:
-          'Opsional untuk kegiatan non-survei: catatan singkat mengenai perjanjian/protokol data…',
-        hint: 'Referensi sumber. Jangan mengklaim sebagai formulir resmi.',
+        hint: 'Isi jika kegiatan memakai data dari pihak lain.',
       },
     ],
     evidence: [
       { id: 'e-4.2-a', label: 'Daftar peran petugas' },
       { id: 'e-4.2-b', label: 'Catatan tugas' },
+      { id: 'ev-4.2-out1', label: 'Dokumentasi Pelaksanaan Pelatihan Petugas', pdfPage: 32 },
+      {
+        id: 'ev-4.2-out2',
+        label: 'Surat Perjanjian Penggunaan Data (PKS/LADU), jika non-survei',
+        pdfPage: 32,
+      },
     ],
     isReady: (v) => hasNamedRows(v, 'roles', 'peran'),
   },
   {
-    cardId: 'collect-4.3',
-    title: 'Siapkan rencana pelaksanaan pengumpulan',
+    cardId: 'gsbpm-4.3',
+    title: 'Siapkan rencana pelaksanaan & monitoring',
     explanation:
-      'Jelaskan bagaimana pengumpulan akan dijalankan. StatPlan tidak menjalankan kuesioner, tidak menyimpan responden, dan tidak menerima isian lapangan.',
+      'Jelaskan bagaimana pengumpulan dijalankan dan bagaimana kemajuannya dipantau — termasuk tindak lanjut non-respon.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 32–36',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 35',
     disclaimer:
-      'Ini rencana pelaksanaan — bukan sistem pengumpulan data dan bukan catatan responden.',
+      'Ini rencana pelaksanaan — StatPlan tidak menjalankan kuesioner dan tidak menyimpan data responden.',
     exampleBody:
-      'Contoh ilustratif: wawancara tatap muka memakai kuesioner kepuasan, moda face-to-face, periode sesuai rencana waktu tahap Collect Anda.',
+      'Pelaksanaan: wawancara CAPI di loket, 1–30 September.\nMonitoring: laporan progres mingguan; non-respon dikunjungi ulang.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Rencana pengumpulan perlu menjelaskan bagaimana kegiatan akan dilaksanakan sesuai rancangan.',
-    educationalNoteClass: 'B',
     fields: [
       {
         id: 'cara_pelaksanaan',
-        label: 'Cara pelaksanaan',
+        label: 'Cara pelaksanaan (termasuk sosialisasi)',
         kind: 'textarea',
         required: true,
       },
@@ -174,7 +177,7 @@ export const GUIDED_COLLECT_PREPARATIONS: GuidedPreparationDef[] = [
       },
       {
         id: 'moda',
-        label: 'Moda/cara memperoleh data',
+        label: 'Moda pengumpulan',
         kind: 'text',
         required: true,
       },
@@ -191,6 +194,12 @@ export const GUIDED_COLLECT_PREPARATIONS: GuidedPreparationDef[] = [
         required: true,
       },
       {
+        id: 'monitoring',
+        label: 'Rencana monitoring dan tindak lanjut',
+        kind: 'repeatableMonitoring',
+        hint: 'Termasuk laporan progres dan tindak lanjut kasus non-respon.',
+      },
+      {
         id: 'catatan_pelaksanaan',
         label: 'Catatan pelaksanaan',
         kind: 'textarea',
@@ -199,59 +208,43 @@ export const GUIDED_COLLECT_PREPARATIONS: GuidedPreparationDef[] = [
     evidence: [
       { id: 'e-4.3-a', label: 'Rencana pelaksanaan' },
       { id: 'e-4.3-b', label: 'Catatan periode pengumpulan' },
-    ],
-  },
-  {
-    cardId: 'collect-4.4',
-    title: 'Siapkan rencana pemantauan / pengendalian',
-    explanation:
-      'Catat apa yang dipantau selama pelaksanaan dan tindak lanjut jika ada masalah. Bantuan perencanaan StatPlan — bukan dasbor status petugas lapangan.',
-    sourceType: 'B',
-    sourceLabel: 'Penjelasan sederhana',
-    disclaimer:
-      'Kartu ini menyusun rencana pemantauan secara sederhana. Tidak menjalankan pemantauan live dan tidak menautkan ke petugas nyata.',
-    exampleBody:
-      'Contoh ilustratif: pantau kelengkapan isian harian — cek laporan singkat — jika ada non-respon, rencanakan kunjungan ulang.',
-    exampleClass: 'C',
-    educationalNote:
-      'Catat bagaimana pelaksanaan akan dipantau dan masalah yang perlu segera ditangani.',
-    educationalNoteClass: 'B',
-    fields: [
+      { id: 'e-4.4-a', label: 'Laporan progres pengumpulan (rencana format)' },
       {
-        id: 'monitoring',
-        label: 'Daftar butir pemantauan',
-        kind: 'repeatableMonitoring',
-        required: true,
+        id: 'ev-4.3-out',
+        label:
+          'Dokumentasi Rapat Monitoring Pelaksanaan dan Pemantauan Kualitas Pengumpulan Data',
+        pdfPage: 32,
       },
     ],
-    evidence: [
-      { id: 'e-4.4-a', label: 'Rencana pemantauan' },
-      { id: 'e-4.4-b', label: 'Catatan penanganan masalah' },
-    ],
-    isReady: (v) => hasNamedRows(v, 'monitoring', 'hal'),
   },
   {
-    cardId: 'collect-4.5',
-    title: 'Siapkan catatan finalisasi hasil pengumpulan',
+    cardId: 'gsbpm-4.4',
+    title: 'Siapkan finalisasi pengumpulan',
     explanation:
-      'Rencanakan pemeriksaan hasil pengumpulan sebelum tahap berikutnya. Ini bukan pengolahan/validasi Process dan bukan klaim data sudah final di StatPlan.',
+      'Catat cara data capture, apa yang diperiksa dari metadata/paradata, dan perbaikan sebelum data diserahkan ke Pengolahan.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 32–36',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 36',
     disclaimer:
       'Persiapan finalisasi pengumpulan — bukan mesin validasi dan bukan status “data siap olah” otomatis.',
     exampleBody:
-      'Contoh ilustratif: periksa kelengkapan berkas, catat hasil pemeriksaan, dan daftar perbaikan yang masih diperlukan.',
+      'Data capture: otomatis dari CAPI.\nParadata: durasi wawancara < 2 menit diperiksa.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Setelah pengumpulan selesai, hasilnya perlu diperiksa dan difinalisasi sebelum masuk ke tahap berikutnya.',
-    educationalNoteClass: 'B',
     fields: [
       {
+        id: 'data_capture',
+        label: 'Cara input & penyimpanan data (data capture)',
+        kind: 'select',
+        options: [
+          { value: 'otomatis', label: 'Otomatis' },
+          { value: 'manual', label: 'Manual' },
+          { value: 'campuran', label: 'Campuran' },
+        ],
+      },
+      {
         id: 'hal_diperiksa',
-        label: 'Apa yang perlu diperiksa?',
+        label: 'Metadata/paradata yang diperiksa',
         kind: 'repeatableText',
         required: true,
-        hint: 'Tambahkan satu atau beberapa butir pemeriksaan.',
       },
       {
         id: 'hasil_pemeriksaan',
@@ -273,6 +266,7 @@ export const GUIDED_COLLECT_PREPARATIONS: GuidedPreparationDef[] = [
     evidence: [
       { id: 'e-4.5-a', label: 'Catatan pemeriksaan hasil pengumpulan' },
       { id: 'e-4.5-b', label: 'Catatan finalisasi' },
+      { id: 'ev-4.4-out', label: 'Metadata Statistik Kegiatan', pdfPage: 32 },
     ],
     isReady: (v) => {
       const checks = v.hal_diperiksa
@@ -280,44 +274,6 @@ export const GUIDED_COLLECT_PREPARATIONS: GuidedPreparationDef[] = [
         Array.isArray(checks) && checks.some((x) => typeof x === 'string' && x.trim())
       return hasChecks && hasText(v.hasil_pemeriksaan)
     },
-  },
-  {
-    cardId: 'collect-4.6',
-    title: 'Catatan kesiapan Collect',
-    explanation:
-      'Tinjau status bahan Collect dan catat risiko atau hal yang masih perlu disiapkan. Ringkasan Mode Terpandu — bukan persetujuan Collect dan bukan pernyataan pengumpulan selesai.',
-    sourceType: 'C',
-    sourceLabel: 'Format kerja StatPlan',
-    disclaimer:
-      'Ringkasan ini tidak membuka Process secara otomatis dan tidak merupakan persetujuan resmi BPS.',
-    exampleBody:
-      'Contoh ilustratif: penyiapan sasaran bahan siap, petugas masih draft, pemantauan masih perlu butir tindak lanjut.',
-    exampleClass: 'C',
-    summaryFromCardIds: [
-      { cardId: 'collect-4.1', label: 'Penyiapan sasaran' },
-      { cardId: 'collect-4.2', label: 'Petugas' },
-      { cardId: 'collect-4.3', label: 'Pelaksanaan' },
-      { cardId: 'collect-4.4', label: 'Pemantauan' },
-      { cardId: 'collect-4.5', label: 'Finalisasi' },
-    ],
-    fields: [
-      {
-        id: 'catatan_kesiapan',
-        label: 'Catatan yang masih perlu disiapkan',
-        kind: 'textarea',
-        required: true,
-      },
-      {
-        id: 'risiko_list',
-        label: 'Risiko/kendala yang perlu diperhatikan',
-        kind: 'repeatableText',
-        hint: 'Tambahkan satu atau beberapa risiko/kendala.',
-      },
-    ],
-    evidence: [
-      { id: 'e-4.6-a', label: 'Ringkasan kesiapan' },
-      { id: 'e-4.6-b', label: 'Daftar hal yang masih perlu diperbaiki' },
-    ],
   },
 ]
 

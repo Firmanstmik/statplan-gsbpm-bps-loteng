@@ -5,6 +5,7 @@ import { PdfRefBadge } from '@/components/ui/PdfRefBadge'
 import { GuidedEvidenceChecklist } from '@/features/planner/guided/GuidedEvidenceChecklist'
 import { GuidedDraftStatus } from '@/features/planner/guided/GuidedDraftStatus'
 import { MateriExampleBlock } from '@/features/planner/guided/MateriExampleBlock'
+import { getGuidedCard } from '@/content/guidedCards'
 import {
   computeDraftStatus,
   emptyDraftFor,
@@ -17,6 +18,7 @@ import {
   type GuidedDraftStatus as DraftStatusValue,
   type GuidedDraftValues,
   type GuidedFinalOutputRow,
+  type GuidedGenericRow,
   type GuidedImprovementRow,
   type GuidedMonitoringRow,
   type GuidedOutputRow,
@@ -98,6 +100,8 @@ export function GuidedTemplatePanel({
   if (!open) return null
 
   const status = computeDraftStatus(prep, values)
+  const card = getGuidedCard(prep.cardId)
+  const materiExamples = prep.materiExamples ?? card?.materiExamples ?? []
 
   function scheduleSave(next: GuidedDraftValues) {
     setSaveLabel('saving')
@@ -169,29 +173,37 @@ export function GuidedTemplatePanel({
               <p className="text-sm leading-relaxed text-ink-700">{prep.explanation}</p>
               <p className="text-[11px] leading-relaxed text-ink-500">{prep.disclaimer}</p>
 
-              {prep.materiExamples && prep.materiExamples.length > 0 ? (
-                <MateriExampleBlock
-                  examples={prep.materiExamples}
-                  pdfPage={prep.pdfPage}
-                  lesson={prep.materiLesson}
-                  context={prep.exampleBody}
-                />
-              ) : (
-                <section className="rounded-xl bg-ink-50 px-3.5 py-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-600">
-                    Contoh{' '}
-                    {prep.exampleClass === 'A'
-                      ? '· Menurut materi'
-                      : '· Contoh ilustratif'}
-                  </p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-ink-800">{prep.exampleBody}</p>
-                </section>
-              )}
+              <section className="rounded-xl bg-ink-50 px-3.5 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-600">
+                  {prep.exampleClass === 'A'
+                    ? 'Contoh · menurut materi'
+                    : prep.exampleClass === 'B'
+                      ? 'Contoh · penjelasan sederhana'
+                      : 'Contoh ilustratif StatPlan'}
+                </p>
+                <p className="mt-1.5 whitespace-pre-line text-sm leading-relaxed text-ink-800">
+                  {prep.exampleBody}
+                </p>
+              </section>
+
+              {materiExamples.length > 0 ? (
+                <details className="group rounded-xl border border-border/70 px-3.5 py-3">
+                  <summary className="focus-ring cursor-pointer list-none rounded text-sm font-semibold text-ink-900">
+                    Lihat contoh dari materi ({materiExamples.length})
+                    <span className="ml-1 text-ink-500 group-open:hidden" aria-hidden>
+                      ▾
+                    </span>
+                  </summary>
+                  <div className="mt-3">
+                    <MateriExampleBlock examples={materiExamples} pdfPage={card?.pdfPage ?? prep.pdfPage} />
+                  </div>
+                </details>
+              ) : null}
 
               {prep.educationalNote ? (
                 <aside className="rounded-xl border border-border/80 px-3.5 py-3">
                   <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-600">
-                    Penjelasan sederhana
+                    {prep.educationalNoteClass === 'A' ? 'Menurut materi' : 'Penjelasan sederhana'}
                     {prep.educationalNotePage != null
                       ? ` · Hal. ${prep.educationalNotePage}`
                       : ''}
@@ -744,6 +756,85 @@ function FieldEditor({
           }
         >
           + Tambah kegiatan
+        </Button>
+      </div>
+    )
+  }
+
+  if (field.kind === 'repeatableRows') {
+    const columns = field.columns ?? []
+    const blankRow = (): GuidedGenericRow =>
+      Object.fromEntries([['id', newId()], ...columns.map((c) => [c.key, ''])]) as GuidedGenericRow
+    const rows: GuidedGenericRow[] = Array.isArray(value)
+      ? (value.filter(
+          (x) => typeof x === 'object' && x !== null && 'id' in x,
+        ) as GuidedGenericRow[])
+      : []
+    const list = rows.length ? rows : [blankRow()]
+    const rowNoun = field.addLabel?.replace(/^\+\s*Tambah\s*/i, '') || 'baris'
+    return (
+      <div>
+        <p className="mb-1.5 text-sm font-medium text-ink-900">
+          {field.label}
+          {field.required ? <span className="text-danger"> *</span> : null}
+        </p>
+        {field.hint ? <p className="mb-2 text-[11px] text-ink-500">{field.hint}</p> : null}
+        <ul className="space-y-3">
+          {list.map((row, idx) => (
+            <li key={row.id} className="space-y-2 rounded-xl border border-border/70 p-3">
+              {columns.map((col) => {
+                const inputId = `${id}-${col.key}-${row.id}`
+                const cell = typeof row[col.key] === 'string' ? row[col.key] : ''
+                const update = (next: string) =>
+                  onChange(list.map((r, i) => (i === idx ? { ...r, [col.key]: next } : r)))
+                return (
+                  <div key={col.key}>
+                    <label className="mb-1 block text-[11px] text-ink-600" htmlFor={inputId}>
+                      {col.label}
+                    </label>
+                    {col.multiline ? (
+                      <textarea
+                        id={inputId}
+                        rows={2}
+                        value={cell}
+                        placeholder={col.placeholder}
+                        onChange={(e) => update(e.target.value)}
+                        className="focus-ring w-full rounded-lg border border-border px-2 py-1.5 text-sm"
+                      />
+                    ) : (
+                      <input
+                        id={inputId}
+                        type="text"
+                        value={cell}
+                        placeholder={col.placeholder}
+                        onChange={(e) => update(e.target.value)}
+                        className="focus-ring h-10 w-full rounded-lg border border-border px-2 text-sm"
+                      />
+                    )}
+                  </div>
+                )
+              })}
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                disabled={list.length <= 1}
+                aria-label={`Hapus ${rowNoun} ${idx + 1}`}
+                onClick={() => onChange(list.filter((_, i) => i !== idx))}
+              >
+                Hapus
+              </Button>
+            </li>
+          ))}
+        </ul>
+        <Button
+          type="button"
+          size="sm"
+          variant="secondary"
+          className="mt-2"
+          onClick={() => onChange([...list, blankRow()])}
+        >
+          {field.addLabel ?? '+ Tambah baris'}
         </Button>
       </div>
     )

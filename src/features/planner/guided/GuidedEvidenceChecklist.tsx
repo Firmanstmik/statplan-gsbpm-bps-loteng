@@ -40,6 +40,11 @@ export function GuidedEvidenceChecklist({ items, states, onChange }: Props) {
               className="rounded-xl border border-border/70 bg-white px-3 py-2.5"
             >
               <p className="text-sm font-medium text-ink-900">{item.label}</p>
+              {item.pdfPage != null ? (
+                <p className="mt-0.5 text-[11px] font-medium text-accent-700">
+                  Output tahap menurut materi · Hal. {item.pdfPage}
+                </p>
+              ) : null}
               <label className="mt-2 block text-[11px] font-medium text-ink-600" htmlFor={`ev-status-${item.id}`}>
                 Status persiapan
               </label>

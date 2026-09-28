@@ -99,49 +99,37 @@ const landing = readFileSync(join(root, 'src/features/landing/LandingPage.tsx'),
 assert(landing.includes('/contoh/') && landing.includes('Mulai perencanaan'), 'Landing CTAs')
 
 const page = readFileSync(join(root, 'src/features/examples/ExampleWalkthroughPage.tsx'), 'utf8')
-assert(
-  page.includes('PreparePhases') &&
-    page.includes('PrepareLearn') &&
-    page.includes('Sudah dipahami') &&
-    page.includes('Tandai sudah memahami') &&
-    page.includes('Apa yang disiapkan') &&
-    page.includes('TryYourDates') &&
-    page.includes('Coba tentukan rentang waktu Anda') &&
-    page.includes('Contoh pembagian waktu') &&
-    page.includes('bukan durasi wajib') &&
-    page.includes('Coba buat rencana seperti ini') &&
-    page.includes('/app/new?from=') &&
-    page.includes('Preview format kerja') &&
-    page.includes('Lihat contoh lengkap') &&
-    page.includes('Format kerja StatPlan') &&
-    page.includes('Bukti dukung') &&
-    !page.includes('unduhan template belum tersedia'),
-  'Persiapan progressive + jadwal interactive + honesty + live format preview',
-)
+// Case-study structure (stable data-section markers, not marketing copy)
+for (const section of ['hero', 'sekilas', 'mengapa', 'roadmap', 'pelajari', 'materi', 'tiru', 'mulai']) {
+  assert(page.includes(`data-section="${section}"`), `case study section ${section}`)
+}
+assert(page.includes('data-phase-lesson'), 'phase lessons are individually addressable')
+assert(page.includes('aria-expanded') && page.includes('aria-controls'), 'phase lessons use disclosure semantics')
+assert(page.includes('/app/new?from='), 'CTA hands off to intake with a copy of the example')
+assert(page.includes('Contoh asli tetap aman'), 'copy-safety reassurance near CTA')
+assert(page.includes('GSBPM sendiri bersifat fleksibel'), 'non-linear GSBPM note')
+assert(page.includes('SourceNote kind="A"') && page.includes('SourceNote kind="C"'), 'A vs C source labels')
+assert(page.includes('loading="lazy"') && page.includes('alt={visual.alt}'), 'PDF visuals lazy with alt text')
+assert(page.includes('MATERI_JADWAL_HAL_23'), 'SKM schedule uses the exact Hal. 23 table')
 assert(
   !page.includes('toggleChecklist') &&
     !page.includes('Siap diekspor') &&
-    !page.includes('W1–') &&
     !page.includes('openWorkspace') &&
     !page.includes('Buka ruang kerja lengkap') &&
     !page.includes('loadDemoData') &&
-    !page.includes('ConfirmDialog'),
-  'Example is demo-only; Workspace not automatic destination',
-)
-assert(
-  page.includes('Alur') || page.includes('Apa kegiatan ini?'),
-  'Alur step present',
-)
-assert(page.includes('Jadwal contoh'), 'Jadwal before Persiapan')
-assert(page.includes('Berikutnya: apa yang disiapkan'), 'Timeline before preparation CTA')
-assert(page.includes('Belum dibuka'), 'later phases locked copy')
-assert(page.includes('Mode Terpandu') || page.includes('rencana seperti ini'), 'Guided handoff')
-assert(
-  page.includes('bukan ruang kerja proyek') ||
-    page.includes('bukan tujuan halaman contoh'),
-  'Workspace optional / not Example endpoint',
+    !page.includes('updateProject') &&
+    !page.includes('useAppStore'),
+  'Example is read-only: never touches the store, checklist, export, or demo projects',
 )
 assert(!page.includes('Template resmi BPS'), 'no fabricated official BPS template claim in UI')
+
+for (const ex of EXAMPLE_JOURNEYS) {
+  assert(ex.takeaways.length >= 3, `${ex.slug} has 3+ takeaways`)
+  assert(
+    ex.prepareItems[0]!.contohDetail?.some((r) => /^Pengguna/.test(r.label)),
+    `${ex.slug} case facts expose pengguna`,
+  )
+}
 
 const steps = readFileSync(join(root, 'src/content/exampleJourney.ts'), 'utf8')
 assert(steps.includes("label: 'Persiapan'"), 'step label Persiapan')

@@ -158,7 +158,7 @@ async function run() {
 
       // Progressive disclosure: open full example on first card of each phase
       if (i === 0) {
-        const fullEx = pageObj.getByRole('button', { name: /Lihat contoh lengkap/i })
+        const fullEx = pageObj.getByRole('button', { name: /Contoh (isian lengkap|penerapan)/i })
         if ((await fullEx.count()) > 0) {
           await fullEx.first().scrollIntoViewIfNeeded()
           await fullEx.first().click()
@@ -182,7 +182,7 @@ async function run() {
         }
       }
 
-      const mark = pageObj.getByRole('button', { name: /Tandai sudah memahami/i })
+      const mark = pageObj.getByRole('button', { name: /Tandai sudah dipahami/i })
       if ((await mark.count()) > 0) {
         await mark.last().scrollIntoViewIfNeeded()
         await mark.last().click()
@@ -192,10 +192,10 @@ async function run() {
       }
     }
     // Progress text check
-    const progress = pageObj.getByText(/dari \d+ materi dipahami/i)
+    const progress = pageObj.getByText(/dari \d+ subproses sudah dipahami/i)
     const progressText = (await progress.count()) > 0 ? await progress.first().innerText() : ''
     note('info', `Understanding progress: ${progressText || '(not found)'}`)
-    const remaining = await pageObj.getByRole('button', { name: /Tandai sudah memahami/i }).count()
+    const remaining = await pageObj.getByRole('button', { name: /Tandai sudah dipahami/i }).count()
     return remaining === 0
   }
 
@@ -213,10 +213,11 @@ async function run() {
   try {
     // ——— LANDING ———
     await page.goto(BASE, { waitUntil: 'networkidle', timeout: 60000 })
-    await page.getByRole('heading', { name: 'StatPlan' }).first().waitFor()
+    await page.getByRole('heading', { level: 1, name: /Susun kegiatan statistik/ }).waitFor()
+    if ((await page.locator('h1').count()) !== 1) note('critical', 'Landing must have exactly one h1')
     await shot(page, '01-landing-desktop.png')
     const landCta = page.getByRole('button', { name: 'Mulai perencanaan' }).first()
-    const landEx = page.getByRole('button', { name: 'Lihat contoh' }).first()
+    const landEx = page.getByRole('button', { name: 'Pelajari contoh' }).first()
     if (!(await landCta.isVisible()) || !(await landEx.isVisible())) {
       note('critical', 'Landing primary/secondary CTA not visible')
     } else {
@@ -238,13 +239,11 @@ async function run() {
     // Click first example card link/button in #contoh
     const contohSection = page.locator('#contoh')
     await contohSection.scrollIntoViewIfNeeded()
-    const contohLink = contohSection.getByRole('link').first()
-    const contohBtn = contohSection.getByRole('button', { name: /Lihat contoh/i }).first()
+    const contohLink = contohSection.getByRole('link', { name: /^Pelajari contoh:/ }).first()
     if ((await contohLink.count()) > 0) {
       await contohLink.click()
-    } else if ((await contohBtn.count()) > 0) {
-      await contohBtn.click()
     } else {
+      note('critical', 'Landing example section has no “Pelajari contoh” entry')
       // fallback known slug
       await page.goto(`${BASE}/contoh/skm`, { waitUntil: 'networkidle' })
     }
@@ -258,34 +257,55 @@ async function run() {
       journey.push('Example walkthrough opened (illustrative, not workspace)')
     }
 
-    // Walk example steps with scroll + wait for heading change
-    const stepClicks = [
-      { btn: /Berikutnya:\s*lihat jadwal/i, expect: /Jadwal/i },
-      { btn: /Berikutnya:\s*apa yang disiapkan/i, expect: /disiapkan|Persiapan/i },
-      { btn: /Berikutnya:\s*ringkasan/i, expect: /Ringkasan|versi Anda|Langkah berikutnya/i },
-    ]
-    for (const step of stepClicks) {
-      const b = page.getByRole('button', { name: step.btn })
-      if ((await b.count()) === 0) {
-        note('warning', `Example step button missing: ${step.btn}`)
-        break
+    // Case-study structure
+    for (const section of ['hero', 'sekilas', 'mengapa', 'roadmap', 'pelajari', 'materi', 'tiru', 'mulai']) {
+      if ((await page.locator(`[data-section="${section}"]`).count()) !== 1) {
+        note('critical', `Example section missing: ${section}`)
       }
-      await b.first().scrollIntoViewIfNeeded()
-      await b.first().click()
-      await page.waitForTimeout(500)
-      await page.getByText(step.expect).first().waitFor({ timeout: 8000 }).catch(() => {
-        note('warning', `Example step expect text not found after click: ${step.expect}`)
-      })
     }
+    const lessons = page.locator('[data-phase-lesson]')
+    if ((await lessons.count()) !== 8) note('critical', `Example phase lessons: ${await lessons.count()} (expect 8)`)
+    else journey.push('Example: 8 phase lessons present')
+    // Expand phase 2 (Perancangan) and verify disclosure + schedule
+    const p2 = lessons.nth(1).locator('button[aria-expanded]').first()
+    await p2.scrollIntoViewIfNeeded()
+    await p2.click()
+    await page.waitForTimeout(400)
+    if ((await p2.getAttribute('aria-expanded')) !== 'true') note('critical', 'Example phase lesson did not expand')
+    else journey.push('Example: phase lesson expands')
+    if (!/Analisis hasil SKM/.test(await lessons.nth(1).innerText())) {
+      note('warning', 'Example: Hal. 23 schedule not shown in Perancangan lesson')
+    }
+    // Source visuals: show all, scroll each into view, check loaded + alt
+    await page.locator('#materi').scrollIntoViewIfNeeded()
+    const moreVisuals = page.getByRole('button', { name: /Tampilkan \d+ contoh lainnya/ })
+    if (await moreVisuals.count()) await moreVisuals.click()
+    const imgs = page.locator('#materi img')
+    const imgCount = await imgs.count()
+    let loaded = 0
+    for (let i = 0; i < imgCount; i++) {
+      await imgs.nth(i).scrollIntoViewIfNeeded()
+      await page.waitForTimeout(250)
+      const ok = await imgs.nth(i).evaluate((el) => el.complete && el.naturalWidth > 0 && (el.alt || '').length > 20)
+      if (ok) loaded++
+    }
+    if (imgCount < 6 || loaded !== imgCount) note('critical', `Example PDF visuals loaded ${loaded}/${imgCount} (expect 6/6)`)
+    else journey.push(`Example: ${loaded}/${imgCount} PDF visuals loaded with alt text`)
+    const pageLabels = await page.locator('#materi').innerText()
+    for (const hal of ['Hal. 18', 'Hal. 23', 'Hal. 26', 'Hal. 27', 'Hal. 28']) {
+      if (!pageLabels.includes(hal)) note('critical', `Example source label missing: ${hal}`)
+    }
+    const exOverflow = await hasOverflow(page)
+    if (exOverflow.overflowX) note('warning', 'Example page horizontal overflow', exOverflow)
 
-    let tryCta = page.getByRole('button', { name: /Coba buat rencana seperti ini/i })
+    const tryCta = page.getByRole('button', { name: /Gunakan contoh ini untuk membuat rencana/i })
     if ((await tryCta.count()) === 0) {
-      note('warning', 'Example CTA missing after walkthrough — falling back to /app/new?from=skm')
+      note('critical', 'Example primary CTA missing — falling back to /app/new?from=skm')
       await page.goto(`${BASE}/app/new?from=skm`, { waitUntil: 'networkidle' })
     } else {
       await tryCta.first().scrollIntoViewIfNeeded()
       await tryCta.click()
-      await page.waitForURL(/\/app\/new/, { timeout: 15000 })
+      await page.waitForURL(/\/app\/new\?from=skm/, { timeout: 15000 })
     }
     journey.push('Example → New project (from=slug)')
 
@@ -320,10 +340,13 @@ async function run() {
     await page.getByRole('button', { name: /Gunakan rencana waktu & lanjutkan/i }).click()
     await page.waitForTimeout(600)
     await dismissOverlays()
+    if ((await page.getByRole('button', { name: /Buka ruang kerja lengkap/i }).count()) > 0) {
+      note('critical', 'Timeline handoff still offers the competing “Buka ruang kerja lengkap” branch')
+    } else journey.push('Timeline handoff: one next action (no Workspace branch)')
     await page.getByRole('button', { name: /Lanjut ke Identifikasi Kebutuhan/i }).click()
     await page.waitForURL(/\/guided/, { timeout: 20000 })
     await page.getByText('Mode Terpandu').first().waitFor({ timeout: 15000 })
-    await page.getByText(/materi dipahami/i).first().waitFor({ timeout: 10000 })
+    await page.getByText(/subproses sudah dipahami/i).first().waitFor({ timeout: 10000 })
     journey.push('Timeline → Guided Mode')
     note('info', `Guided URL: ${page.url()}`)
 
@@ -345,46 +368,46 @@ async function run() {
         cards: 6,
         shot: '07-guided-phase-2.png',
         finish: /Selesai memahami tahap ini/i,
-        next: /Lanjut ke Build/i,
+        next: /Lanjut ke Pembangunan$/i,
       },
       {
         key: 'build',
-        cards: 6,
+        cards: 7,
         shot: '08-guided-phase-3.png',
         finish: /Selesai memahami tahap ini/i,
-        next: /Lanjut ke Collect/i,
+        next: /Lanjut ke Pengumpulan Data$/i,
       },
       {
         key: 'collect',
-        cards: 6,
+        cards: 4,
         shot: '09-guided-phase-4.png',
         finish: /Selesai memahami tahap ini/i,
-        next: /Lanjut ke Process/i,
+        next: /Lanjut ke Pengolahan Data$/i,
       },
       {
         key: 'process',
-        cards: 6,
+        cards: 8,
         shot: '10-guided-phase-5.png',
         finish: /Selesai memahami tahap ini/i,
-        next: /Lanjut ke Analyse/i,
+        next: /Lanjut ke Analisis Data$/i,
       },
       {
         key: 'analyse',
-        cards: 6,
+        cards: 5,
         shot: '11-guided-phase-6.png',
         finish: /Selesai memahami tahap ini/i,
-        next: /Lanjut ke Disseminate/i,
+        next: /Lanjut ke Penyajian & Penyebarluasan$/i,
       },
       {
         key: 'disseminate',
-        cards: 6,
+        cards: 5,
         shot: '12-guided-phase-7.png',
         finish: /Selesai memahami tahap ini/i,
-        next: /Lanjut ke Evaluate/i,
+        next: /Lanjut ke Evaluasi$/i,
       },
       {
         key: 'evaluate',
-        cards: 6,
+        cards: 3,
         shot: '13-guided-phase-8.png',
         finish: /Selesai memahami tahap ini/i,
         next: null,
@@ -455,6 +478,58 @@ async function run() {
     await shot(page, '15-workspace.png')
     journey.push('Workspace opened')
 
+    // ——— WORKSPACE INFORMATION ARCHITECTURE ———
+    {
+      const wsBase = page.url().split('?')[0]
+      const wsTabs = () => page.getByRole('tablist', { name: 'Bagian workspace' })
+      const expected = ['Timeline', 'Alur kerja', 'Checklist', 'Perancangan', 'Variabel', 'Instrumen', 'Metadata', 'Riwayat', 'Ekspor']
+      const selectedTab = async () => (await wsTabs().getByRole('tab', { selected: true }).innerText()).trim()
+      const labels = (await wsTabs().getByRole('tab').allInnerTexts()).map((t) => t.trim())
+      if (labels.join('|') !== expected.join('|')) note('critical', `Workspace tab order wrong: ${labels.join(' · ')}`)
+      else journey.push('Workspace tab order: Timeline → Alur kerja → Checklist → … → Ekspor')
+      if (!/[?&]tab=checklist/.test(page.url()) || (await selectedTab()) !== 'Checklist') {
+        note('critical', `Guided → Workspace deep link did not open Checklist (${page.url()} / ${await selectedTab()})`)
+      } else journey.push('Deep link ?tab=checklist opens Checklist')
+      await page.goto(wsBase, { waitUntil: 'load' })
+      await wsTabs().getByRole('tab', { selected: true }).waitFor()
+      if ((await selectedTab()) !== 'Timeline') note('critical', `Bare Workspace URL opened ${await selectedTab()}, expected Timeline`)
+      else journey.push('Bare Workspace URL opens Timeline first')
+      if (!/Timeline perencanaan/.test(await page.locator('#workspace-tab-content').innerText())) {
+        note('critical', 'Default Workspace view does not show the timeline')
+      }
+      for (const [q, name] of [['workflow', 'Alur kerja'], ['variables', 'Variabel'], ['instruments', 'Instrumen'], ['metadata', 'Metadata'], ['export', 'Ekspor']]) {
+        await page.goto(`${wsBase}?tab=${q}`, { waitUntil: 'load' })
+        await wsTabs().getByRole('tab', { selected: true }).waitFor()
+        if ((await selectedTab()) !== name) note('critical', `Deep link ?tab=${q} opened ${await selectedTab()}`)
+      }
+      journey.push('Deep links ?tab=workflow/variables/instruments/metadata/export open their tab')
+      // Keyboard: roving focus follows the new order
+      await page.goto(wsBase, { waitUntil: 'load' })
+      await wsTabs().getByRole('tab', { name: 'Timeline' }).focus()
+      await page.keyboard.press('ArrowRight')
+      await page.waitForTimeout(200)
+      const focusedTab = await page.evaluate(() => document.activeElement?.getAttribute('role') === 'tab' && document.activeElement.textContent.trim())
+      if (focusedTab !== 'Alur kerja' || (await selectedTab()) !== 'Alur kerja') note('critical', `ArrowRight from Timeline went to ${focusedTab}`)
+      else journey.push('Keyboard: ArrowRight from Timeline selects Alur kerja')
+      // “Buka Alur kerja” (next-step card) still lands on Alur kerja
+      await page.goto(wsBase, { waitUntil: 'load' })
+      const bukaAlur = page.getByRole('button', { name: /^Buka Alur kerja/ }).first()
+      if (await bukaAlur.count()) {
+        await bukaAlur.click()
+        await page.waitForTimeout(300)
+        if ((await selectedTab()) !== 'Alur kerja') note('critical', '“Buka Alur kerja” did not open Alur kerja')
+        else journey.push('“Buka Alur kerja” opens Alur kerja')
+      }
+      // Workspace ↔ Guided round trip keeps state
+      await page.goto(wsBase, { waitUntil: 'load' })
+      await page.getByRole('link', { name: /Kembali ke Mode Terpandu/i }).first().click()
+      await page.waitForURL(/\/guided/, { timeout: 15000 })
+      await page.getByText(/subproses sudah dipahami/i).first().waitFor({ timeout: 10000 })
+      journey.push('Workspace → Mode Terpandu works')
+      await page.goto(`${wsBase}?tab=checklist`, { waitUntil: 'load' })
+      await wsTabs().getByRole('tab', { selected: true }).waitFor()
+    }
+
     // Validation / checklist tab likely already open
     await dismissOverlays()
     await shot(page, '16-validation.png')
@@ -480,28 +555,23 @@ async function run() {
       await page.waitForTimeout(600)
     }
     await shot(page, '17-export.png')
-    const unduh = page.getByRole('button', { name: /Unduh draf|Ekspor|Download/i })
-    if ((await unduh.count()) > 0) {
+    const unduh = page.getByRole('button', { name: 'Unduh draf perencanaan' })
+    if ((await unduh.count()) === 1) {
       journey.push('Export UI visible')
-      const btn = unduh.first()
-      if (await btn.isDisabled()) {
-        note('info', 'Export disabled (expected if validation incomplete for new project)')
+      if (await unduh.isDisabled()) {
+        journey.push('Export gate: new incomplete project is blocked (expected)')
+        const reviewText = await page.locator('#tinjauan-ekspor').locator('..').innerText()
+        if (!/Mengapa penting/.test(reviewText) || !/Cara memperbaiki/.test(reviewText)) {
+          note('critical', 'Validation review lacks why/how guidance')
+        } else journey.push('Validation review explains why + how to fix')
       } else {
-        try {
-          const [download] = await Promise.all([
-            page.waitForEvent('download', { timeout: 8000 }),
-            btn.click(),
-          ])
-          journey.push(`Export download started: ${download.suggestedFilename()}`)
-        } catch {
-          note('warning', 'Export click did not produce download within timeout')
-        }
+        note('critical', 'Export gate: brand-new project should not be exportable')
       }
     } else {
-      note('warning', 'Export button not found')
-      const bodySnippet = (await page.locator('body').innerText()).slice(0, 500)
-      note('info', `Export tab body snippet: ${bodySnippet.replace(/\s+/g, ' ')}`)
+      note('critical', 'Export button not found')
     }
+    const exportBody = await page.locator('body').innerText()
+    if (!/bukan dokumen resmi BPS/i.test(exportBody)) note('critical', 'Export lacks draft / not-official statement')
 
     // ——— RESPONSIVE PASS ———
     const viewports = [
@@ -525,86 +595,105 @@ async function run() {
     await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto(`${BASE}/app/presentation`, { waitUntil: 'networkidle' })
     await page.waitForTimeout(500)
-    const presHeading = page.getByRole('heading', { name: /Materi Presentasi StatPlan/i })
+    const presHeading = page.getByRole('heading', { name: 'Presentasi StatPlan' })
     if ((await presHeading.count()) === 0) {
-      // may need demo load
-      const loadDemo = page.getByRole('button', { name: /Muat data demo/i })
-      if ((await loadDemo.count()) > 0) {
-        await loadDemo.click()
-        await page.waitForTimeout(800)
+      note('critical', 'Presentation Mode heading not found')
+    } else {
+      await shot(page, '23-presentation.png')
+      journey.push('Presentation Mode opened (no project required)')
+      const next = page.getByRole('button', { name: 'Berikutnya' })
+      let seen = 1
+      while (!(await next.isDisabled())) {
+        await next.click()
+        seen++
+        if (seen > 12) break
+      }
+      if (seen !== 8) note('critical', `Presentation slides: ${seen} (expect 8)`)
+      else journey.push('Presentation: 8 slides navigable')
+      if (!/44 subproses resmi/.test(await page.locator('body').innerText())) {
+        // last slide is limitations; go back to slide 6
+        for (let i = 0; i < 2; i++) await page.getByRole('button', { name: 'Sebelumnya' }).click()
+      }
+      if (!/44 subproses resmi/.test(await page.locator('body').innerText())) note('critical', 'Presentation GSBPM slide lacks 44 subprocesses')
+      await page.getByRole('tab', { name: 'FAQ' }).click()
+      const faqText = await page.locator('body').innerText()
+      if (!/Apakah ini sistem resmi BPS\?/.test(faqText)) note('warning', 'Presentation FAQ missing')
+      else journey.push('Presentation FAQ tab works')
+      if (/Disetujui BPS|Validasi resmi BPS/i.test(faqText) && !/bukan|tidak/i.test(faqText)) {
+        note('critical', 'Presentation Mode overclaims official BPS status')
       }
     }
-    if ((await page.getByRole('heading', { name: /Materi Presentasi StatPlan/i }).count()) > 0) {
-      await shot(page, '23-presentation.png')
-      journey.push('Presentation Mode opened')
-      const body = await page.locator('body').innerText()
-      if (/sistem resmi BPS|Disetujui BPS|Validasi BPS/i.test(body) && !/bukan|tidak/i.test(body)) {
-        note('warning', 'Presentation Mode may contain overclaiming BPS official language')
-      }
-      if (/contoh ilustratif|draf/i.test(body)) {
-        journey.push('Presentation Mode honesty/draf copy present')
-      }
-      const back = page.getByRole('button', { name: /Kembali ke beranda/i })
-      if ((await back.count()) > 0) {
-        await back.click()
-        await page.waitForTimeout(400)
-        journey.push('Presentation Mode back CTA works')
-      }
-    } else {
-      note('warning', 'Presentation Mode heading not found')
+
+    // ——— DEMO SEED PERSISTENCE (first visit → reload → demo deep link still resolves) ———
+    {
+      const fresh = await browser.newContext({ viewport: { width: 1280, height: 900 } })
+      await fresh.addInitScript(() => localStorage.setItem('bps-statplan-onboarding-done', '1'))
+      const fp = await fresh.newPage()
+      await fp.goto(`${BASE}/app`, { waitUntil: 'load' })
+      await fp.getByRole('button', { name: /^(Muat demo|Perbarui demo)$/ }).first().waitFor({ timeout: 15000 })
+      await fp.goto(`${BASE}/app/projects/demo-skm-dpmptsp-2026`, { waitUntil: 'load' })
+      await fp.waitForTimeout(800)
+      if (/Proyek tidak ditemukan/.test(await fp.locator('body').innerText())) {
+        note('critical', 'Auto-seeded demo projects are not persisted: demo deep link fails after reload')
+      } else journey.push('Auto-seeded demo projects persist across reload')
+      await fresh.close()
     }
 
     // ——— DEMO SAFETY ———
     await page.goto(`${BASE}/app`, { waitUntil: 'networkidle' })
-    await page.waitForTimeout(600)
-    const demoNameBefore = await page.evaluate(() => {
-      try {
-        const raw = localStorage.getItem('bps-statplan-store') || localStorage.getItem('bps-statplan') || ''
-        // Zustand persist key may vary — scan all keys
+    const muat = page.getByRole('button', { name: 'Muat demo' })
+    if (await muat.count()) {
+      await muat.click()
+      await page.waitForTimeout(500)
+    }
+    const readProjects = () =>
+      page.evaluate(() => {
         for (let i = 0; i < localStorage.length; i++) {
-          const k = localStorage.key(i)
-          const v = localStorage.getItem(k) || ''
-          if (v.includes('demo-skm-dpmptsp-2026')) {
-            const m = v.match(/Survei Kepuasan Masyarakat[^"\\]*/)
-            return { key: k, nameSnippet: m ? m[0].slice(0, 80) : 'found-id' }
+          const v = localStorage.getItem(localStorage.key(i)) || ''
+          if (v.includes('"projects"')) {
+            try {
+              const parsed = JSON.parse(v)
+              return (parsed.state?.projects ?? parsed.projects ?? []).map((p) => ({ id: p.id, json: JSON.stringify(p) }))
+            } catch {
+              /* ignore */
+            }
           }
         }
-        return { key: null, nameSnippet: null }
-      } catch {
-        return { key: null, nameSnippet: null }
-      }
-    })
-    if (demoNameBefore.nameSnippet) {
-      journey.push(`Demo SKM present before edit: ${demoNameBefore.nameSnippet}`)
-    } else {
-      note('info', 'Demo SKM id not found in localStorage scan (may use different persist key)')
-    }
-
-    // Create a new project from example without mutating demo seed path
+        return []
+      })
+    const before = await readProjects()
+    const demoBefore = before.find((p) => p.id === 'demo-skm-dpmptsp-2026')
+    if (!demoBefore) note('critical', 'Demo safety: demo SKM project not loaded')
     await page.goto(`${BASE}/contoh/skm`, { waitUntil: 'networkidle' })
+    await page.getByRole('button', { name: /Gunakan contoh ini untuk membuat rencana/i }).click()
+    await page.waitForURL(/\/app\/new/)
+    await page.getByRole('button', { name: 'Lanjutkan' }).click()
+    await page.getByRole('button', { name: /Gunakan.*lanjutkan/i }).click()
+    await page.getByRole('button', { name: /Gunakan rencana waktu & lanjutkan/i }).click()
     await page.waitForTimeout(400)
-    const ctaPlan = page.getByRole('button', { name: /Coba buat rencana seperti ini|Buat rencana/i })
-    if ((await ctaPlan.count()) > 0) {
-      await ctaPlan.first().click()
-      await page.waitForTimeout(600)
-    } else {
-      await page.goto(`${BASE}/app/new?from=skm`, { waitUntil: 'networkidle' })
+    const after = await readProjects()
+    const demoAfter = after.find((p) => p.id === 'demo-skm-dpmptsp-2026')
+    if (demoBefore && demoAfter && demoBefore.json === demoAfter.json) {
+      journey.push('Demo safety: demo SKM project byte-identical after starting from example')
+    } else if (demoBefore) {
+      note('critical', 'Demo safety: demo SKM project changed after starting from example')
     }
-    const newUrl = page.url()
-    if (/\/app\/new|\/guided|\/projects\//.test(newUrl)) {
-      journey.push(`From-example flow reachable: ${newUrl.replace(BASE, '')}`)
-    }
+    if (after.length === before.length + 1) journey.push('Example → new project created as a separate copy')
+    else note('critical', `Example → new project: project count ${before.length} → ${after.length}`)
 
-    // Verify demo id still in storage after starting from example
-    const demoStillThere = await page.evaluate(() => {
-      for (let i = 0; i < localStorage.length; i++) {
-        const v = localStorage.getItem(localStorage.key(i)) || ''
-        if (v.includes('demo-skm-dpmptsp-2026')) return true
+    // Export gate on an export-ready demo project (download must work when allowed)
+    await page.goto(`${BASE}/app/projects/demo-skm-dpmptsp-2026?tab=export`, { waitUntil: 'networkidle' })
+    const demoUnduh = page.getByRole('button', { name: 'Unduh draf perencanaan' })
+    if ((await demoUnduh.count()) === 1 && !(await demoUnduh.isDisabled())) {
+      try {
+        const [download] = await Promise.all([page.waitForEvent('download', { timeout: 20000 }), demoUnduh.click()])
+        journey.push(`Export download produced: ${download.suggestedFilename()}`)
+      } catch {
+        note('critical', 'Export enabled but no download produced')
       }
-      return false
-    })
-    if (demoStillThere) journey.push('Demo safety: demo-skm id still present after from-example')
-    else note('warning', 'Demo safety: demo-skm id missing after from-example (check seed load)')
+    } else {
+      note('info', 'Demo SKM not export-ready in this build — download path not exercised')
+    }
 
     // ——— REFRESH / BACK / FORWARD ———
     const refreshTargets = [
@@ -632,7 +721,7 @@ async function run() {
       }
     }
     await page.goto(BASE, { waitUntil: 'networkidle' })
-    await page.getByRole('button', { name: /Lihat contoh/i }).first().click().catch(() => {})
+    await page.getByRole('button', { name: 'Pelajari contoh' }).first().click().catch(() => {})
     await page.waitForTimeout(400)
     await page.goBack()
     await page.waitForTimeout(300)
@@ -671,6 +760,52 @@ async function run() {
     const focused = await page.evaluate(() => document.activeElement?.tagName)
     if (focused) journey.push(`Keyboard focus works (active=${focused})`)
 
+    // ——— KEYBOARD + REDUCED MOTION ———
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto(`${BASE}/contoh/skm`, { waitUntil: 'networkidle' })
+    const lessonBtn = page.locator('[data-phase-lesson="build"] button[aria-expanded]').first()
+    await lessonBtn.focus()
+    await page.keyboard.press('Enter')
+    await page.waitForTimeout(150)
+    const afterEnter = await lessonBtn.getAttribute('aria-expanded')
+    await page.keyboard.press('Space')
+    await page.waitForTimeout(150)
+    const afterSpace = await lessonBtn.getAttribute('aria-expanded')
+    if (afterEnter === 'true' && afterSpace === 'false') {
+      journey.push('Keyboard: example phase lesson toggles with Enter/Space (reduced motion)')
+    } else {
+      note('critical', `Keyboard: phase lesson toggle failed (enter=${afterEnter}, space=${afterSpace})`)
+    }
+    const focusRing = await lessonBtn.evaluate((el) => getComputedStyle(el).boxShadow)
+    if (!focusRing || focusRing === 'none') note('warning', 'Keyboard: no visible focus ring on phase lesson toggle')
+    else journey.push('Keyboard: visible focus ring present')
+
+    await page.goto(`${BASE}/app/presentation`, { waitUntil: 'networkidle' })
+    const stage = page.locator('[aria-roledescription="slide"]')
+    await stage.focus()
+    await page.keyboard.press('ArrowRight')
+    await page.keyboard.press('ArrowRight')
+    const label2 = await stage.getAttribute('aria-label')
+    await page.keyboard.press('ArrowLeft')
+    const label1 = await stage.getAttribute('aria-label')
+    if (/^Slide 3 /.test(label2 || '') && /^Slide 2 /.test(label1 || '')) {
+      journey.push('Keyboard: presentation slides move with arrow keys')
+    } else note('critical', `Keyboard: presentation arrows failed (${label2} / ${label1})`)
+    await page.getByRole('tab', { name: 'Slide' }).focus()
+    await page.keyboard.press('ArrowRight')
+    const activeTab = await page.evaluate(() => document.activeElement?.textContent)
+    if (activeTab === 'Naskah demo') journey.push('Keyboard: presentation tabs move with arrow keys')
+    else note('warning', `Keyboard: tab arrow navigation landed on ${activeTab}`)
+
+    // Heading hierarchy: exactly one h1 per primary page
+    for (const path of ['/', '/contoh/skm', '/app', '/app/new', '/app/presentation']) {
+      await page.goto(`${BASE}${path}`, { waitUntil: 'networkidle' })
+      const h1 = await page.locator('h1').count()
+      if (h1 !== 1) note('warning', `Heading hierarchy: ${path} has ${h1} h1 elements`)
+    }
+    journey.push('Heading hierarchy checked on primary pages')
+    await page.emulateMedia({ reducedMotion: 'no-preference' })
+
   } catch (e) {
     note('critical', `Journey aborted: ${e.message}`)
     try {
@@ -685,7 +820,7 @@ async function run() {
   const critical = findings.filter((f) => f.level === 'critical')
   const status =
     critical.length > 0
-      ? 'PASS WITH NOTES'
+      ? 'FAIL'
       : findings.some((f) => f.level === 'warning')
         ? 'PASS WITH NOTES'
         : 'PASS'
@@ -705,7 +840,7 @@ async function run() {
   console.log('Journey steps:', journey.length)
   console.log('Console errors:', consoleErrors.length)
   console.log('Network fails:', networkFails.length)
-  process.exit(critical.length && !reachedGuided ? 2 : 0)
+  process.exit(critical.length ? 1 : 0)
 }
 
 function writeReport({ status, reason }) {

@@ -30,7 +30,7 @@ export function EmptyState({
         className,
       )}
     >
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-900 text-gold-400 shadow-(--shadow-glow)">
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-ink-900 text-ink-500 shadow-(--shadow-glow)">
         <Icon size={28} variant="Bold" color="currentColor" />
       </div>
       <h2 className="font-display text-xl font-semibold tracking-tight text-ink-950">{title}</h2>
@@ -77,15 +77,13 @@ export function PageHeader({
     <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:gap-5 lg:mb-10 lg:flex-row lg:items-end lg:justify-between">
       <div className="min-w-0 max-w-2xl">
         {eyebrow ? (
-          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-bps-blue sm:text-xs sm:text-ink-600">
-            {eyebrow}
-          </p>
+          <p className="t-eyebrow mb-2">{eyebrow}</p>
         ) : null}
-        <h1 className="font-display text-[1.65rem] font-semibold leading-tight tracking-tight text-ink-950 sm:text-4xl">
+        <h1 className="t-page-title">
           {title}
         </h1>
         {description ? (
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-700 sm:text-base">
+          <p className="t-body mt-2 max-w-xl">
             {description}
           </p>
         ) : null}
@@ -108,7 +106,7 @@ export function SectionTitle({
 }) {
   return (
     <div className="mb-3 flex items-center gap-2">
-      <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-600">{children}</h2>
+      <h2 className="t-label">{children}</h2>
       {hint}
     </div>
   )

@@ -1,33 +1,66 @@
 /**
- * Slice 10 — Guided preparation for Disseminate.
+ * Guided preparation for Disseminate (7.1–7.5, Materi Hal. 52–59).
  * Working formats only. Does not publish, release, promote, or run user support.
  */
-import type {
-  GuidedDraftValues,
-  GuidedPreparationDef,
-} from '@/content/guidedNeedPreparation'
-
-function hasText(v: unknown): boolean {
-  return typeof v === 'string' && v.trim().length > 0
-}
+import type { GuidedPreparationDef } from '@/content/guidedNeedPreparation'
 
 export const GUIDED_DISSEMINATE_PREPARATIONS: GuidedPreparationDef[] = [
   {
-    cardId: 'disseminate-7.1',
-    title: 'Siapkan rencana produk statistik',
+    cardId: 'gsbpm-7.1',
+    title: 'Siapkan pemutakhiran sistem output',
     explanation:
-      'Tuliskan bentuk produk yang direncanakan. StatPlan tidak menerbitkan hasil statistik dan tidak membuat angka fiktif.',
+      'Catat data apa yang dimuat ke sistem output, di sistem mana, dan metadata mana yang harus tertaut sebelum rilis.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 52–57',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 53',
     disclaimer:
-      'Format kerja StatPlan — bukan template resmi BPS. Rencana produk ≠ produk yang sudah dipublikasikan.',
+      'StatPlan tidak terhubung ke sistem output mana pun — ini daftar persiapan Anda.',
     exampleBody:
-      'Contoh ilustratif: nama “Ringkasan kepuasan pelayanan”; bentuk ringkasan singkat; informasi yang disajikan: pola kepuasan; pengguna sasaran: pengelola layanan.',
+      'Data: tabel indeks per aspek · Sistem: database output unit · Metadata: MS-Keg, MS-Var, MS-Ind.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Produk statistik adalah bentuk hasil yang direncanakan untuk tersedia bagi pengguna — bukan hasil yang sudah dirilis di StatPlan.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '52–57',
+    fields: [
+      {
+        id: 'data_dimuat',
+        label: 'Data yang dimuat ke sistem output',
+        kind: 'textarea',
+        required: true,
+      },
+      {
+        id: 'sistem_output',
+        label: 'Sistem output / database tujuan',
+        kind: 'text',
+      },
+      {
+        id: 'metadata_siap',
+        label: 'Metadata yang sudah lengkap dan tertaut',
+        kind: 'multiSelect',
+        options: [
+          { value: 'ms_keg', label: 'MS-Keg (kegiatan)' },
+          { value: 'ms_var', label: 'MS-Var (variabel)' },
+          { value: 'ms_ind', label: 'MS-Ind (indikator)' },
+        ],
+      },
+      {
+        id: 'catatan_tautan',
+        label: 'Catatan format / tautan data–metadata',
+        kind: 'textarea',
+      },
+    ],
+    evidence: [
+      { id: 'ev-7.1-a', label: 'Daftar data yang dimuat ke sistem output' },
+      { id: 'ev-7.1-out', label: 'Data dan Metadata Statistik sesuai format baku', pdfPage: 52 },
+    ],
+  },
+  {
+    cardId: 'gsbpm-7.2',
+    title: 'Siapkan rencana produk diseminasi',
+    explanation:
+      'Tentukan produk, komponennya, dan pemeriksaan sebelum produk dianggap memenuhi standar publikasi.',
+    sourceType: 'A',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 54',
+    disclaimer: 'Rencana produk — bukan produk yang sudah diterbitkan.',
+    exampleBody:
+      'Produk: Laporan Ringkas SKM 2026 · Bentuk: publikasi elektronik · Komponen: tabel, grafik, catatan teknis, pernyataan kualitas.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     fields: [
       {
         id: 'nama_produk',
@@ -40,8 +73,19 @@ export const GUIDED_DISSEMINATE_PREPARATIONS: GuidedPreparationDef[] = [
         label: 'Bentuk produk',
         kind: 'text',
         required: true,
-        placeholder: 'Misalnya: ringkasan, tabel, infografis…',
-        hint: 'Pilihan kerja StatPlan — bukan taksonomi resmi BPS.',
+        placeholder: 'Publikasi cetak/elektronik, tabulasi, grafik, peta…',
+      },
+      {
+        id: 'komponen',
+        label: 'Komponen produk (Hal. 54)',
+        kind: 'multiSelect',
+        options: [
+          { value: 'catatan_teknis', label: 'Catatan / penjelasan teknis' },
+          { value: 'tabel', label: 'Tabel' },
+          { value: 'grafik', label: 'Grafik' },
+          { value: 'peta', label: 'Peta' },
+          { value: 'pernyataan_kualitas', label: 'Pernyataan kualitas' },
+        ],
       },
       {
         id: 'informasi_disajikan',
@@ -58,50 +102,59 @@ export const GUIDED_DISSEMINATE_PREPARATIONS: GuidedPreparationDef[] = [
       },
       {
         id: 'catatan',
-        label: 'Catatan',
+        label: 'Pemeriksaan & penyuntingan yang direncanakan',
         kind: 'textarea',
       },
     ],
     evidence: [
       { id: 'e-7.1-a', label: 'Catatan bentuk produk' },
       { id: 'e-7.1-b', label: 'Daftar pengguna sasaran' },
+      {
+        id: 'ev-7.2-out',
+        label: 'Produk statis & dinamis yang disajikan melalui berbagai kanal',
+        pdfPage: 52,
+      },
     ],
   },
   {
-    cardId: 'disseminate-7.2',
+    cardId: 'gsbpm-7.3',
     title: 'Siapkan rencana rilis',
     explanation:
-      'Tentukan target waktu dan kondisi kesiapan. Tanggal di bawah adalah rencana Anda — bukan jadwal rilis resmi BPS dan bukan tanggal publikasi aktual.',
+      'Tulis kondisi kesiapan, jadwal dan mekanisme rilis, briefing pra-rilis, dan mekanisme ralat jika ada kesalahan.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 52–57',
-    disclaimer:
-      'Target waktu rilis = rencana pengguna (Input Anda). Bukan jadwal resmi, bukan tanggal publikasi aktual, dan bukan persetujuan rilis.',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 55',
+    disclaimer: 'Target waktu adalah rencana Anda — bukan jadwal rilis resmi BPS.',
     exampleBody:
-      'Contoh ilustratif: produk “Ringkasan kepuasan”; target waktu sesuai rencana tahap Disseminate Anda; kondisi kesiapan: output akhir dan catatan disclosure sudah ditinjau.',
+      'Produk: Laporan Ringkas SKM · Mekanisme: unggah ke laman unit + rapat · Ralat: terbitkan catatan perubahan.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Rencana rilis membantu memikirkan kapan produk direncanakan tersedia. Planned release ≠ actual release.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '52–57',
     fields: [
       {
         id: 'nama_produk',
-        label: 'Nama produk',
+        label: 'Produk yang dirilis',
         kind: 'text',
         required: true,
       },
       {
         id: 'target_waktu',
-        label: 'Target waktu rilis (rencana)',
+        label: 'Target waktu rilis',
         kind: 'date',
         required: true,
-        hint: 'Tanggal rencana Anda — bukan tanggal publikasi aktual.',
       },
       {
         id: 'kondisi_kesiapan',
-        label: 'Kondisi kesiapan',
+        label: 'Kondisi kesiapan sebelum rilis',
         kind: 'textarea',
         required: true,
+      },
+      {
+        id: 'mekanisme_rilis',
+        label: 'Mekanisme rilis dan briefing pra-rilis',
+        kind: 'textarea',
+      },
+      {
+        id: 'mekanisme_ralat',
+        label: 'Mekanisme jika ditemukan kesalahan setelah terbit',
+        kind: 'textarea',
       },
       {
         id: 'catatan',
@@ -112,81 +165,24 @@ export const GUIDED_DISSEMINATE_PREPARATIONS: GuidedPreparationDef[] = [
     evidence: [
       { id: 'e-7.2-a', label: 'Catatan target waktu rilis (rencana)' },
       { id: 'e-7.2-b', label: 'Daftar kondisi kesiapan' },
+      { id: 'ev-7.3-out', label: 'Dokumentasi rilis hasil kegiatan', pdfPage: 52 },
     ],
   },
   {
-    cardId: 'disseminate-7.3',
-    title: 'Siapkan rencana penyebarluasan',
+    cardId: 'gsbpm-7.4',
+    title: 'Siapkan rencana promosi',
     explanation:
-      'Rencanakan bagaimana produk dapat tersedia. Planned channel ≠ published channel. StatPlan tidak mempublikasikan apa pun.',
+      'Tentukan produk yang dipromosikan, sasaran, kanal (situs web, media sosial, platform digital), dan materi pendukung.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 52–57',
-    disclaimer:
-      'Format kerja StatPlan — bukan template resmi BPS. Rencana penyebarluasan ≠ publikasi yang sudah berjalan.',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 56',
+    disclaimer: 'Rencana promosi — bukan pernyataan bahwa promosi sudah dilakukan.',
     exampleBody:
-      'Contoh ilustratif: kanal rapat internal / portal internal OPD; bentuk ringkasan singkat; pengguna sasaran pengelola layanan.',
+      'Produk: Laporan Ringkas SKM · Kanal: media sosial instansi, situs web · Materi: infografis satu halaman.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Rencana penyebarluasan menjelaskan bagaimana produk direncanakan tersedia — bukan bahwa produk sudah tersedia.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '52–57',
-    fields: [
-      {
-        id: 'kanal',
-        label: 'Kanal',
-        kind: 'repeatableText',
-        required: true,
-        hint: 'Pilihan kerja StatPlan. Contoh ilustratif: rapat internal, portal internal, surat edaran.',
-      },
-      {
-        id: 'bentuk_penyajian',
-        label: 'Bentuk penyajian',
-        kind: 'text',
-        required: true,
-      },
-      {
-        id: 'pengguna_sasaran',
-        label: 'Pengguna sasaran',
-        kind: 'text',
-        required: true,
-      },
-      {
-        id: 'catatan',
-        label: 'Catatan',
-        kind: 'textarea',
-      },
-    ],
-    evidence: [
-      { id: 'e-7.3-a', label: 'Catatan kanal yang direncanakan' },
-      { id: 'e-7.3-b', label: 'Catatan bentuk penyajian' },
-    ],
-    isReady: (v: GuidedDraftValues) => {
-      const kanal = v.kanal
-      const hasKanal =
-        Array.isArray(kanal) && kanal.some((x) => typeof x === 'string' && x.trim())
-      return hasKanal && hasText(v.bentuk_penyajian) && hasText(v.pengguna_sasaran)
-    },
-  },
-  {
-    cardId: 'disseminate-7.4',
-    title: 'Siapkan rencana promosi / pengenalan produk',
-    explanation:
-      'Rencanakan bagaimana produk dikenalkan kepada sasaran. Promotion plan ≠ promotion performed. Tidak ada metrik pemasaran.',
-    sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 52–57',
-    disclaimer:
-      'Format kerja StatPlan. Rencana pengenalan ≠ promosi yang sudah dilaksanakan. Tidak membuat analytics promosi.',
-    exampleBody:
-      'Contoh ilustratif: produk ringkasan kepuasan dikenalkan kepada pengelola layanan melalui paparan singkat di rapat bulanan.',
-    exampleClass: 'C',
-    educationalNote:
-      'Disseminate dapat mencakup pengenalan produk kepada pengguna sasaran — sebagai rencana, bukan klaim sudah dilakukan.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '52–57',
     fields: [
       {
         id: 'produk_dikenalkan',
-        label: 'Produk yang dikenalkan',
+        label: 'Produk yang dipromosikan',
         kind: 'text',
         required: true,
       },
@@ -197,10 +193,15 @@ export const GUIDED_DISSEMINATE_PREPARATIONS: GuidedPreparationDef[] = [
         required: true,
       },
       {
+        id: 'kanal',
+        label: 'Kanal promosi',
+        kind: 'repeatableText',
+        hint: 'Materi menyebut situs web, media sosial, dan platform digital.',
+      },
+      {
         id: 'cara_pengenalan',
-        label: 'Cara pengenalan',
+        label: 'Cara promosi',
         kind: 'textarea',
-        required: true,
       },
       {
         id: 'materi_pendukung',
@@ -214,44 +215,46 @@ export const GUIDED_DISSEMINATE_PREPARATIONS: GuidedPreparationDef[] = [
       },
     ],
     evidence: [
-      { id: 'e-7.4-a', label: 'Catatan rencana pengenalan' },
+      { id: 'e-7.4-a', label: 'Catatan rencana promosi' },
       { id: 'e-7.4-b', label: 'Daftar materi pendukung (rencana)' },
+      { id: 'e-7.3-a', label: 'Catatan kanal yang direncanakan' },
+      { id: 'ev-7.4-out', label: 'Dokumentasi promosi hasil kegiatan', pdfPage: 52 },
     ],
   },
   {
-    cardId: 'disseminate-7.5',
-    title: 'Siapkan rencana dukungan pengguna',
+    cardId: 'gsbpm-7.5',
+    title: 'Siapkan rencana layanan pengguna',
     explanation:
-      'Rencanakan bagaimana pengguna dapat memperoleh penjelasan. User support plan ≠ support operation. Tidak ada sistem tiket.',
+      'Rencanakan cara mencatat permintaan, batas waktu pemenuhan, kanal layanan, dan FAQ.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 52–57',
-    disclaimer:
-      'Format kerja StatPlan. Rencana dukungan ≠ layanan operasional yang sudah berjalan.',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 57',
+    disclaimer: 'Rencana layanan — StatPlan bukan sistem tiket atau helpdesk.',
     exampleBody:
-      'Contoh ilustratif: kebutuhan FAQ singkat; informasi yang dijelaskan: cara membaca tabel; kanal: email unit kerja / meja layanan.',
+      'Pencatatan: buku layanan · Batas waktu: 5 hari kerja · FAQ: cara membaca indeks.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Dukungan pengguna merencanakan cara memperoleh penjelasan terkait produk — bukan menjalankan helpdesk.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '52–57',
     fields: [
       {
         id: 'kebutuhan_dukungan',
-        label: 'Kebutuhan dukungan',
+        label: 'Jenis permintaan yang dilayani',
         kind: 'textarea',
+        required: true,
+        placeholder: 'mis. pertanyaan hasil, permintaan data mikro anonim…',
+      },
+      {
+        id: 'batas_waktu',
+        label: 'Batas waktu pemenuhan',
+        kind: 'text',
+      },
+      {
+        id: 'kanal_dukungan',
+        label: 'Kanal layanan',
+        kind: 'text',
         required: true,
       },
       {
         id: 'informasi_dijelaskan',
-        label: 'Informasi yang perlu dijelaskan',
+        label: 'Pertanyaan FAQ yang disiapkan',
         kind: 'textarea',
-        required: true,
-      },
-      {
-        id: 'kanal_dukungan',
-        label: 'Kanal dukungan',
-        kind: 'text',
-        required: true,
       },
       {
         id: 'catatan',
@@ -260,45 +263,9 @@ export const GUIDED_DISSEMINATE_PREPARATIONS: GuidedPreparationDef[] = [
       },
     ],
     evidence: [
-      { id: 'e-7.5-a', label: 'Catatan kebutuhan dukungan' },
-      { id: 'e-7.5-b', label: 'Rencana kanal dukungan' },
-    ],
-  },
-  {
-    cardId: 'disseminate-7.6',
-    title: 'Catatan finalisasi Disseminate',
-    explanation:
-      'Tinjau status bahan Disseminate. Persiapan Disseminate selesai dipelajari — bukan Disseminate selesai dilaksanakan, bukan produk dipublikasikan, dan bukan persetujuan resmi.',
-    sourceType: 'C',
-    sourceLabel: 'Format kerja StatPlan',
-    disclaimer:
-      'Ringkasan ini tidak membuka Evaluate secara otomatis dan tidak merupakan publikasi, rilis, atau persetujuan resmi BPS.',
-    exampleBody:
-      'Contoh ilustratif: produk dan rencana rilis bahan siap; promosi masih draft; dukungan pengguna perlu kontak penanggung jawab.',
-    exampleClass: 'C',
-    summaryFromCardIds: [
-      { cardId: 'disseminate-7.1', label: 'Produk' },
-      { cardId: 'disseminate-7.2', label: 'Rencana rilis' },
-      { cardId: 'disseminate-7.3', label: 'Penyebarluasan' },
-      { cardId: 'disseminate-7.4', label: 'Promosi' },
-      { cardId: 'disseminate-7.5', label: 'Dukungan pengguna' },
-    ],
-    fields: [
-      {
-        id: 'catatan_finalisasi',
-        label: 'Catatan finalisasi',
-        kind: 'textarea',
-        required: true,
-      },
-      {
-        id: 'hal_terbuka',
-        label: 'Hal yang masih terbuka',
-        kind: 'repeatableText',
-      },
-    ],
-    evidence: [
-      { id: 'e-7.6-a', label: 'Ringkasan rencana Disseminate' },
-      { id: 'e-7.6-b', label: 'Daftar catatan terbuka' },
+      { id: 'e-7.5-a', label: 'Catatan kebutuhan layanan' },
+      { id: 'e-7.5-b', label: 'Rencana kanal layanan' },
+      { id: 'ev-7.5-c', label: 'Draf FAQ' },
     ],
   },
 ]

@@ -10,7 +10,16 @@ import type {
   GuidedDraftValues,
   GuidedEvidenceStatus,
 } from '@/content/guidedNeedPreparation'
+import {
+  GUIDED_SCHEMA_VERSION,
+  migrateGuidedMapsV1toV2,
+  type GuidedLegacyArchive,
+} from '@/lib/guidedMigration'
 
+/**
+ * Storage key keeps its historical "-v1" suffix so existing sessions are found;
+ * the per-session `schemaVersion` field tracks the card-id schema (see guidedMigration.ts).
+ */
 const STORAGE_KEY = 'statplan-guided-sessions-v1'
 
 export type GuidedEvidenceItemState = {
@@ -39,6 +48,10 @@ export type GuidedSession = {
   /** Slice 4 — evidence keyed by cardId → evidenceItemId */
   evidenceStates: Record<string, Record<string, GuidedEvidenceItemState>>
   updatedAt: string
+  /** 2 = official GSBPM 5.2 card ids (`gsbpm-X.Y`). Missing/1 = legacy positional ids. */
+  schemaVersion: number
+  /** Complete copy of v1 per-card data, kept after migration so nothing is lost. */
+  legacy?: GuidedLegacyArchive
 }
 
 type Store = Record<string, GuidedSession>
@@ -60,17 +73,35 @@ function canUseLocalStorage(): boolean {
 }
 
 function normalizeSession(raw: Partial<GuidedSession> & { projectId: string }): GuidedSession {
+  const base = {
+    understood: raw.understood ?? {},
+    templateDrafts: raw.templateDrafts ?? {},
+    evidenceStates: raw.evidenceStates ?? {},
+  }
+  let maps = base
+  let legacy = raw.legacy
+  if ((raw.schemaVersion ?? 1) < GUIDED_SCHEMA_VERSION) {
+    const migrated = migrateGuidedMapsV1toV2(base, new Date().toISOString())
+    maps = {
+      understood: migrated.understood,
+      templateDrafts: migrated.templateDrafts,
+      evidenceStates: migrated.evidenceStates,
+    }
+    legacy = legacy ?? migrated.legacy
+  }
   return {
     projectId: raw.projectId,
     startISO: raw.startISO ?? '',
     endISO: raw.endISO ?? '',
     phasePlan: raw.phasePlan ?? [],
-    understood: raw.understood ?? {},
+    understood: maps.understood,
     completedPhases: raw.completedPhases ?? [],
     unlockedPhases: raw.unlockedPhases?.length ? raw.unlockedPhases : ['specify_need'],
-    templateDrafts: raw.templateDrafts ?? {},
-    evidenceStates: raw.evidenceStates ?? {},
+    templateDrafts: maps.templateDrafts,
+    evidenceStates: maps.evidenceStates,
     updatedAt: raw.updatedAt ?? new Date().toISOString(),
+    schemaVersion: GUIDED_SCHEMA_VERSION,
+    ...(legacy ? { legacy } : {}),
   }
 }
 
@@ -85,12 +116,22 @@ function readStore(): Store {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return {}
-    const parsed = JSON.parse(raw) as Store
+    const parsed = JSON.parse(raw) as Record<string, Partial<GuidedSession>>
     if (!parsed || typeof parsed !== 'object') return {}
     const out: Store = {}
+    let migrated = false
     for (const [k, v] of Object.entries(parsed)) {
       if (v && typeof v === 'object' && 'projectId' in v) {
-        out[k] = normalizeSession(v as GuidedSession)
+        if ((v.schemaVersion ?? 1) < GUIDED_SCHEMA_VERSION) migrated = true
+        out[k] = normalizeSession(v as Partial<GuidedSession> & { projectId: string })
+      }
+    }
+    if (migrated) {
+      // Persist once so the migration (and its legacy archive) is stable.
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(out))
+      } catch {
+        /* storage full or blocked — migration is re-derived on next read */
       }
     }
     return out
@@ -144,6 +185,7 @@ export function createGuidedSession(input: {
     templateDrafts: {},
     evidenceStates: {},
     updatedAt: new Date().toISOString(),
+    schemaVersion: GUIDED_SCHEMA_VERSION,
   }
   return saveGuidedSession(session)
 }

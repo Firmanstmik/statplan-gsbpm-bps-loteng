@@ -98,6 +98,8 @@ export type ExampleJourney = {
     schedule: string
     prepare: string
   }
+  /** “Apa yang bisa saya tiru?” — short beginner lessons from this example (Type C). */
+  takeaways: string[]
 }
 
 export const EXAMPLE_WALKTHROUGH_STEPS = [
@@ -417,7 +419,7 @@ function buildLaterPhases(ctx: {
             lessonPoints: [
               'Contoh Aturan Validasi Hal. 26; Aturan Tabulasi Hal. 27.',
               'Hal. 28: struktur & alur hortikultura (Type A).',
-              'Pilot: questionnaire, methodology, processing, dummy table (Hal. 30).',
+              'Pilot: uji coba kuesioner, metodologi, dan pengolahan data termasuk dummy table (Hal. 30).',
             ],
             sourceType: 'pdf',
             pdfPage: 25,
@@ -552,7 +554,7 @@ function buildLaterPhases(ctx: {
           {
             contohDetail: ctx.evaluateDetail,
             lessonPoints: [
-              'Bahan evaluasi: feedback, paradata, metrics, staff feedback (Hal. 60–63).',
+              'Bahan evaluasi: umpan balik pengguna, paradata, metrik sistem, masukan staf (Hal. 60).',
               'Struktur tindak lanjut — bukan skor palsu.',
             ],
             sourceType: 'pdf',
@@ -998,6 +1000,13 @@ export const EXAMPLE_SKM: ExampleJourney = {
   },
   prepareItems: SKM_PREP.prepareItems,
   preparePhases: SKM_PREP.preparePhases,
+  takeaways: [
+    'Mulailah dari masalah yang nyata — “belum ada informasi tentang pengalaman masyarakat” — bukan dari judul kegiatan.',
+    'Sebut siapa pengguna hasilnya sejak awal; di contoh ini DPMPTSP memakai hasil untuk memperbaiki layanan.',
+    'Rancang tabel output dulu (kosong, tanpa angka), baru turunkan variabel dan pertanyaan kuesioner.',
+    'Karena caranya survei, kegiatan ini memerlukan sampel dan penimbang — sensus atau kompilasi tidak.',
+    'Setiap tahap menghasilkan bukti dukung yang nyata: KAK, SOP, instrumen, laporan, dan notulen tindak lanjut.',
+  ],
   summary: {
     need: 'Mengukur kepuasan masyarakat.',
     result: 'Indeks kepuasan dan temuan pelayanan.',
@@ -1264,6 +1273,12 @@ export const EXAMPLE_UMKM: ExampleJourney = {
   },
   prepareItems: UMKM_PREP.prepareItems,
   preparePhases: UMKM_PREP.preparePhases,
+  takeaways: [
+    'Pendataan lengkap (sensus) mencakup seluruh unit usaha — jadi tidak ada penarikan sampel maupun penimbang.',
+    'Tetapkan dulu definisi “UMKM” yang dipakai; tanpa kondef yang sama, hitungan antarwilayah tidak sebanding.',
+    'Rencanakan petugas dan wilayah kerja dengan teliti — cakupan lengkap membutuhkan organisasi lapangan yang kuat.',
+    'Hasil berupa profil dan sebaran usaha; rancang tabelnya menurut jenis usaha dan wilayah sejak awal.',
+  ],
   summary: {
     need: 'Memperbarui data UMKM wilayah.',
     result: 'Profil dan sebaran unit usaha.',
@@ -1551,6 +1566,12 @@ export const EXAMPLE_KOMPROMIN: ExampleJourney = {
   },
   prepareItems: KOMPROMIN_PREP.prepareItems,
   preparePhases: KOMPROMIN_PREP.preparePhases,
+  takeaways: [
+    'Kompilasi memakai data administratif yang sudah ada — periksa ketersediaannya di portal rujukan lebih dulu.',
+    'Siapkan perjanjian penggunaan data dengan pemilik data sebelum mengambil datanya.',
+    'Integrasi dan validasi menjadi pekerjaan utama: sumber berbeda harus memakai definisi dan kode yang sama.',
+    'Data individu dari sumber administratif sensitif — rencanakan pengendalian kerahasiaan sebelum hasil disajikan.',
+  ],
   summary: {
     need: 'Statistik kependudukan untuk perencanaan.',
     result: 'Indikator dari data administratif.',

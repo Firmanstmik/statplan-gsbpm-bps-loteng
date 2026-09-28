@@ -8,7 +8,7 @@ export const HELP_TOPICS = {
   },
   rekomendasi: {
     title: 'Rekomendasi ke BPS',
-    body: 'Penyelenggara statistik sektoral wajib menyiapkan pengajuan rekomendasi kegiatan statistik ke BPS pada Design 2.5. Isi formulir draf di Alur kerja, lalu centang checklist terkait. Tanpa ini, ekspor draf untuk proyek sektoral akan diblokir.',
+    body: 'Materi Proses Bisnis menyebut penyelenggara statistik sektoral mengajukan permintaan rekomendasi kegiatan statistik ke BPS pada fase Perancangan (Hal. 17; Design 2.6). Isi formulir draf di Alur kerja, lalu centang checklist terkait. Tanpa ini, ekspor draf untuk proyek sektoral akan diblokir.',
   },
   metadata: {
     title: 'Metadata statistik',
@@ -24,7 +24,7 @@ export const HELP_TOPICS = {
   },
   export: {
     title: 'Ekspor dokumen',
-    body: 'Ekspor menghasilkan draf Word (.docx) di perangkat Anda setelah persyaratan wajib terpenuhi. Klik item error untuk loncat ke tab yang kurang. Dokumen tetap perlu validasi bersama BPS.',
+    body: 'Ekspor menghasilkan draf Word (.docx) di perangkat Anda setelah persyaratan wajib terpenuhi. Klik item error untuk loncat ke tab yang kurang. Dokumen ini draf bahan kerja, bukan dokumen resmi BPS.',
   },
   variables: {
     title: 'Manajer variabel',

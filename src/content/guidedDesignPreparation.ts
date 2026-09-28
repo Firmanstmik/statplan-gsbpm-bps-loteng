@@ -30,62 +30,89 @@ function hasNamedRows(
   )
 }
 
+/** Exact sampling methods on Materi Hal. 21 (Type A). */
+export const SAMPLING_METHOD_OPTIONS = [
+  { value: 'srs', label: 'Simple Random Sampling (probability)' },
+  { value: 'stratified', label: 'Stratified Sampling (probability)' },
+  { value: 'systematic', label: 'Systematic Sampling (probability)' },
+  { value: 'cluster', label: 'Cluster Sampling (probability)' },
+  { value: 'pps', label: 'Probability Proportional to Size Sampling (probability)' },
+  { value: 'quota', label: 'Quota Sampling (non probability)' },
+  { value: 'accidental', label: 'Accidental Sampling (non probability)' },
+  { value: 'purposive', label: 'Purposive Sampling (non probability)' },
+  { value: 'snowball', label: 'Snowball Sampling (non probability)' },
+  { value: 'lainnya', label: 'Lainnya / belum ada di daftar materi' },
+]
+
 export const GUIDED_DESIGN_PREPARATIONS: GuidedPreparationDef[] = [
   {
-    cardId: 'design-2.1',
+    cardId: 'gsbpm-2.1',
     title: 'Siapkan rancangan output / tabulasi',
     explanation:
-      'Bayangkan bentuk informasi yang ingin dihasilkan. Materi memuat “Contoh Rancangan Tabulasi” (Hal. 18) sebagai rujukan konsep.',
+      'Susun rancangan tabel kegiatan Anda seperti “Contoh Rancangan Tabulasi” pada materi: judul lengkap, kelompok/pembanding, dan informasi yang ditampilkan — tanpa angka.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 18',
     disclaimer:
       'Format kerja StatPlan — bukan salinan tabel dari materi dan bukan template resmi BPS.',
     exampleBody:
-      'Setelah meninjau “Contoh Rancangan Tabulasi” pada materi, susun versi kegiatan Anda di Format kerja StatPlan. Contoh ilustratif isian: output “Tingkat kepuasan menurut jenis layanan” dengan pembanding jenis layanan dan wilayah — itu Data Anda, bukan isi tabel PDF.',
-    exampleClass: 'A',
-    materiExamples: [
-      {
-        title: 'Contoh Rancangan Tabulasi',
-        kind: 'table',
-        note: 'Visual contoh rancangan tabulasi pada materi — bukan tabel editable di StatPlan.',
-      },
-    ],
-    materiLesson:
-      'Contoh ini membantu membayangkan bentuk penyajian output sebelum merancang pengumpulan data. Susun versi kegiatan Anda sendiri — jangan menyalin isi tabel materi sebagai data resmi.',
+      'Judul: Tabel 1. Indeks Kepuasan Masyarakat terhadap Pelayanan Perizinan Menurut Aspek Pelayanan, 2026.\nInformasi: nilai indeks, kategori mutu.\nKelompok: aspek pelayanan.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     pdfPage: 18,
     fields: [
       {
         id: 'outputs',
-        label: 'Rancangan output kegiatan Anda',
+        label: 'Rancangan tabel kegiatan Anda',
         kind: 'repeatableTabulation',
         required: true,
-        hint: 'Format kerja StatPlan — buat versi Anda, bukan salinan tabel materi.',
+        hint: 'Satu baris = satu tabel. Isi judul lengkap seperti contoh materi.',
+      },
+      {
+        id: 'indikator',
+        label: 'Formulasi indikator yang akan dihasilkan',
+        kind: 'textarea',
+        placeholder: 'Nama indikator dan cara menghitungnya (sesuai kondef di 1.4)…',
       },
     ],
     evidence: [
       { id: 'e-2.1-a', label: 'Draft rancangan output/tabulasi' },
       { id: 'e-2.1-b', label: 'Catatan kebutuhan informasi' },
+      { id: 'ev-2.1-out1', label: 'Rancangan tabel/layout publikasi/infografis', pdfPage: 17 },
+      {
+        id: 'ev-2.1-out2',
+        label: 'Formulasi indikator statistik yang akan dihasilkan',
+        pdfPage: 17,
+      },
     ],
     isReady: (v) => hasNamedRows(v, 'outputs', 'judul'),
   },
   {
-    cardId: 'design-2.2',
+    cardId: 'gsbpm-2.2',
     title: 'Siapkan daftar variabel awal',
     explanation:
-      'Tuliskan potongan informasi yang dibutuhkan untuk menghasilkan output. Contoh variabel pada materi: nama, umur, jenis kelamin, pendidikan, pekerjaan, instansi.',
+      'Tuliskan variabel yang dibutuhkan untuk mengisi rancangan output. Untuk setiap variabel, sebut dipakai untuk output apa.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 19',
     disclaimer:
-      'Daftar ini adalah draft pembelajaran. Belum tersambung ke variabel ruang kerja. StatPlan menyediakan format kerja sederhana untuk membantu penyusunan awal.',
+      'Daftar ini adalah draft pembelajaran dan belum tersambung ke variabel ruang kerja.',
     exampleBody:
-      'Contoh variabel pada materi: nama, umur, jenis kelamin, pendidikan, pekerjaan, instansi. Tidak semua contoh wajib dipakai.',
-    exampleClass: 'A',
+      'Jenis layanan → untuk “menurut jenis layanan” di Tabel 1.\nPenilaian aspek persyaratan → untuk nilai indeks aspek persyaratan.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     fields: [
       {
         id: 'variables',
         label: 'Daftar variabel',
         kind: 'repeatableVariable',
         required: true,
+      },
+      {
+        id: 'cek_standar',
+        label: 'Sudah dicek terhadap Standar Data Statistik Nasional?',
+        kind: 'select',
+        options: [
+          { value: 'sudah', label: 'Sudah' },
+          { value: 'sebagian', label: 'Sebagian variabel' },
+          { value: 'belum', label: 'Belum' },
+        ],
       },
     ],
     evidence: [
@@ -95,76 +122,80 @@ export const GUIDED_DESIGN_PREPARATIONS: GuidedPreparationDef[] = [
     isReady: (v) => hasNamedRows(v, 'variables', 'name'),
   },
   {
-    cardId: 'design-2.3',
-    title: 'Siapkan cara / metode / moda',
+    cardId: 'gsbpm-2.3',
+    title: 'Pilih cara / metode / moda',
     explanation:
-      'Catat rancangan awal bagaimana data akan diperoleh menggunakan istilah cara, metode, dan moda sesuai materi.',
+      'Pilih satu cara, metode, dan moda. Pilihan di bawah memakai istilah persis dari materi Hal. 20.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 20',
     disclaimer:
-      'Pilihan ini merupakan rancangan awal. StatPlan tidak menentukan metode yang paling tepat secara otomatis.',
+      'StatPlan tidak menentukan metode yang paling tepat secara otomatis. Catat alasan pilihan Anda.',
     exampleBody:
-      'Contoh ilustratif: cara Survei, metode Wawancara, moda CAPI — disesuaikan dengan kegiatan Anda.',
+      'Cara: Survei · Metode: Wawancara · Moda: CAPI — karena responden ditemui di loket dan isian tablet dapat langsung divalidasi. (Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
     fields: [
       {
         id: 'cara',
-        label: 'Cara',
+        label: 'Cara pengumpulan data',
         kind: 'select',
         required: true,
         options: [
+          { value: 'sensus', label: 'Sensus/pendataan lengkap' },
           { value: 'survei', label: 'Survei' },
-          { value: 'sensus', label: 'Sensus' },
-          { value: 'kompromin', label: 'Kompromin / kompilasi' },
+          { value: 'kompromin', label: 'Kompilasi Produk Administratif (kompromin)' },
+          { value: 'lainnya', label: 'Lainnya (mis. big data)' },
         ],
       },
       {
         id: 'metode',
-        label: 'Metode',
+        label: 'Metode pengumpulan data',
         kind: 'select',
         required: true,
         options: [
           { value: 'wawancara', label: 'Wawancara' },
-          { value: 'self_enumeration', label: 'Self enumeration' },
+          { value: 'self_enumeration', label: 'Self Enumeration' },
           { value: 'observasi', label: 'Observasi' },
         ],
       },
       {
         id: 'moda',
-        label: 'Moda',
+        label: 'Moda pengumpulan data',
         kind: 'select',
         required: true,
         options: [
-          { value: 'papi', label: 'PAPI' },
-          { value: 'capi', label: 'CAPI' },
-          { value: 'cati', label: 'CATI' },
-          { value: 'cawi', label: 'CAWI' },
+          { value: 'papi', label: 'PAPI — Paper and Pencil Interviewing' },
+          { value: 'capi', label: 'CAPI — Computer Assisted Personal Interviewing' },
+          { value: 'cati', label: 'CATI — Computer Assisted Telephones Interviewing' },
+          { value: 'cawi', label: 'CAWI — Computer Aided Web Interviewing' },
         ],
       },
       {
         id: 'catatan_metode',
-        label: 'Catatan metode',
+        label: 'Alasan pilihan',
         kind: 'textarea',
-        placeholder: 'Catatan tambahan mengenai cara memperoleh data…',
+        placeholder: 'Mengapa cara, metode, dan moda ini cocok untuk kegiatan Anda?',
       },
     ],
-    evidence: [{ id: 'e-2.3-a', label: 'Catatan cara/metode/moda' }],
+    evidence: [
+      { id: 'e-2.3-a', label: 'Catatan cara/metode/moda' },
+      { id: 'ev-2.3-b', label: 'Alasan pemilihan yang dapat ditinjau saat uji coba (3.6)' },
+    ],
   },
   {
-    cardId: 'design-2.4',
-    title: 'Siapkan catatan pengambilan sampel',
+    cardId: 'gsbpm-2.4',
+    title: 'Siapkan rancangan sampel',
     explanation:
-      'Jika kegiatan menggunakan sampel, catat rencana pemilihan sampel. Untuk sensus atau kompilasi, sampling dapat berbeda atau tidak digunakan.',
+      'Jika kegiatan memakai sampel, pilih metode sampling dari daftar materi Hal. 21 dan catat kerangka sampelnya.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 21',
     disclaimer:
-      'StatPlan tidak merekomendasikan metode sampling tertentu dan tidak menghitung ukuran sampel di Mode Terpandu.',
+      'StatPlan tidak merekomendasikan metode tertentu dan tidak menghitung ukuran sampel.',
     exampleBody:
-      'Jika Ya: tuliskan metode yang direncanakan dan alasannya. Jika Tidak / Belum ditentukan: catat alasan atau hal yang masih perlu diputuskan.',
-    exampleClass: 'B',
+      'Menggunakan sampel: Ya.\nMetode: Systematic Sampling.\nKerangka: daftar penerima layanan selama periode survei.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     educationalNote:
-      'Untuk sensus atau kompilasi data, kebutuhan sampling dapat berbeda atau tidak digunakan.',
-    educationalNoteClass: 'B',
+      'Subproses ini tidak dilakukan jika pengumpulan data berupa sensus/pendataan lengkap atau kompilasi produk administrasi (kompromin).',
+    educationalNoteClass: 'A',
     educationalNotePage: 21,
     fields: [
       {
@@ -174,84 +205,125 @@ export const GUIDED_DESIGN_PREPARATIONS: GuidedPreparationDef[] = [
         required: true,
         options: [
           { value: 'ya', label: 'Ya' },
-          { value: 'tidak', label: 'Tidak' },
+          { value: 'tidak', label: 'Tidak (sensus / kompromin)' },
           { value: 'belum', label: 'Belum ditentukan' },
         ],
       },
       {
         id: 'metode_sampling',
-        label: 'Metode sampling yang direncanakan',
+        label: 'Metode sampling (daftar materi Hal. 21)',
+        kind: 'select',
+        options: SAMPLING_METHOD_OPTIONS,
+        visibleWhen: { fieldId: 'menggunakan_sampel', values: ['ya'] },
+      },
+      {
+        id: 'metode_sampling_lain',
+        label: 'Metode lain / keterangan',
         kind: 'text',
-        placeholder: 'Tuliskan metode yang direncanakan (jika Ya)…',
-        hint: 'Isi jika jawaban Anda Ya. Tidak diwajibkan jika Tidak / Belum ditentukan.',
+        visibleWhen: { fieldId: 'metode_sampling', values: ['lainnya'] },
+      },
+      {
+        id: 'kerangka_sampel',
+        label: 'Kerangka sampel (daftar sumber pemilihan)',
+        kind: 'text',
+        placeholder: 'mis. daftar penerima layanan dari sistem loket',
+        visibleWhen: { fieldId: 'menggunakan_sampel', values: ['ya'] },
       },
       {
         id: 'alasan_sampling',
         label: 'Alasan pemilihan',
         kind: 'textarea',
-        placeholder: 'Mengapa metode tersebut dipertimbangkan?',
+        visibleWhen: { fieldId: 'menggunakan_sampel', values: ['ya'] },
       },
       {
         id: 'catatan_sampling',
         label: 'Catatan',
         kind: 'textarea',
-        placeholder: 'Catatan jika Tidak menggunakan sampel, atau hal yang masih diputuskan…',
+        placeholder:
+          'Jika tidak memakai sampel, tulis alasannya; jika belum, apa yang masih diputuskan…',
       },
     ],
-    evidence: [{ id: 'e-2.4-a', label: 'Catatan metode sampling, jika relevan' }],
+    evidence: [
+      { id: 'e-2.4-a', label: 'Catatan metode sampling, jika relevan' },
+      { id: 'ev-2.4-b', label: 'Sumber kerangka sampel yang akan dipakai di 4.1' },
+    ],
     isReady: (v) => {
       const choice = typeof v.menggunakan_sampel === 'string' ? v.menggunakan_sampel : ''
       if (!choice) return false
       if (choice === 'ya') {
-        return hasText(v.metode_sampling) && hasText(v.alasan_sampling)
+        const method = typeof v.metode_sampling === 'string' ? v.metode_sampling : ''
+        const methodOk = method === 'lainnya' ? hasText(v.metode_sampling_lain) : hasText(method)
+        return methodOk && hasText(v.alasan_sampling)
       }
       return hasText(v.catatan_sampling)
     },
   },
   {
-    cardId: 'design-2.5',
-    title: 'Siapkan jadwal kegiatan',
+    cardId: 'gsbpm-2.5',
+    title: 'Siapkan rancangan pengolahan & analisis',
     explanation:
-      'Tambahkan kegiatan utama di dalam rentang waktu tahap Perancangan Anda. Ini tidak mengganti rencana waktu tahap dari langkah sebelumnya.',
+      'Tulis aturan penyuntingan (editing), pengkodean (coding), dan pensahihan (validasi) yang akan dipakai, lalu pilih jenis analisis.',
     sourceType: 'A',
-    sourceLabel: 'Contoh sumber · Materi Proses Bisnis · Hal. 23',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 22',
     disclaimer:
-      'Contoh jadwal Juli–Desember pada materi adalah contoh sumber, bukan jadwal wajib. Tanggal yang Anda isi adalah Input Anda.',
+      'Rancangan ini dibangun menjadi aturan aplikasi di 3.2 dan dijalankan di tahap Pengolahan. StatPlan tidak menjalankannya.',
     exampleBody:
-      'Contoh sumber: jadwal kegiatan pada materi (termasuk contoh SKM Juli–Desember). Contoh ilustratif StatPlan: “Penyusunan instrumen” pada rentang tanggal yang Anda tentukan sendiri.',
-    exampleClass: 'A',
+      'Editing: isian kosong dikembalikan ke petugas.\nCoding: jenis layanan → kode 1–5.\nValidasi: penilaian aspek harus 1–4.\nAnalisis: deskriptif.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     fields: [
       {
-        id: 'kegiatan',
-        label: 'Daftar kegiatan',
-        kind: 'repeatableSchedule',
+        id: 'aturan_olah',
+        label: 'Rancangan editing, coding, dan validasi',
+        kind: 'repeatableRows',
         required: true,
+        addLabel: '+ Tambah aturan',
+        columns: [
+          { key: 'aturan', label: 'Aturan', placeholder: 'mis. Nilai penilaian aspek harus 1–4' },
+          { key: 'jenis', label: 'Jenis (editing / coding / validasi)' },
+          { key: 'variabel', label: 'Variabel yang terkena' },
+        ],
+      },
+      {
+        id: 'jenis_analisis',
+        label: 'Rancangan analisis',
+        kind: 'select',
+        required: true,
+        options: [
+          { value: 'deskriptif', label: 'Deskriptif (hanya narasi)' },
+          { value: 'inferensia', label: 'Inferensia (metode analisis lebih lanjut)' },
+          { value: 'keduanya', label: 'Deskriptif dan inferensia' },
+        ],
+      },
+      {
+        id: 'alasan_analisis',
+        label: 'Alasan / catatan analisis',
+        kind: 'textarea',
       },
     ],
-    evidence: [{ id: 'e-2.5-a', label: 'Draft jadwal kegiatan' }],
-    isReady: (v) => {
-      const rows = v.kegiatan
-      if (!Array.isArray(rows)) return false
-      return rows.some((row) => {
-        if (typeof row !== 'object' || row === null || !('kegiatan' in row)) return false
-        const r = row as GuidedScheduleRow
-        return hasText(r.kegiatan) && hasText(r.mulai) && hasText(r.selesai)
-      })
-    },
+    evidence: [
+      { id: 'ev-2.5-a', label: 'Rancangan aturan editing, coding, dan validasi' },
+      { id: 'ev-2.5-b', label: 'Catatan rancangan analisis' },
+    ],
   },
   {
-    cardId: 'design-2.6',
-    title: 'Siapkan SOP & persiapan rekomendasi',
+    cardId: 'gsbpm-2.6',
+    title: 'Siapkan jadwal, SOP & persiapan rekomendasi',
     explanation:
-      'Catat SOP yang perlu disiapkan dan status persiapan rekomendasi. StatPlan tidak mengirim atau menyetujui rekomendasi ke BPS.',
+      'Susun jadwal kegiatan di dalam rentang waktu proyek Anda, daftar SOP yang perlu dibuat, dan status persiapan rekomendasi kegiatan statistik.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 23',
     disclaimer:
-      'Ini pencatatan persiapan saja — bukan alur persetujuan resmi dan bukan klaim “rekomendasi berhasil”.',
+      'Jadwal Juli–Desember pada materi adalah contoh, bukan durasi wajib. StatPlan tidak mengirim atau menyetujui rekomendasi ke BPS.',
     exampleBody:
-      'Contoh: daftar SOP pendataan lapangan dan status “Sedang disiapkan” untuk persiapan rekomendasi, beserta catatan tindak lanjut.',
+      'Kegiatan: Perancangan instrumen · Mulai–selesai: sesuai rentang proyek Anda.\nSOP: Pengumpulan data SKM.\nRekomendasi: sedang disiapkan.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
     fields: [
+      {
+        id: 'kegiatan',
+        label: 'Jadwal kegiatan',
+        kind: 'repeatableSchedule',
+        required: true,
+      },
       {
         id: 'sop_list',
         label: 'SOP yang perlu disiapkan',
@@ -260,29 +332,44 @@ export const GUIDED_DESIGN_PREPARATIONS: GuidedPreparationDef[] = [
       },
       {
         id: 'status_rekomendasi',
-        label: 'Persiapan rekomendasi',
+        label: 'Persiapan rekomendasi kegiatan statistik',
         kind: 'select',
-        required: true,
         options: [
           { value: 'belum', label: 'Belum disiapkan' },
           { value: 'sedang', label: 'Sedang disiapkan' },
           { value: 'sudah', label: 'Sudah disiapkan' },
-          { value: 'belum_diperlukan', label: 'Belum diperlukan / belum ditentukan' },
+          { value: 'belum_diperlukan', label: 'Tidak diperlukan / belum ditentukan' },
         ],
       },
       {
         id: 'catatan_rekomendasi',
-        label: 'Catatan status pengajuan / persiapan',
+        label: 'Catatan persiapan rekomendasi',
         kind: 'textarea',
         placeholder: 'Catatan Anda — bukan status resmi BPS…',
       },
     ],
     evidence: [
+      { id: 'e-2.5-a', label: 'Draft jadwal kegiatan' },
       { id: 'e-2.6-a', label: 'Draft SOP' },
       { id: 'e-2.6-b', label: 'Catatan persiapan rekomendasi' },
+      { id: 'ev-2.6-out1', label: 'Rancangan sistem alur kerja (SOP)', pdfPage: 17 },
+      {
+        id: 'ev-2.6-out2',
+        label: 'Surat Rekomendasi Kegiatan Statistik (sektoral)',
+        pdfPage: 24,
+      },
     ],
-    isReady: (v) =>
-      hasNamedRows(v, 'sop_list', 'nama') && hasText(v.status_rekomendasi),
+    isReady: (v) => {
+      const rows = v.kegiatan
+      const hasSchedule =
+        Array.isArray(rows) &&
+        rows.some((row) => {
+          if (typeof row !== 'object' || row === null || !('kegiatan' in row)) return false
+          const r = row as GuidedScheduleRow
+          return hasText(r.kegiatan) && hasText(r.mulai) && hasText(r.selesai)
+        })
+      return hasSchedule && hasNamedRows(v, 'sop_list', 'nama')
+    },
   },
 ]
 

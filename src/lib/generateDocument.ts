@@ -352,7 +352,7 @@ export async function exportProjectDocument(project: Project) {
   children.push(
     h('Catatan Penutup', HeadingLevel.HEADING_2),
     p(
-      'Penyelenggara statistik sektoral wajib mengajukan rekomendasi kegiatan statistik ke BPS sesuai ketentuan yang berlaku (Design 2.5, Materi Proses Bisnis).',
+      'Penyelenggara statistik sektoral wajib mengajukan rekomendasi kegiatan statistik ke BPS sesuai ketentuan yang berlaku (Design 2.6, Materi Proses Bisnis).',
     ),
     p(
       'Metadata resmi mengikuti Peraturan BPS Nomor 5 Tahun 2020. Field pada dokumen ini mengacu pada definisi MS-Keg, MS-Var, dan MS-Ind pada Materi Proses Bisnis.',

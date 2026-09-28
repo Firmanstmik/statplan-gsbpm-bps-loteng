@@ -77,12 +77,12 @@ export function SettingsPage() {
       <Card>
         <h2 className="mb-3 font-semibold">Navigasi cepat</h2>
         <p className="mb-3 text-sm text-ink-700">
-          Pintasan ke halaman yang mungkin tidak muncul di bilah bawah perangkat seluler. Mulai dari
-          Bantuan jika Anda mengerjakan tanpa dipandu.
+          Pintasan ke halaman yang mungkin tidak muncul di bilah bawah perangkat seluler. Istilah yang
+          membingungkan dijelaskan di FAQ.
         </p>
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" variant="secondary" leftIcon={<Book1 size={14} variant="Bold" color="currentColor" />} onClick={() => navigate('/app/help')}>
-            Bantuan
+          <Button size="sm" variant="secondary" leftIcon={<Book1 size={14} variant="Bold" color="currentColor" />} onClick={() => navigate('/app/faq')}>
+            FAQ
           </Button>
           <Button size="sm" variant="secondary" leftIcon={<MagicStar size={14} variant="Bold" color="currentColor" />} onClick={() => navigate('/app/assistant')}>
             Asisten
@@ -105,7 +105,7 @@ export function SettingsPage() {
           Target publik sesuai arahan BPS: <strong>simulator.bpsloteng.net</strong> (Vercel).
           Deploy dari mesin lokal:
         </p>
-        <pre className="mt-3 overflow-x-auto rounded-xl bg-ink-950 px-3 py-2.5 text-[11px] leading-relaxed text-gold-400">
+        <pre className="mt-3 overflow-x-auto rounded-xl bg-ink-950 px-3 py-2.5 text-[11px] leading-relaxed text-ink-500">
 {`npm run build
 npx vercel login
 npm run deploy:prod`}
@@ -124,7 +124,7 @@ npm run deploy:prod`}
 
       <Card className="relative overflow-hidden border-gold-500/20 bg-gradient-to-br from-gold-100/40 via-white to-white">
         <div className="mb-1 flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink-900 text-gold-400">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-ink-900 text-ink-500">
             <Data size={18} variant="Bold" color="currentColor" />
           </div>
           <h2 className="font-semibold">Mode demonstrasi</h2>
@@ -252,9 +252,9 @@ npm run deploy:prod`}
       ))}
 
       <p className="text-center text-xs text-ink-600">
-        Butuh bantuan istilah?{' '}
-        <Link to="/app/help" className="font-medium text-ink-900 underline-offset-2 hover:underline">
-          Buka halaman Bantuan
+        Butuh penjelasan istilah?{' '}
+        <Link to="/app/faq" className="font-medium text-ink-900 underline-offset-2 hover:underline">
+          Buka FAQ
         </Link>
       </p>
 

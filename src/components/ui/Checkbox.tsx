@@ -1,5 +1,5 @@
 import { TickSquare } from 'iconsax-react'
-import type { ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 export function Checkbox({
@@ -17,6 +17,8 @@ export function Checkbox({
   className?: string
   id?: string
 }) {
+  const autoId = useId()
+  const boxId = id ?? autoId
   return (
     <div
       className={cn(
@@ -27,7 +29,7 @@ export function Checkbox({
       )}
     >
       <button
-        id={id}
+        id={boxId}
         type="button"
         role="checkbox"
         aria-checked={checked}
@@ -48,14 +50,11 @@ export function Checkbox({
           />
         ) : null}
       </button>
-      <button
-        type="button"
-        className="min-w-0 flex-1 cursor-pointer text-left text-sm text-ink-800"
-        onClick={() => onChange(!checked)}
-      >
+      {/* A real <label> names the checkbox and forwards clicks to it (one control, one Tab stop). */}
+      <label htmlFor={boxId} className="min-w-0 flex-1 cursor-pointer text-left text-sm text-ink-800">
         {label}
         {hint}
-      </button>
+      </label>
     </div>
   )
 }

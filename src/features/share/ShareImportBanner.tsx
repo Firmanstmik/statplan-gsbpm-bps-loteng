@@ -19,8 +19,10 @@ export function ShareImportBanner() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const { hash, search } = location
+
   useEffect(() => {
-    const t = readShareTokenFromLocation(location)
+    const t = readShareTokenFromLocation({ hash, search })
     if (!t) {
       setPendingName(null)
       setToken(null)
@@ -45,7 +47,7 @@ export function ShareImportBanner() {
     return () => {
       cancelled = true
     }
-  }, [location.hash, location.search])
+  }, [hash, search])
 
   if (!pendingName && !error) return null
 

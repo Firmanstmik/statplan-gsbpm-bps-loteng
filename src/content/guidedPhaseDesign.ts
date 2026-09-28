@@ -1,254 +1,312 @@
 /**
- * Mode Terpandu — Perancangan learning cards (Slice 5).
+ * Mode Terpandu — Perancangan (Design) learning cards.
+ * Six official subprocesses, Materi Proses Bisnis Hal. 17–23.
  * Educational layer only. Does NOT mutate domain checklist / progress / export.
  */
 import type { GuidedSourceClass } from '@/content/guidedPhaseNeed'
-import type { GuidedLearningCard } from '@/content/guidedPhaseNeed'
+import type { GuidedLearningCard, GuidedPhaseIntro } from '@/content/guidedPhaseNeed'
+import { GSBPM_FLEXIBLE_NOTE } from '@/content/guidedPhaseNeed'
 
-export const DESIGN_INTRO = {
-  phaseId: 'design' as const,
+export const DESIGN_INTRO: GuidedPhaseIntro = {
+  phaseId: 'design',
   title: 'Perancangan',
+  officialTitle: 'Design (Perancangan)',
   question: 'Bagaimana kebutuhan statistik diterjemahkan menjadi rancangan kegiatan?',
   explanation:
-    'Pada tahap ini, Anda mulai merancang bagaimana kebutuhan statistik akan diterjemahkan menjadi data, output, metode, jadwal, dan persiapan pelaksanaan.',
-  gsbpmNote:
-    'Ini adalah mode panduan StatPlan. GSBPM bersifat fleksibel; Anda dapat kembali dan menyesuaikan langkah sebelumnya. Mode Terpandu bukan urutan wajib GSBPM.',
+    'Pada tahap ini Anda merancang output, variabel, cara mengumpulkan data, sampel, pengolahan dan analisis, serta jadwal dan alur kerjanya.',
+  gsbpmNote: GSBPM_FLEXIBLE_NOTE,
+  pdfRange: 'Hal. 17–23',
+  outputs: [
+    'Rancangan tabel/layout publikasi/infografis',
+    'Formulasi indikator statistik yang akan dihasilkan',
+    'Rancangan sistem alur kerja (SOP)',
+    'Rancangan Kegiatan Statistik',
+  ],
+  outputsPage: 17,
+}
+
+/** Exact schedule table on Materi Hal. 23 (Type A). */
+export const MATERI_JADWAL_HAL_23 = {
+  columns: ['No.', 'Kegiatan', 'Waktu'],
+  rows: [
+    ['1', 'Identifikasi kebutuhan', 'Juli – Agustus'],
+    ['2', 'Perancangan instrumen', 'Agustus – September'],
+    ['3', 'Pelatihan petugas', 'September'],
+    ['4', 'Pengumpulan data', 'September – Oktober'],
+    ['5', 'Pengolahan data', 'November'],
+    ['6', 'Analisis hasil SKM', 'November – Desember'],
+    ['7', 'Penyusunan laporan', 'Desember'],
+    ['8', 'Evaluasi', 'Desember'],
+  ],
 }
 
 export const GUIDED_DESIGN_CARDS: GuidedLearningCard[] = [
   {
-    id: 'design-2.1',
+    id: 'gsbpm-2.1',
     code: '2.1',
     mappingKind: 'gsbpm',
     officialTitle: 'Merancang Output & Diseminasi',
-    title: 'Rancangan output / tabulasi',
-    apa: 'Sebelum menentukan data yang dikumpulkan, bayangkan informasi seperti apa yang nantinya ingin dihasilkan. Rancangan output membantu Anda membayangkan bentuk hasil akhir.',
-    contoh:
-      'Materi menampilkan “Contoh Rancangan Tabulasi” sebagai gambaran bentuk penyajian. Preview tersedia di materi — StatPlan tidak menggambar ulang tabel fiktif.',
-    contohClass: 'A',
+    title: 'Merancang bentuk output',
+    apa: 'Sebelum menentukan data yang dikumpulkan, rancang dulu bentuk hasil akhirnya: tabel apa yang akan disajikan dan indikator apa yang akan dihitung. Rancangan tabel dibuat kosong — tanpa angka.',
+    materiPoints: [
+      'Rancangan tabel.',
+      'Formulasi indikator statistik yang akan dihasilkan.',
+    ],
     pdfPage: 18,
+    contoh:
+      'Materi menampilkan “Contoh Rancangan Tabulasi”: judul tabel lengkap, kolom bernomor, baris total, dan sel yang masih kosong.',
+    contohClass: 'A',
     materiExamples: [
       {
         title: 'Contoh Rancangan Tabulasi',
         kind: 'table',
-        note: 'Preview contoh tersedia di Materi Proses Bisnis Hal. 18. Visual asli tidak digambar ulang di StatPlan.',
+        imageSrc: '/materi/hal-18-contoh-rancangan-tabulasi.png',
+        imageWidth: 1079,
+        imageHeight: 288,
+        imageAlt:
+          'Tabel 7.1. Jumlah Pekerja Laki-laki Perusahaan Peternakan Sapi Perah Pada Akhir Tahun 2024 Menurut Status Pekerja. Kolom: Provinsi (1), Pekerja Tetap (2), Pekerja Honorer (3), Jumlah (4). Sel isian masih kosong; baris terakhir berlabel Indonesia.',
+        note: 'Gambar asli dari materi — tidak digambar ulang.',
       },
     ],
     materiLesson:
-      'Contoh ini membantu membayangkan bentuk penyajian output sebelum merancang pengumpulan data.',
+      'Perhatikan anatomi rancangan tabel: judul menyebut apa, siapa, kapan, dan “menurut” apa; setiap kolom diberi nomor; ada baris total; isinya dibiarkan kosong karena data belum dikumpulkan.',
+    contohDetail: [
+      {
+        label: 'Judul tabel',
+        value:
+          'Tabel 1. Indeks Kepuasan Masyarakat terhadap Pelayanan Perizinan Menurut Aspek Pelayanan, 2026',
+      },
+      { label: 'Kolom', value: 'Aspek pelayanan (1) · Nilai indeks (2) · Kategori mutu (3)' },
+      { label: 'Baris', value: 'Persyaratan · Prosedur · Waktu · Biaya · … · Seluruh aspek' },
+      {
+        label: 'Formulasi indikator',
+        value: 'Nilai indeks per aspek — rumus mengikuti kondef yang disepakati di 1.4.',
+      },
+      { label: 'Diseminasi', value: 'Laporan ringkas untuk DPMPTSP (dirinci di tahap 7).' },
+    ],
     lessonPoints: [
-      'Rancangan tabulasi dibuat sebelum instrumen final.',
-      'Bayangkan baris/kolom informasi yang ingin ditampilkan — bukan angka hasil.',
-      'Susun versi kegiatan Anda di Format kerja StatPlan; jangan menyalin isi tabel materi sebagai data resmi.',
+      'Judul tabel memuat apa yang diukur, cakupan, waktu, dan pembeda (“menurut …”).',
+      'Rancangan tabel menentukan variabel yang nanti wajib dikumpulkan.',
+      'Tidak ada angka di rancangan — isi sel kosong adalah hal yang benar.',
     ],
-    templateTitle: 'Format kerja StatPlan — rancangan output',
-    templateFields: [
-      { label: 'Judul output' },
-      { label: 'Informasi yang ingin ditampilkan' },
-      { label: 'Kelompok / pembanding' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Draft rancangan output/tabulasi', 'Catatan kebutuhan informasi'],
-    buktiClass: 'C',
+    buktiClass: 'A',
+    buktiPdfPage: 17,
   },
   {
-    id: 'design-2.2',
+    id: 'gsbpm-2.2',
     code: '2.2',
     mappingKind: 'gsbpm',
     officialTitle: 'Merancang Variabel',
-    title: 'Variabel',
-    apa: 'Variabel adalah potongan informasi yang diperlukan untuk menghasilkan output. Menyusun daftar variabel awal membantu memastikan data yang dikumpulkan relevan.',
-    contoh:
-      'Contoh variabel yang terlihat pada materi: nama, umur, jenis kelamin, pendidikan, pekerjaan, instansi.',
-    contohClass: 'A',
+    title: 'Menentukan variabel',
+    apa: 'Variabel adalah potongan informasi yang dikumpulkan untuk mengisi rancangan output. Setiap variabel dicek terhadap Standar Data Statistik Nasional dan ketersediaannya.',
+    materiPoints: [
+      'Merancang variabel yang akan dikumpulkan. Misal: nama, umur, jenis kelamin, tingkat pendidikan, pekerjaan utama, instansi, dll.',
+      'Cek Standar Data Statistik Nasional untuk setiap variabel.',
+      'Cek ketersediaan variabel.',
+    ],
     pdfPage: 19,
+    contoh:
+      'Contoh variabel pada materi: nama, umur, jenis kelamin, tingkat pendidikan, pekerjaan utama, instansi.',
+    contohClass: 'A',
     materiExamples: [
-      { title: 'nama', kind: 'other' },
-      { title: 'umur', kind: 'other' },
-      { title: 'jenis kelamin', kind: 'other' },
-      { title: 'pendidikan', kind: 'other' },
-      { title: 'pekerjaan', kind: 'other' },
-      { title: 'instansi', kind: 'other' },
+      {
+        title: 'Contoh variabel pada materi',
+        kind: 'other',
+        items: ['nama', 'umur', 'jenis kelamin', 'tingkat pendidikan', 'pekerjaan utama', 'instansi'],
+        note: 'Contoh dari materi — bukan daftar wajib untuk setiap kegiatan.',
+      },
     ],
-    materiLesson:
-      'Daftar di atas adalah contoh variabel yang muncul di materi — bukan daftar wajib untuk setiap kegiatan.',
+    contohDetail: [
+      { label: 'Variabel', value: 'Jenis layanan perizinan' },
+      { label: 'Untuk output', value: 'Kolom/baris “menurut jenis layanan” di Tabel 1 (2.1)' },
+      { label: 'Cek standar', value: 'Periksa apakah ada Standar Data Statistik Nasional terkait' },
+      { label: 'Variabel lain', value: 'Penilaian tiap aspek pelayanan, jenis kelamin, tingkat pendidikan' },
+    ],
     lessonPoints: [
-      'Pilih variabel yang benar-benar dibutuhkan untuk output.',
-      'Tidak setiap kegiatan membutuhkan semua contoh di materi.',
-      'Catat definisi singkat agar pengertian variabel seragam.',
+      'Tarik variabel dari rancangan output — setiap kolom/baris butuh variabel.',
+      'Hindari variabel yang tidak dipakai di output mana pun.',
+      'Cek standar data dan ketersediaan sebelum menambah pertanyaan baru.',
     ],
-    templateTitle: 'Format daftar variabel awal',
-    templateFields: [
-      { label: 'Nama variabel' },
-      { label: 'Untuk apa digunakan?' },
-      { label: 'Catatan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Daftar variabel awal', 'Catatan definisi variabel'],
     buktiClass: 'C',
   },
   {
-    id: 'design-2.3',
+    id: 'gsbpm-2.3',
     code: '2.3',
     mappingKind: 'gsbpm',
     officialTitle: 'Merancang Pengumpulan Data',
-    title: 'Cara / metode / moda',
-    apa: 'Pada bagian ini, Anda mulai menentukan bagaimana data akan diperoleh. Materi membedakan istilah cara, metode, dan moda pengumpulan.',
-    contoh:
-      'Taxonomy materi Hal. 20 membedakan cara, metode, dan moda. StatPlan tidak memilih metode otomatis untuk Anda.',
-    contohClass: 'A',
+    title: 'Memilih cara, metode, dan moda',
+    apa: 'Materi membedakan tiga hal: cara (seberapa luas data diambil), metode (bagaimana data diperoleh dari responden), dan moda (media yang dipakai). Ketiganya dipilih terpisah.',
     pdfPage: 20,
+    contoh:
+      'Istilah persis dari materi Hal. 20 ditampilkan di bawah; penjelasan “seberapa luas / bagaimana / media” adalah parafrase StatPlan.',
+    contohClass: 'A',
     materiExamples: [
       {
-        title: 'Cara',
+        title: 'Cara Pengumpulan Data',
         kind: 'method',
-        note: 'Bagaimana data diperoleh secara umum (misalnya survei), sesuai taxonomy materi.',
+        items: [
+          'Sensus/pendataan lengkap',
+          'Survei',
+          'Kompilasi Produk Administratif (kompromin)',
+          'Lainnya; Misal: big data',
+        ],
       },
       {
-        title: 'Metode',
+        title: 'Metode Pengumpulan Data',
         kind: 'method',
-        note: 'Teknik pengumpulan (misalnya wawancara), sesuai taxonomy materi.',
+        items: ['Wawancara', 'Self Enumeration', 'Observasi'],
       },
       {
-        title: 'Moda',
+        title: 'Moda Pengumpulan Data',
         kind: 'method',
-        note: 'Media/alat pengumpulan (misalnya CAPI), sesuai taxonomy materi.',
+        items: [
+          'Paper and Pencil Interviewing (PAPI)',
+          'Computer Assisted Personal Interviewing (CAPI)',
+          'Computer Assisted Telephones Interviewing (CATI)',
+          'Computer Aided Web Interviewing (CAWI)',
+        ],
       },
     ],
-    materiLesson:
-      'Bedakan tiga istilah sebelum mengisi rancangan. Pilihan tergantung konteks kegiatan Anda.',
+    contohDetail: [
+      { label: 'Cara', value: 'Survei — hanya sebagian pengguna layanan yang ditanya' },
+      { label: 'Metode', value: 'Wawancara — petugas menanyakan langsung setelah layanan selesai' },
+      { label: 'Moda', value: 'CAPI — isian di tablet agar validasi bisa langsung berjalan' },
+      { label: 'Alasan', value: 'Responden ada di loket; CAPI mengurangi kesalahan isian' },
+    ],
     lessonPoints: [
       'Cara ≠ metode ≠ moda — tulis masing-masing secara terpisah.',
-      'Jangan otomatis memilih satu metode hanya karena contoh umum.',
-      'Catat alasan singkat agar keputusan metode dapat ditinjau ulang.',
+      'Pilihan cara menentukan apakah 2.4 (sampel) dan 5.6 (bobot) dilakukan.',
+      'Catat alasan pilihan agar dapat ditinjau saat uji coba.',
     ],
-    templateTitle: 'Format cara / metode / moda',
-    templateFields: [
-      { label: 'Cara' },
-      { label: 'Metode' },
-      { label: 'Moda' },
-      { label: 'Catatan metode' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Catatan cara/metode/moda'],
     buktiClass: 'B',
     buktiPdfPage: 20,
   },
   {
-    id: 'design-2.4',
+    id: 'gsbpm-2.4',
     code: '2.4',
     mappingKind: 'gsbpm',
     officialTitle: 'Merancang Kerangka Sampel',
-    title: 'Metode pengambilan sampel',
-    apa: 'Jika kegiatan menggunakan sampel, tentukan bagaimana bagian dari populasi akan dipilih. Untuk sensus atau kompilasi data, kebutuhan sampling dapat berbeda atau tidak digunakan.',
-    contoh:
-      'Materi Hal. 21 membahas metode sampling. Bedakan konteks survei vs sensus vs kompilasi — StatPlan tidak menghitung ukuran sampel.',
-    contohClass: 'A',
+    title: 'Merancang sampel',
+    apa: 'Jika cara pengumpulan adalah survei, rancang kerangka sampel dan metode pemilihan sampelnya. Materi membagi metode sampling menjadi probability dan non probability.',
+    materiPoints: [
+      'Subproses ini tidak dilakukan, jika pengumpulan data dilakukan secara Sensus/Pendataan Lengkap dan Kompilasi Produk Administrasi (Kompromin).',
+    ],
     pdfPage: 21,
+    contoh:
+      'Metode sampling persis seperti tercantum pada materi Hal. 21. StatPlan tidak menghitung ukuran sampel.',
+    contohClass: 'A',
     materiExamples: [
       {
-        title: 'Survei',
+        title: 'Probability Sampling',
         kind: 'method',
-        note: 'Sampling biasanya relevan karena hanya sebagian populasi diamati.',
+        items: [
+          'Simple Random Sampling',
+          'Stratified Sampling',
+          'Systematic Sampling',
+          'Cluster Sampling',
+          'Probability Proportional to Size Sampling',
+        ],
       },
       {
-        title: 'Sensus',
+        title: 'Non Probability Sampling',
         kind: 'method',
-        note: 'Umumnya mencakup seluruh populasi — kebutuhan sampling berbeda.',
-      },
-      {
-        title: 'Kompilasi',
-        kind: 'method',
-        note: 'Data dari sumber yang sudah ada; sampling sering tidak diterapkan seperti pada survei.',
+        items: ['Quota Sampling', 'Accidental Sampling', 'Purposive Sampling', 'Snowball Sampling'],
       },
     ],
-    materiLesson:
-      'Jenis kegiatan memengaruhi apakah sampling digunakan. Pilih metode sesuai rancangan — bukan otomatis dari StatPlan.',
+    contohDetail: [
+      { label: 'Menggunakan sampel?', value: 'Ya — cara pengumpulan adalah survei (2.3)' },
+      { label: 'Kerangka sampel', value: 'Daftar penerima layanan perizinan selama periode survei' },
+      { label: 'Metode', value: 'Systematic Sampling — setiap pengguna ke-k dalam daftar' },
+      { label: 'Alasan', value: 'Daftar berurutan menurut waktu layanan tersedia di sistem loket' },
+    ],
     lessonPoints: [
-      'Tentukan dulu apakah kegiatan memakai sampel.',
-      'Survei, sensus, dan kompilasi punya kebutuhan sampling yang berbeda.',
-      'StatPlan tidak menyediakan kalkulator ukuran sampel.',
+      'Tanyakan dulu: apakah kegiatan memakai sampel? Sensus dan kompromin tidak.',
+      'Probability sampling memungkinkan perhitungan bobot (5.6) dan sampling error (5.7).',
+      'Kerangka sampel = daftar dari mana sampel dipilih; siapkan sumbernya.',
     ],
-    templateTitle: 'Format catatan sampling',
-    templateFields: [
-      { label: 'Apakah menggunakan sampel?' },
-      { label: 'Metode sampling (jika ya)' },
-      { label: 'Alasan / catatan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Catatan metode sampling, jika relevan'],
     buktiClass: 'B',
     buktiPdfPage: 21,
   },
   {
-    id: 'design-2.5',
-    code: 'SP-R5',
-    mappingKind: 'statplan',
-    title: 'Jadwal kegiatan',
-    apa: 'Susun kegiatan utama di dalam rentang waktu yang sudah Anda tentukan. Jadwal ini melengkapi rencana waktu tahap — bukan menggantinya.',
+    id: 'gsbpm-2.5',
+    code: '2.5',
+    mappingKind: 'gsbpm',
+    officialTitle: 'Merancang Pengolahan & Analisis',
+    title: 'Merancang pengolahan dan analisis',
+    apa: 'Rancang dari awal bagaimana data akan diperiksa dan diolah — penyuntingan, pengkodean, dan pensahihan — serta apakah analisisnya deskriptif atau inferensia.',
+    materiPoints: [
+      'Rancangan penyuntingan (editing), pengkodean (coding), pensahihan (validasi).',
+      'Rancangan analisis: deskriptif (hanya narasi) atau inferensia (menggunakan metode analisis lebih lanjut).',
+    ],
+    pdfPage: 22,
     contoh:
-      'Materi memuat contoh jadwal SKM. Itu contoh sumber — bukan klaim durasi wajib untuk proyek Anda.',
-    contohClass: 'A',
-    pdfPage: 23,
-    materiExamples: [
-      {
-        title: 'Contoh jadwal SKM',
-        kind: 'schedule',
-        note: 'Contoh jadwal pada Materi Proses Bisnis Hal. 23 — bukan jadwal wajib.',
-      },
+      'Untuk SKM: satu aturan editing, satu aturan coding, satu aturan validasi, dan analisis deskriptif.',
+    contohClass: 'C',
+    contohDetail: [
+      { label: 'Editing', value: 'Isian penilaian yang kosong dikembalikan ke petugas untuk dilengkapi' },
+      { label: 'Coding', value: 'Jenis layanan diberi kode 1–5 sesuai daftar layanan' },
+      { label: 'Validasi', value: 'Nilai penilaian aspek harus 1–4; di luar itu ditandai error' },
+      { label: 'Analisis', value: 'Deskriptif — narasi dan tabel indeks per aspek' },
     ],
-    materiLesson:
-      'Contoh jadwal membantu melihat bagaimana kegiatan diurutkan dalam waktu. Sesuaikan dengan rentang proyek Anda sendiri.',
     lessonPoints: [
-      'Jadwal contoh di materi bukan durasi wajib.',
-      'Susun kegiatan utama (persiapan → pengumpulan → pengolahan → diseminasi) sesuai kapasitas Anda.',
-      'Catat mulai/selesai agar progress mudah ditinjau.',
+      'Aturan editing, coding, dan validasi dirancang sekarang, dibangun di 3.2, dijalankan di tahap 5.',
+      'Deskriptif cukup untuk menggambarkan; inferensia dipakai jika perlu menguji atau menaksir lebih jauh.',
+      'Rancangan analisis harus bisa menghasilkan output yang dirancang di 2.1.',
     ],
-    templateTitle: 'Format jadwal kegiatan',
-    templateFields: [
-      { label: 'Kegiatan' },
-      { label: 'Mulai' },
-      { label: 'Selesai' },
-      { label: 'Catatan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Draft jadwal kegiatan'],
     buktiClass: 'C',
   },
   {
-    id: 'design-2.6',
-    code: 'SP-R6',
-    mappingKind: 'statplan',
-    title: 'SOP & persiapan rekomendasi',
-    apa: 'Sebelum kegiatan berjalan, beberapa prosedur dan persiapan administratif perlu direncanakan — termasuk SOP dan persiapan rekomendasi bila relevan.',
-    contoh:
-      'Materi Hal. 23 mengaitkan perencanaan jadwal dengan SOP dan persiapan rekomendasi. StatPlan hanya membantu pencatatan — bukan memberikan approval.',
-    contohClass: 'A',
+    id: 'gsbpm-2.6',
+    code: '2.6',
+    mappingKind: 'gsbpm',
+    officialTitle: 'Merancang Sistem Produksi & Alur Kerja',
+    title: 'Menyusun jadwal, SOP, dan rekomendasi',
+    apa: 'Susun jadwal kegiatan dan SOP alur kerja. Penyelenggara statistik sektoral juga menyiapkan pengajuan rekomendasi kegiatan statistik ke BPS.',
+    materiPoints: [
+      'Menyusun Jadwal Kegiatan.',
+      'Menyusun Standar Operasional Prosedur (SOP).',
+      'Mengajukan rekomendasi kegiatan Statistik.',
+      'Mengajukan permintaan rekomendasi Kegiatan statistik ke BPS (khusus Penyelenggara Statistik Sektoral) — Hal. 17.',
+    ],
     pdfPage: 23,
+    contoh:
+      'Materi Hal. 23 memuat contoh jadwal delapan kegiatan SKM (Juli–Desember) dan potongan contoh SOP SKM.',
+    contohClass: 'A',
     materiExamples: [
       {
-        title: 'SOP & persiapan rekomendasi',
-        kind: 'document',
-        note: 'Struktur/persiapan yang disebut pada materi Hal. 23 — bukan persetujuan StatPlan.',
+        title: 'Contoh Jadwal Kegiatan',
+        kind: 'schedule',
+        table: MATERI_JADWAL_HAL_23,
+        note: 'Isi tabel sama persis dengan materi. Durasi ini contoh — bukan jadwal wajib.',
+      },
+      {
+        title: 'Contoh SOP (SKM)',
+        kind: 'flow',
+        imageSrc: '/materi/hal-23-contoh-sop-skm.png',
+        imageWidth: 1286,
+        imageHeight: 858,
+        imageAlt:
+          'Potongan tabel SOP SKM. Kolom: No, Aktivitas, Pelaksana (Pejabat Administrator, Pejabat Pengawas, JFU/JFT), Mutu Baku (Kelengkapan, Waktu, Output), Ket. Aktivitas 1–7: menerima surat perintah pelaksanaan SKM, koordinasi dengan stakeholder, menyusun bahan pelatihan petugas, pelatihan petugas, pengumpulan data SKM (2–4 bulan), pengolahan data SKM (2–4 bulan), konsolidasi hasil SKM. Alur antar pelaksana digambar dengan kotak dan panah.',
+        note: 'Gambar asli dari materi. Pada materi, tabel ini memang tampil terpotong di baris 7.',
       },
     ],
     materiLesson:
-      'Siapkan catatan SOP dan status persiapan rekomendasi bila relevan. StatPlan tidak mengirim atau menyetujui rekomendasi.',
+      'Jadwal mengurutkan kegiatan dalam waktu; SOP merinci siapa mengerjakan apa, dengan kelengkapan, waktu, dan output tiap langkah.',
+    contohDetail: [
+      { label: 'Jadwal', value: 'Sesuaikan 8 baris contoh ke rentang waktu proyek Anda' },
+      { label: 'SOP', value: 'SOP pengumpulan data SKM: aktivitas, pelaksana, waktu, output' },
+      {
+        label: 'Rekomendasi',
+        value: 'Jika instansi Anda penyelenggara statistik sektoral: siapkan pengajuan ke BPS',
+      },
+    ],
     lessonPoints: [
-      'SOP menclarifikasi prosedur agar pelaksanaan konsisten.',
-      'Persiapan rekomendasi (bila relevan) dicatat sebagai status — bukan approval BPS.',
-      'Format kerja StatPlan hanya membantu dokumentasi awal.',
+      'Contoh jadwal materi berurutan dari identifikasi kebutuhan sampai evaluasi.',
+      'SOP yang baik memuat pelaksana, kelengkapan, waktu, dan output setiap aktivitas.',
+      'Rekomendasi BPS wajib untuk statistik sektoral — StatPlan hanya mencatat persiapannya.',
     ],
-    templateTitle: 'Format SOP & persiapan rekomendasi',
-    templateFields: [
-      { label: 'Nama SOP' },
-      { label: 'Status persiapan rekomendasi' },
-      { label: 'Catatan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Draft SOP', 'Catatan persiapan rekomendasi'],
-    buktiClass: 'B',
-    buktiPdfPage: 23,
+    buktiClass: 'A',
+    buktiPdfPage: 17,
   },
 ]
 

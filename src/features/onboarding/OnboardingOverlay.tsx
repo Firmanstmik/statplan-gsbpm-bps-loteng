@@ -1,14 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  ArrowRight2,
-  MagicStar,
-  Hierarchy,
-  DocumentText,
-  TickCircle,
-  TaskSquare,
-} from 'iconsax-react'
+import { ArrowRight2, MagicStar, Hierarchy, TickCircle } from 'iconsax-react'
 import { markOnboardingDone } from '@/demo/seed'
 import { Button } from '@/components/ui/Button'
 import { BrandLockup } from '@/components/branding/BrandLockup'
@@ -16,27 +9,17 @@ import { BrandLockup } from '@/components/branding/BrandLockup'
 const steps = [
   {
     title: 'Selamat datang di StatPlan',
-    body: 'Platform perencanaan kegiatan statistik untuk OPD Kabupaten Lombok Tengah, dipandu kerangka GSBPM 5.2. Keluaran aplikasi berstatus draf bahan kerja — bukan persetujuan resmi BPS.',
+    body: 'Simulator untuk belajar dan menyusun rencana kegiatan statistik berbasis GSBPM 5.2. Hasilnya draf bahan kerja — bukan dokumen atau persetujuan resmi BPS.',
     icon: MagicStar,
   },
   {
-    title: 'Apa itu StatPlan?',
-    body: 'Ruang kerja untuk menyusun kebutuhan data, checklist fase, instrumen, metadata, dan draf dokumen — bukan modul pelatihan dan bukan entri data lapangan.',
-    icon: DocumentText,
-  },
-  {
-    title: 'Bagaimana cara mengerjakannya?',
-    body: 'Portal rujukan → checklist GSBPM → perancangan → variabel → instrumen (jika perlu) → metadata → rekomendasi BPS (sektoral) → ekspor draf Word. Ikuti kartu “Langkah berikutnya” di dalam proyek.',
+    title: 'Cara memakainya',
+    body: 'Lihat contoh kegiatan → ceritakan kebutuhan Anda → tentukan jadwal → pelajari dan siapkan bahan di Mode Terpandu → periksa di Ruang kerja → unduh draf Word.',
     icon: Hierarchy,
   },
   {
-    title: 'Tutorial singkat',
-    body: 'Beranda → buka proyek demo → kerjakan dari Alur kerja. Buka menu Bantuan untuk SOP 9 langkah. Mode Presentasi berisi naskah bila Anda mendemokan ke orang lain.',
-    icon: TaskSquare,
-  },
-  {
-    title: 'Siap mulai tanpa dipandu',
-    body: 'Muat data demo di Beranda/Pengaturan untuk melihat 5 contoh OPD, atau buat proyek baru. Semua petunjuk ada di kartu Langkah berikutnya dan halaman Bantuan.',
+    title: 'Butuh bantuan?',
+    body: 'Di setiap proyek, kartu “Langkah berikutnya” menunjukkan apa yang sebaiknya dikerjakan sekarang. Istilah yang membingungkan dijelaskan di FAQ.',
     icon: TickCircle,
   },
 ]
@@ -64,7 +47,7 @@ export function OnboardingOverlay({ onDone }: { onDone: () => void }) {
           <BrandLockup size="sm" />
         </div>
         <div className="px-6 py-8">
-          <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-900 text-gold-400">
+          <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-ink-900 text-ink-500">
             <Icon size={24} variant="Bold" color="currentColor" />
           </div>
           <AnimatePresence mode="wait">

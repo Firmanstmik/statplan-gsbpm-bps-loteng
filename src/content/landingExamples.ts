@@ -17,6 +17,8 @@ export type LandingExampleCard = {
   jenis: JenisKegiatan
   /** One-line planned result preview */
   resultPreview: string
+  /** What a beginner learns from this example (one line) */
+  lesson: string
   /** Always C for these landing cards */
   classification: 'C'
   classificationLabel: string
@@ -34,6 +36,7 @@ export const LANDING_EXAMPLES: LandingExampleCard[] = [
     purpose: 'Mengetahui tingkat kepuasan masyarakat terhadap pelayanan perizinan.',
     jenis: 'survei',
     resultPreview: 'Indeks kepuasan dan temuan untuk perbaikan layanan.',
+    lesson: 'Cara merancang survei dengan sampel — dari masalah sampai tabel hasil.',
     classification: 'C',
     classificationLabel: 'Contoh ilustratif',
   },
@@ -44,6 +47,7 @@ export const LANDING_EXAMPLES: LandingExampleCard[] = [
     purpose: 'Mendata unit usaha di wilayah untuk memperbarui basis data pemberdayaan.',
     jenis: 'sensus',
     resultPreview: 'Profil dan sebaran UMKM menurut jenis usaha dan wilayah.',
+    lesson: 'Kapan pendataan lengkap (sensus) dipakai, dan mengapa tidak perlu sampel.',
     classification: 'C',
     classificationLabel: 'Contoh ilustratif',
   },
@@ -54,6 +58,7 @@ export const LANDING_EXAMPLES: LandingExampleCard[] = [
     purpose: 'Menyusun statistik dari data administratif yang sudah tersedia.',
     jenis: 'kompromin',
     resultPreview: 'Indikator kependudukan dari sumber administratif.',
+    lesson: 'Cara memakai data yang sudah ada, termasuk perjanjian dan kerahasiaan data.',
     classification: 'C',
     classificationLabel: 'Contoh ilustratif',
   },
@@ -61,23 +66,34 @@ export const LANDING_EXAMPLES: LandingExampleCard[] = [
 
 export const HOW_IT_WORKS_STEPS = [
   {
-    number: '1',
-    title: 'Ceritakan atau lihat contoh',
-    description: 'Jelaskan kegiatan Anda, atau mulai dari contoh ilustratif.',
+    number: '01',
+    title: 'Ceritakan kebutuhan',
+    description: 'Tulis dengan bahasa sehari-hari informasi apa yang ingin Anda hasilkan.',
   },
   {
-    number: '2',
-    title: 'Pahami bentuk rencana',
-    description: 'Lihat alur, jadwal, dan apa yang perlu disiapkan.',
+    number: '02',
+    title: 'Pelajari contoh & saran',
+    description: 'Lihat contoh kegiatan serupa dan saran cara memperoleh datanya.',
   },
   {
-    number: '3',
-    title: 'Susun bersama StatPlan',
-    description: 'StatPlan memandu kebutuhan, jadwal, dan langkah berikutnya.',
+    number: '03',
+    title: 'Susun langkah dan persiapan',
+    description: 'Ikuti Mode Terpandu satu langkah demi satu langkah, lengkap dengan contohnya.',
   },
   {
-    number: '4',
+    number: '04',
     title: 'Dapatkan draf',
-    description: 'Periksa lalu unduh draf perencanaan.',
+    description: 'Periksa kelengkapan, lalu unduh draf rencana kegiatan dalam format Word.',
   },
+] as const
+
+/** What the draft actually contains (mirrors the Ekspor tab contents list). */
+export const LANDING_OUTPUTS = [
+  'Identitas, tujuan, dan kebutuhan kegiatan',
+  'Rancangan: cara, metode, dan sampel',
+  'Variabel dan indikator',
+  'Instrumen (bila diperlukan)',
+  'Jadwal kegiatan per fase',
+  'Checklist GSBPM 5.2',
+  'Metadata kegiatan, variabel, dan indikator',
 ] as const

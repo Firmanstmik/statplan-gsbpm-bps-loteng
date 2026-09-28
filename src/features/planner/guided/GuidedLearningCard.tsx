@@ -1,11 +1,11 @@
-import { useEffect, useId, useRef } from 'react'
-import { ArrowDown2, ArrowUp2, TickCircle } from 'iconsax-react'
+import { useEffect, useId, useRef, useState } from 'react'
+import { ArrowDown2, ArrowRight2, ArrowUp2, TickCircle } from 'iconsax-react'
 import type { GuidedLearningCard as CardData } from '@/content/guidedPhaseNeed'
-import { sourceBadgeLabel } from '@/content/guidedPhaseNeed'
 import {
   computeDraftStatus,
   countEvidenceReady,
   type GuidedDraftStatus as DraftStatus,
+  type GuidedEvidenceDef,
 } from '@/content/guidedNeedPreparation'
 import { getPreparation } from '@/content/guidedPreparation'
 import type { GuidedEvidenceItemState } from '@/lib/guidedSession'
@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/Button'
 import { PdfRefBadge } from '@/components/ui/PdfRefBadge'
 import { GuidedDraftStatus } from '@/features/planner/guided/GuidedDraftStatus'
 import { MateriExampleBlock } from '@/features/planner/guided/MateriExampleBlock'
-import { GuidedExampleBlock } from '@/features/planner/guided/GuidedExampleBlock'
 import { cn } from '@/lib/utils'
 
 type Props = {
@@ -26,14 +25,28 @@ type Props = {
   onToggle: () => void
   onMarkUnderstood: () => void
   onPrepare: () => void
+  /** Opens the next subprocess of the same phase (shown once understood) */
+  onNext?: () => void
+  nextLabel?: string
 }
 
-function SectionLabel({ children }: { children: string }) {
+function SectionLabel({ children, id }: { children: string; id?: string }) {
   return (
-    <h4 className="text-[11px] font-semibold uppercase tracking-wide text-ink-600">
+    <h4 id={id} className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-600">
       {children}
     </h4>
   )
+}
+
+function SourceTag({ kind, page }: { kind: 'A' | 'B' | 'C'; page?: number | string }) {
+  if (kind === 'A' && page != null) return <PdfRefBadge ref={`Dari materi · Hal. ${page}`} />
+  if (kind === 'B')
+    return (
+      <span className="text-[11px] font-medium text-ink-500">
+        Penjelasan sederhana{page != null ? ` · Hal. ${page}` : ''}
+      </span>
+    )
+  return <span className="text-[11px] font-medium text-ink-500">Contoh ilustratif StatPlan</span>
 }
 
 export function GuidedLearningCard({
@@ -45,17 +58,25 @@ export function GuidedLearningCard({
   onToggle,
   onMarkUnderstood,
   onPrepare,
+  onNext,
+  nextLabel,
 }: Props) {
   const panelId = useId()
   const headingId = useId()
+  const pointsId = useId()
+  const detailId = useId()
   const contentRef = useRef<HTMLDivElement>(null)
+  const [showPoints, setShowPoints] = useState(false)
+  const [showDetail, setShowDetail] = useState(false)
   const prep = getPreparation(card.id)
-  const draftStatus: DraftStatus = prep
-    ? computeDraftStatus(prep, draftValues)
-    : 'empty'
+  const draftStatus: DraftStatus = prep ? computeDraftStatus(prep, draftValues) : 'empty'
+  const evidence: GuidedEvidenceDef[] =
+    prep?.evidence ?? (card.buktiItems ?? []).map((label) => ({ id: label, label }))
   const evidenceCount = prep
     ? countEvidenceReady(prep.evidence, evidenceStates)
-    : { ready: 0, total: 0 }
+    : { ready: 0, total: evidence.length }
+  const officialTitle = card.officialTitle ?? card.title
+  const hasMateri = Boolean(card.materiExamples?.length)
 
   useEffect(() => {
     if (open && contentRef.current) {
@@ -65,15 +86,14 @@ export function GuidedLearningCard({
 
   return (
     <article
+      data-guided-card={card.id}
       className={cn(
         'rounded-2xl border bg-white transition-shadow',
         open ? 'border-ink-900/15 shadow-(--shadow-soft)' : 'border-border/80',
       )}
     >
       <h3 className="sr-only" id={headingId}>
-        {card.mappingKind === 'statplan'
-          ? `Panduan StatPlan ${card.title}`
-          : `${card.code} ${card.officialTitle ?? card.title}`}
+        {`${card.code} ${officialTitle}`}
       </h3>
       <button
         type="button"
@@ -85,47 +105,33 @@ export function GuidedLearningCard({
       >
         <span
           className={cn(
-            'mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm',
-            understood
-              ? 'bg-ink-900 text-white'
-              : 'bg-ink-100 text-ink-600 ring-1 ring-ink-900/10',
+            'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full',
+            understood ? 'bg-ink-900 text-white' : 'bg-white ring-[1.5px] ring-ink-900/20',
           )}
           aria-hidden
         >
-          {understood ? <TickCircle size={14} variant="Bold" color="currentColor" /> : '○'}
+          {understood ? <TickCircle size={14} variant="Bold" color="currentColor" /> : null}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block text-sm font-semibold text-ink-950">
-            {card.mappingKind === 'statplan' ? (
-              <>
-                <span className="mr-1.5 rounded bg-ink-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink-600">
-                  Panduan StatPlan
-                </span>
-                {card.title}
-              </>
-            ) : (
-              <>
-                <span className="text-ink-500">{card.code}</span>{' '}
-                {card.officialTitle ?? card.title}
-              </>
-            )}
+          <span className="block text-[15px] font-semibold leading-snug text-ink-950">
+            <span className="mr-1.5 tabular-nums text-ink-500">{card.code}</span>
+            {officialTitle}
           </span>
-          {card.mappingKind === 'gsbpm' &&
-          card.officialTitle &&
-          card.officialTitle !== card.title ? (
-            <span className="mt-0.5 block text-xs text-ink-600">Penjelasan: {card.title}</span>
-          ) : null}
-          {card.mappingKind === 'statplan' ? (
-            <span className="mt-0.5 block text-[11px] text-ink-500">
-              Bukan kode sub-proses GSBPM resmi — bantuan belajar StatPlan.
-            </span>
-          ) : null}
-          <span className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-ink-600">
-            {understood ? <span>Sudah dipahami</span> : null}
+          <span className="mt-0.5 block text-xs text-ink-600">{card.title}</span>
+          <span className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-600">
+            {card.pdfPage != null ? (
+              <span className="tabular-nums text-ink-500">Hal. {card.pdfPage}</span>
+            ) : null}
+            {understood ? <span className="font-medium text-ink-900">Sudah dipahami</span> : null}
             <GuidedDraftStatus status={draftStatus} compact />
           </span>
         </span>
-        <span className="mt-1 shrink-0 text-ink-500" aria-hidden>
+        <span className="mt-0.5 flex shrink-0 items-center gap-1.5 text-ink-500" aria-hidden>
+          {!open ? (
+            <span className="hidden rounded-lg border border-border px-2.5 py-1 text-xs font-semibold text-ink-800 sm:inline">
+              {understood ? 'Tinjau' : 'Pelajari'}
+            </span>
+          ) : null}
           {open ? (
             <ArrowUp2 size={16} variant="Bold" color="currentColor" />
           ) : (
@@ -141,119 +147,198 @@ export function GuidedLearningCard({
           aria-labelledby={headingId}
           ref={contentRef}
           tabIndex={-1}
-          className="space-y-4 border-t border-border/70 px-3.5 pb-4 pt-3 outline-none sm:px-4"
+          className="space-y-6 border-t border-border/70 px-3.5 pb-5 pt-4 outline-none sm:px-5"
         >
-          <section className="space-y-1.5">
-            <SectionLabel>Apa?</SectionLabel>
-            <p className="text-sm leading-relaxed text-ink-800">{card.apa}</p>
-          </section>
-
-          <section className="space-y-1.5">
-            {card.materiExamples && card.materiExamples.length > 0 ? (
-              <MateriExampleBlock
-                examples={card.materiExamples}
-                pdfPage={card.pdfPage}
-                lesson={
-                  card.lessonPoints && card.lessonPoints.length > 0
-                    ? undefined
-                    : card.materiLesson
-                }
-                context={card.contoh}
-              />
-            ) : (
-              <GuidedExampleBlock
-                summary={card.contoh}
-                sourceClass={card.contohClass}
-                pdfPage={card.pdfPage}
-                detail={card.contohDetail}
-                lessonPoints={card.lessonPoints}
-              />
-            )}
-            {card.materiExamples &&
-            card.materiExamples.length > 0 &&
-            card.lessonPoints &&
-            card.lessonPoints.length > 0 ? (
-              <div className="space-y-1.5">
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-600">
-                  Yang bisa dipelajari
-                </p>
-                <ul className="list-disc space-y-1 pl-4 text-sm leading-relaxed text-ink-800">
-                  {card.lessonPoints.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
+          {/* APA? */}
+          <section className="space-y-2" data-section="apa">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <SectionLabel>Apa?</SectionLabel>
+              <SourceTag kind="B" page={card.pdfPage} />
+            </div>
+            <p className="text-[15px] leading-relaxed text-ink-900">{card.apa}</p>
+            {card.materiPoints && card.materiPoints.length > 0 ? (
+              <div>
+                <button
+                  type="button"
+                  className="focus-ring inline-flex items-center gap-1 rounded text-xs font-semibold text-ink-700 hover:text-ink-950"
+                  aria-expanded={showPoints}
+                  aria-controls={pointsId}
+                  onClick={() => setShowPoints((v) => !v)}
+                >
+                  {showPoints ? 'Sembunyikan' : 'Lihat'} poin dari materi ({card.materiPoints.length})
+                  {showPoints ? (
+                    <ArrowUp2 size={12} variant="Bold" color="currentColor" aria-hidden />
+                  ) : (
+                    <ArrowDown2 size={12} variant="Bold" color="currentColor" aria-hidden />
+                  )}
+                </button>
+                {showPoints ? (
+                  <div id={pointsId} className="mt-2 rounded-xl bg-ink-50/70 px-3.5 py-3">
+                    <div className="mb-2">
+                      <SourceTag kind="A" page={card.pdfPage} />
+                    </div>
+                    <ul className="space-y-1.5 text-sm leading-relaxed text-ink-800">
+                      {card.materiPoints.map((point) => (
+                        <li key={point} className="flex gap-2">
+                          <span aria-hidden className="mt-2 h-1 w-1 shrink-0 rounded-full bg-ink-500" />
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
               </div>
             ) : null}
-            {card.contohDetail &&
-            card.contohDetail.length > 0 &&
-            card.materiExamples &&
-            card.materiExamples.length > 0 ? (
-              <GuidedExampleBlock
-                summary="Contoh isian untuk kegiatan Anda (ilustratif StatPlan — bukan salinan materi)."
-                sourceClass="C"
-                detail={card.contohDetail}
+          </section>
+
+          {/* CONTOH */}
+          <section className="space-y-2.5" data-section="contoh">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <SectionLabel>Contoh</SectionLabel>
+              <SourceTag kind={card.contohClass} page={card.pdfPage} />
+            </div>
+            <p className="text-sm leading-relaxed text-ink-800">{card.contoh}</p>
+            {hasMateri ? (
+              <MateriExampleBlock
+                examples={card.materiExamples!}
+                pdfPage={card.pdfPage}
+                lesson={card.materiLesson}
               />
             ) : null}
-          </section>
-
-          <section className="space-y-2">
-            <SectionLabel>Format kerja StatPlan</SectionLabel>
-            <p className="text-xs leading-relaxed text-ink-600">
-              Buat versi kegiatan Anda. Bukan template resmi BPS. Contoh materi dan isian Anda
-              dibedakan dengan jelas.
-            </p>
-            <Button type="button" className="w-full" onClick={onPrepare}>
-              Siapkan bahan
-            </Button>
-            <GuidedDraftStatus status={draftStatus} />
-          </section>
-
-          <section className="space-y-1.5">
-            <div className="flex flex-wrap items-center gap-2">
-              <SectionLabel>Bukti dukung</SectionLabel>
-              {card.buktiClass === 'A' && card.buktiPdfPage != null ? (
-                <PdfRefBadge
-                  ref={`Menurut Materi Proses Bisnis · Hal. ${card.buktiPdfPage}`}
-                />
-              ) : card.buktiPdfPage != null ? (
-                <span className="text-[11px] font-medium text-ink-500">
-                  {sourceBadgeLabel(card.buktiClass, card.buktiPdfPage)}
-                </span>
-              ) : null}
-            </div>
-            <p className="text-xs text-ink-700">
-              {evidenceCount.ready}/{evidenceCount.total} disiapkan
-            </p>
-            <ul className="list-disc space-y-1 pl-4 text-sm text-ink-800">
-              {(prep?.evidence.map((e) => e.label) ?? card.buktiItems).map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-            <p className="text-[11px] text-ink-500">
-              Status bukti diatur di dalam “Siapkan bahan”. Tidak semua item wajib.
-            </p>
-            {card.id.startsWith('design-2.2') ? (
-              <p className="text-[11px] leading-relaxed text-ink-500">
-                Variabel yang Anda siapkan di sini masih berupa draft pembelajaran.
-              </p>
+            {card.contohDetail && card.contohDetail.length > 0 ? (
+              <div className="rounded-xl border border-dashed border-ink-900/15 px-3.5 py-3">
+                <button
+                  type="button"
+                  className="focus-ring flex w-full items-center justify-between gap-2 rounded text-left"
+                  aria-expanded={showDetail}
+                  aria-controls={detailId}
+                  onClick={() => setShowDetail((v) => !v)}
+                >
+                  <span>
+                    <span className="block text-sm font-semibold text-ink-950">
+                      {hasMateri ? 'Contoh penerapan untuk kegiatan SKM' : 'Contoh isian lengkap'}
+                    </span>
+                    <span className="block text-[11px] text-ink-500">
+                      Contoh ilustratif StatPlan — bukan data atau dokumen resmi
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-ink-500" aria-hidden>
+                    {showDetail ? (
+                      <ArrowUp2 size={14} variant="Bold" color="currentColor" />
+                    ) : (
+                      <ArrowDown2 size={14} variant="Bold" color="currentColor" />
+                    )}
+                  </span>
+                </button>
+                {showDetail ? (
+                  <dl id={detailId} className="mt-3 grid gap-x-4 gap-y-2.5 sm:grid-cols-[10rem_minmax(0,1fr)]">
+                    {card.contohDetail.map((row) => (
+                      <div key={row.label} className="contents">
+                        <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-600 sm:pt-0.5">
+                          {row.label}
+                        </dt>
+                        <dd className="-mt-1.5 whitespace-pre-line text-sm leading-relaxed text-ink-900 sm:mt-0">
+                          {row.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                ) : null}
+              </div>
             ) : null}
           </section>
 
-          <div className="space-y-2 border-t border-border/60 pt-3">
-            <p className="text-[11px] leading-relaxed text-ink-500">
-              Centang ini menandai bahwa Anda sudah meninjau dan memahami materi ini — bukan
-              bahwa draft sudah lengkap, dokumen disetujui, atau kegiatan statistik selesai.
-            </p>
+          {/* YANG BISA DIPELAJARI */}
+          {card.lessonPoints && card.lessonPoints.length > 0 ? (
+            <section className="space-y-2" data-section="pelajari">
+              <SectionLabel>Yang bisa dipelajari</SectionLabel>
+              <ul className="space-y-1.5 text-sm leading-relaxed text-ink-800">
+                {card.lessonPoints.map((point) => (
+                  <li key={point} className="flex gap-2">
+                    <TickCircle
+                      size={14}
+                      variant="Linear"
+                      color="currentColor"
+                      className="mt-1 shrink-0 text-ink-500"
+                      aria-hidden
+                    />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+
+          {/* FORMAT KERJA */}
+          <section
+            className="space-y-2 rounded-xl bg-ink-50/70 px-3.5 py-3"
+            data-section="format"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <SectionLabel>Format kerja StatPlan</SectionLabel>
+              <GuidedDraftStatus status={draftStatus} />
+            </div>
+            {prep ? (
+              <>
+                <p className="text-sm font-medium text-ink-950">{prep.title}</p>
+                <p className="text-xs leading-relaxed text-ink-600">{prep.explanation}</p>
+              </>
+            ) : null}
+            <Button type="button" className="mt-1 w-full sm:w-auto" onClick={onPrepare}>
+              {draftStatus === 'empty' ? 'Isi format kerja' : 'Lanjutkan format kerja'}
+            </Button>
+          </section>
+
+          {/* BUKTI DUKUNG */}
+          <section className="space-y-2" data-section="bukti">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <SectionLabel>Bukti dukung</SectionLabel>
+              <span className="text-xs tabular-nums text-ink-600">
+                {evidenceCount.ready}/{evidenceCount.total} disiapkan
+              </span>
+            </div>
+            <ul className="space-y-1.5">
+              {evidence.map((item) => (
+                <li key={item.id} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm text-ink-800">
+                  <span className="min-w-0">{item.label}</span>
+                  {item.pdfPage != null ? (
+                    <span className="text-[11px] font-medium text-accent-700">
+                      Output tahap menurut materi · Hal. {item.pdfPage}
+                    </span>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* SUDAH DIPAHAMI */}
+          <div className="flex flex-col gap-2 border-t border-border/60 pt-4 sm:flex-row sm:items-center sm:justify-between">
             {understood ? (
-              <p className="flex items-center gap-2 text-sm font-medium text-ink-900">
+              <p className="flex items-center gap-2 text-sm font-medium text-ink-900" data-understood>
                 <TickCircle size={18} variant="Bold" color="currentColor" aria-hidden />
-                <span>Sudah dipahami</span>
+                Sudah dipahami
               </p>
             ) : (
-              <Button type="button" variant="secondary" className="w-full sm:w-auto" onClick={onMarkUnderstood}>
-                Tandai sudah memahami
+              <Button
+                type="button"
+                variant="secondary"
+                className="w-full sm:w-auto"
+                onClick={onMarkUnderstood}
+              >
+                Tandai sudah dipahami
               </Button>
             )}
+            {understood && onNext ? (
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full sm:w-auto"
+                onClick={onNext}
+                rightIcon={<ArrowRight2 size={16} variant="Bold" color="currentColor" aria-hidden />}
+              >
+                {nextLabel ?? 'Subproses berikutnya'}
+              </Button>
+            ) : null}
           </div>
         </div>
       ) : null}

@@ -49,7 +49,7 @@ export function SampelKalkulator({
       </div>
       <p className="text-xs text-ink-700">
         Alat bantu perencanaan (rumus Yamane / Z). Hasil bersifat ilustratif — desain sampel final
-        divalidasi bersama BPS. Bukan standar resmi yang menggantikan kajian sampling.
+        perlu ditinjau ahli metodologi. Bukan standar resmi yang menggantikan kajian sampling.
       </p>
 
       <div className="grid gap-3 sm:grid-cols-2">
@@ -120,8 +120,8 @@ export function SampelKalkulator({
               onApply(
                 line,
                 mode === 'yamane'
-                  ? 'Perhitungan awal Yamane (perlu validasi BPS)'
-                  : 'Perhitungan awal Z + FPC (perlu validasi BPS)',
+                  ? 'Perhitungan awal Yamane (perlu ditinjau ahli metodologi)'
+                  : 'Perhitungan awal Z + FPC (perlu ditinjau ahli metodologi)',
               )
             }}
           >

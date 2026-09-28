@@ -15,69 +15,6 @@ export type WorkspaceTabId =
   | 'activity'
   | 'export'
 
-/** Ordered SOP shown on Help page — self-serve without a presenter. */
-export const HOW_TO_STEPS: {
-  step: number
-  title: string
-  body: string
-  where: string
-}[] = [
-  {
-    step: 1,
-    title: 'Buka atau buat proyek',
-    body: 'Di Beranda, buka proyek demo atau buat proyek baru. Isi nama, topik, dan deskripsi kebutuhan. Sistem akan menyarankan Survei, Sensus, atau Kompromin beserta alasannya.',
-    where: 'Beranda · Proyek baru · Asisten',
-  },
-  {
-    step: 2,
-    title: 'Cek portal rujukan statistik',
-    body: 'Pada tab Alur kerja, centang bahwa Anda sudah memeriksa sirusa.web.bps.go.id dan romantik.bps.go.id (serta portal SDI bila relevan). Ini wajib sebelum ekspor — untuk mencegah duplikasi kegiatan.',
-    where: 'Workspace → Alur kerja → kartu portal',
-  },
-  {
-    step: 3,
-    title: 'Kerjakan checklist GSBPM',
-    body: 'Centang item wajib di Alur kerja atau tab Checklist. Progres dihitung dari item yang relevan dengan jenis kegiatan Anda. Target minimal 80% untuk bisa mengekspor draf.',
-    where: 'Workspace → Alur kerja / Checklist',
-  },
-  {
-    step: 4,
-    title: 'Tetapkan perancangan pengumpulan',
-    body: 'Di tab Perancangan, pilih cara (Survei/Sensus/Kompromin), metode, dan moda. Untuk survei, isi sampling dan hitung n dengan kalkulator Yamane/Z. Untuk kompromin, fokus pada sumber administratif — bukan kuesioner lapangan. Lihat juga panel Contoh ilustrasi di Alur kerja sesuai topik.',
-    where: 'Workspace → Perancangan · Alur kerja (Contoh ilustrasi)',
-  },
-  {
-    step: 5,
-    title: 'Susun variabel (dan indikator)',
-    body: 'Isi nama, definisi, tipe, skala, sumber, contoh nilai, dan aturan missing untuk setiap variabel. Indikator di bawah daftar variabel menunjukkan rumus yang memakai variabel terkait (contoh demo bersifat ilustratif).',
-    where: 'Workspace → Variabel',
-  },
-  {
-    step: 6,
-    title: 'Susun instrumen (jika perlu)',
-    body: 'Survei/Sensus: tambah pertanyaan yang selaras dengan variabel. Kompromin: tidak ada kuesioner — yang ditampilkan adalah pemetaan variabel ke sumber administrasi.',
-    where: 'Workspace → Instrumen',
-  },
-  {
-    step: 7,
-    title: 'Tinjau timeline & lengkapi metadata',
-    body: 'Timeline menampilkan rencana minggu kerja per fase (contoh perencanaan). Lalu lengkapi MS-Keg, MS-Var, dan MS-Ind pada tab Metadata. Field bertanda * wajib untuk ekspor.',
-    where: 'Workspace → Timeline · Metadata',
-  },
-  {
-    step: 8,
-    title: 'Sektoral: siapkan rekomendasi ke BPS',
-    body: 'Jika klasifikasi sektoral, lengkapi draf rekomendasi di Alur kerja (Design 2.5) dan centang checklist terkait. Ini syarat ekspor untuk kegiatan sektoral.',
-    where: 'Workspace → Alur kerja → rekomendasi BPS',
-  },
-  {
-    step: 9,
-    title: 'Ekspor draf Word',
-    body: 'Buka tab Ekspor. Jika ada persyaratan merah, klik item tersebut untuk loncat ke tab yang perlu dilengkapi. Setelah lolos, unduh .docx. File berstatus draf — validasi akhir bersama BPS.',
-    where: 'Workspace → Ekspor',
-  },
-]
-
 export interface NextStepItem {
   id: string
   title: string
@@ -187,6 +124,6 @@ export const TAB_GUIDES: Record<
   },
   export: {
     title: 'Cara kerja tab ini',
-    body: 'Lihat daftar persyaratan. Perbaiki yang berwarna error, lalu unduh draf Word. File diproses di perangkat Anda dan tetap perlu validasi BPS.',
+    body: 'Lihat daftar persyaratan. Perbaiki yang berwarna error, lalu unduh draf Word. File diproses di perangkat Anda dan berstatus draf, bukan dokumen resmi BPS.',
   },
 }

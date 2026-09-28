@@ -52,7 +52,7 @@ export function buildDemoProjects(): Project[] {
       rationale: [
         'Data kepuasan layanan belum tersedia di portal rujukan; diperlukan pengumpulan baru melalui sampel pengguna layanan.',
         'Survei membutuhkan kerangka sampel, kuesioner, dan metode sampling sesuai Design 2.3–2.4.',
-        'Sebagai statistik sektoral, pengajuan rekomendasi kegiatan ke BPS wajib disiapkan (Design 2.5).',
+        'Sebagai statistik sektoral, pengajuan rekomendasi kegiatan ke BPS wajib disiapkan (Design 2.6).',
       ],
       groundedRefs: [
         'Materi Proses Bisnis — Specify Need 1.5 (hal. 15)',

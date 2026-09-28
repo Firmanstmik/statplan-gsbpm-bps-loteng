@@ -6,8 +6,6 @@ import { useAppStore } from '@/store/appStore'
 import { Button } from '@/components/ui/Button'
 import {
   allocatePhaseDates,
-  formatDateID,
-  formatDateRangeID,
 } from '@/content/planningTimeline'
 import {
   GUIDED_NEED_CARDS,
@@ -66,6 +64,7 @@ import {
   type GuidedSession,
 } from '@/lib/guidedSession'
 import { GuidedLearningCard } from '@/features/planner/guided/GuidedLearningCard'
+import { PhaseChapter } from '@/features/planner/guided/PhaseChapter'
 import {
   GuidedMaterialsSummary,
   GuidedTemplatePanel,
@@ -123,7 +122,7 @@ function materialsFor(
     const status = prep
       ? computeDraftStatus(prep, session.templateDrafts[card.id]?.values)
       : 'empty'
-    return { id: card.id, title: card.title, status }
+    return { id: card.id, title: `${card.code} ${card.officialTitle ?? card.title}`, status }
   })
 }
 
@@ -378,24 +377,19 @@ export function GuidedPhasePage() {
   const showPhase7 = view === 'phase7' || view === 'phase7-done'
   const showPhase8 = view === 'phase8' || view === 'phase8-done'
 
-  const headerDates =
-    showPhase8 && evaluatePhaseDates
-      ? `${formatDateID(evaluatePhaseDates.startISO)} – ${formatDateID(evaluatePhaseDates.endISO)}`
-      : showPhase7 && disseminatePhaseDates
-        ? `${formatDateID(disseminatePhaseDates.startISO)} – ${formatDateID(disseminatePhaseDates.endISO)}`
-        : showPhase6 && analysePhaseDates
-          ? `${formatDateID(analysePhaseDates.startISO)} – ${formatDateID(analysePhaseDates.endISO)}`
-          : showPhase5 && processPhaseDates
-            ? `${formatDateID(processPhaseDates.startISO)} – ${formatDateID(processPhaseDates.endISO)}`
-            : showPhase4 && collectPhaseDates
-              ? `${formatDateID(collectPhaseDates.startISO)} – ${formatDateID(collectPhaseDates.endISO)}`
-              : showPhase3 && buildPhaseDates
-                ? `${formatDateID(buildPhaseDates.startISO)} – ${formatDateID(buildPhaseDates.endISO)}`
-                : showPhase2 && designPhaseDates
-                  ? `${formatDateID(designPhaseDates.startISO)} – ${formatDateID(designPhaseDates.endISO)}`
-                  : needPhaseDates
-                    ? `${formatDateID(needPhaseDates.startISO)} – ${formatDateID(needPhaseDates.endISO)}`
-                    : formatDateRangeID(session.startISO, session.endISO)
+  function nextOf(cards: CardData[], cardId: string): CardData | undefined {
+    const idx = cards.findIndex((c) => c.id === cardId)
+    return idx >= 0 ? cards[idx + 1] : undefined
+  }
+
+  function openCard(cardId: string) {
+    setOpenCardId(cardId)
+    window.setTimeout(() => {
+      document
+        .querySelector(`[data-guided-card="${cardId}"]`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 30)
+  }
 
   function renderCardList(cards: CardData[]) {
     return (
@@ -411,6 +405,12 @@ export function GuidedPhasePage() {
             onToggle={() => setOpenCardId((cur) => (cur === card.id ? null : card.id))}
             onMarkUnderstood={() => handleMarkUnderstood(card.id)}
             onPrepare={() => setPrepCardId(card.id)}
+            onNext={nextOf(cards, card.id) ? () => openCard(nextOf(cards, card.id)!.id) : undefined}
+            nextLabel={
+              nextOf(cards, card.id)
+                ? `Lanjut ke ${nextOf(cards, card.id)!.code} ${nextOf(cards, card.id)!.officialTitle ?? ''}`
+                : undefined
+            }
           />
         ))}
       </div>
@@ -419,33 +419,21 @@ export function GuidedPhasePage() {
 
   return (
     <div className="mx-auto max-w-3xl pb-10">
-      <header className="space-y-3 border-b border-border/70 pb-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-bps-orange">
-          Mode Terpandu
-        </p>
-        <div>
-          <p className="text-xs font-medium text-ink-600">Rencana waktu Anda</p>
-          <p className="mt-0.5 text-sm font-medium text-ink-950">{headerDates}</p>
-          <p className="mt-1 text-[11px] text-ink-500">
-            Rentang yang Anda tentukan untuk tahap ini — bukan durasi wajib BPS. Anda bisa
-            mengubahnya nanti.
-          </p>
-        </div>
-        <p className="text-sm text-ink-700">
-          Kegiatan: <span className="font-medium text-ink-900">{project.name}</span>
-        </p>
-        <p className="text-sm leading-relaxed text-ink-700">
-          Di sini Anda belajar apa yang perlu disiapkan — satu bagian per satu. Anda tidak perlu
-          memahami GSBPM terlebih dahulu; StatPlan menjelaskan langkahnya.
+      <header className="flex flex-col gap-1 border-b border-border pb-5">
+        <p className="t-eyebrow">Mode Terpandu</p>
+        <p className="text-[15px] font-semibold text-ink-950">{project.name}</p>
+        <p className="t-support">
+          Pelajari satu subproses GSBPM pada satu waktu, lalu siapkan bahannya. Tidak perlu memahami
+          GSBPM terlebih dahulu.
         </p>
       </header>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[11rem_minmax(0,1fr)]">
-        <nav aria-label="Urutan belajar Mode Terpandu" className="lg:sticky lg:top-4 lg:self-start">
+        <nav aria-label="Urutan belajar Mode Terpandu" className="min-w-0 lg:sticky lg:top-20 lg:self-start">
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-ink-500">
             Urutan belajar StatPlan
           </p>
-          <ol className="space-y-1.5">
+          <ol className="-mx-4 flex snap-x gap-1.5 overflow-x-auto px-4 pb-1 lg:mx-0 lg:block lg:space-y-1.5 lg:overflow-visible lg:px-0 lg:pb-0">
             {GSBPM_PHASES.map((phase, idx) => {
               const status = phaseStatus(phase.id)
               const isCurrent =
@@ -462,7 +450,7 @@ export function GuidedPhasePage() {
                 ? `Belum dibuka. Selesaikan belajar tahap ${prevPhase.titleId} terlebih dahulu.`
                 : 'Belum dibuka'
               return (
-                <li key={phase.id}>
+                <li key={phase.id} className="shrink-0 lg:shrink">
                   <button
                     type="button"
                     disabled={status === 'locked'}
@@ -513,7 +501,7 @@ export function GuidedPhasePage() {
                       }
                     }}
                     className={cn(
-                      'focus-ring flex w-full items-start gap-2 rounded-xl px-2 py-2 text-left text-xs',
+                      'focus-ring flex w-[9.5rem] shrink-0 snap-start items-start gap-2 rounded-xl px-2 py-2 text-left text-xs lg:w-full',
                       isCurrent ? 'bg-ink-900 text-white' : 'text-ink-700 hover:bg-ink-50',
                       status === 'locked'
                         ? 'cursor-not-allowed opacity-55 hover:bg-transparent'
@@ -551,7 +539,7 @@ export function GuidedPhasePage() {
               )
             })}
           </ol>
-          <p className="mt-3 text-[10px] leading-relaxed text-ink-500">
+          <p className="mt-3 hidden text-[10px] leading-relaxed text-ink-500 lg:block">
             Kunci tahap adalah urutan belajar StatPlan, bukan urutan wajib GSBPM.
           </p>
         </nav>
@@ -559,30 +547,13 @@ export function GuidedPhasePage() {
         <div className="min-w-0">
           {showPhase1 ? (
             <section aria-labelledby="guided-phase-heading" className="space-y-5">
-              <header>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                  1 · Identifikasi Kebutuhan
-                </p>
-                <h1
-                  id="guided-phase-heading"
-                  tabIndex={-1}
-                  className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
-                >
-                  {GUIDED_NEED_INTRO.title}
-                </h1>
-                <p className="mt-2 text-sm font-medium text-ink-900">
-                  {GUIDED_NEED_INTRO.question}
-                </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-700">
-                  {GUIDED_NEED_INTRO.explanation}
-                </p>
-              </header>
-              <aside className="rounded-xl border border-border/80 bg-ink-50/80 px-3.5 py-3">
-                <p className="text-xs font-semibold text-ink-900">Berbasis GSBPM 5.2</p>
-                <p className="mt-1 text-xs leading-relaxed text-ink-600">
-                  {GUIDED_NEED_INTRO.gsbpmNote}
-                </p>
-              </aside>
+              <PhaseChapter
+                index={1}
+                intro={GUIDED_NEED_INTRO}
+                cards={GUIDED_NEED_CARDS}
+                understood={activeSession.understood}
+                dates={needPhaseDates}
+              />
               {renderCardList(GUIDED_NEED_CARDS)}
               <GuidedMaterialsSummary
                 rows={needMaterialsRows}
@@ -595,7 +566,7 @@ export function GuidedPhasePage() {
               />
               <div className="rounded-2xl border border-border/80 bg-white px-4 py-4">
                 <p className="text-sm font-medium text-ink-950">
-                  Progress: {needUnderstoodCount} dari {GUIDED_NEED_CARDS.length} materi dipahami
+                  {needUnderstoodCount} dari {GUIDED_NEED_CARDS.length} subproses sudah dipahami
                 </p>
                 {!phase1Done ? (
                   <>
@@ -645,36 +616,13 @@ export function GuidedPhasePage() {
 
           {showPhase2 ? (
             <section aria-labelledby="guided-phase-heading" className="space-y-5">
-              <header>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                  2 · Perancangan
-                </p>
-                <h1
-                  id="guided-phase-heading"
-                  tabIndex={-1}
-                  className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
-                >
-                  {DESIGN_INTRO.title}
-                </h1>
-                <p className="mt-2 text-sm font-medium text-ink-900">{DESIGN_INTRO.question}</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-700">
-                  {DESIGN_INTRO.explanation}
-                </p>
-                {designPhaseDates ? (
-                  <p className="mt-3 text-sm text-ink-800">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                      Rencana waktu Anda
-                    </span>
-                    <br />
-                    {formatDateID(designPhaseDates.startISO)} –{' '}
-                    {formatDateID(designPhaseDates.endISO)}
-                  </p>
-                ) : null}
-              </header>
-              <aside className="rounded-xl border border-border/80 bg-ink-50/80 px-3.5 py-3">
-                <p className="text-xs font-semibold text-ink-900">Berbasis GSBPM 5.2</p>
-                <p className="mt-1 text-xs leading-relaxed text-ink-600">{DESIGN_INTRO.gsbpmNote}</p>
-              </aside>
+              <PhaseChapter
+                index={2}
+                intro={DESIGN_INTRO}
+                cards={GUIDED_DESIGN_CARDS}
+                understood={activeSession.understood}
+                dates={designPhaseDates}
+              />
               {renderCardList(GUIDED_DESIGN_CARDS)}
               <GuidedMaterialsSummary
                 title="Bahan perancangan Anda"
@@ -688,8 +636,7 @@ export function GuidedPhasePage() {
               />
               <div className="rounded-2xl border border-border/80 bg-white px-4 py-4">
                 <p className="text-sm font-medium text-ink-950">
-                  Progress: {designUnderstoodCount} dari {GUIDED_DESIGN_CARDS.length} materi
-                  dipahami
+                  {designUnderstoodCount} dari {GUIDED_DESIGN_CARDS.length} subproses sudah dipahami
                 </p>
                 {!phase2Done ? (
                   <Button
@@ -710,7 +657,7 @@ export function GuidedPhasePage() {
                     <TickCircle size={18} variant="Bold" color="currentColor" aria-hidden />
                     Perancangan selesai dipelajari.
                   </p>
-                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Build</p>
+                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Pembangunan</p>
                   <Button
                     className="mt-4 w-full"
                     onClick={() => {
@@ -718,7 +665,7 @@ export function GuidedPhasePage() {
                       setOpenCardId(null)
                     }}
                   >
-                    Lanjut ke Build
+                    Lanjut ke Pembangunan
                   </Button>
                 </div>
               ) : (
@@ -737,39 +684,16 @@ export function GuidedPhasePage() {
 
           {showPhase3 ? (
             <section aria-labelledby="guided-phase-heading" className="space-y-5">
-              <header>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                  3 · Build
-                </p>
-                <h1
-                  id="guided-phase-heading"
-                  tabIndex={-1}
-                  className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
-                >
-                  {BUILD_INTRO.title}
-                </h1>
-                <p className="mt-2 text-sm font-medium text-ink-900">{BUILD_INTRO.question}</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-700">
-                  {BUILD_INTRO.explanation}
-                </p>
-                {buildPhaseDates ? (
-                  <p className="mt-3 text-sm text-ink-800">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                      Rencana waktu Anda
-                    </span>
-                    <br />
-                    {formatDateID(buildPhaseDates.startISO)} –{' '}
-                    {formatDateID(buildPhaseDates.endISO)}
-                  </p>
-                ) : null}
-              </header>
-              <aside className="rounded-xl border border-border/80 bg-ink-50/80 px-3.5 py-3">
-                <p className="text-xs font-semibold text-ink-900">Berbasis GSBPM 5.2</p>
-                <p className="mt-1 text-xs leading-relaxed text-ink-600">{BUILD_INTRO.gsbpmNote}</p>
-              </aside>
+              <PhaseChapter
+                index={3}
+                intro={BUILD_INTRO}
+                cards={GUIDED_BUILD_CARDS}
+                understood={activeSession.understood}
+                dates={buildPhaseDates}
+              />
               {renderCardList(GUIDED_BUILD_CARDS)}
               <GuidedMaterialsSummary
-                title="Bahan Build Anda"
+                title="Bahan pembangunan Anda"
                 rows={buildMaterialsRows}
                 onContinue={() => {
                   const firstEmpty = buildMaterialsRows.find((r) => r.status === 'empty')
@@ -780,10 +704,10 @@ export function GuidedPhasePage() {
               />
               <div className="rounded-2xl border border-border/80 bg-white px-4 py-4">
                 <p className="text-sm font-medium text-ink-950">
-                  Progress: {buildUnderstoodCount} dari {GUIDED_BUILD_CARDS.length} materi dipahami
+                  {buildUnderstoodCount} dari {GUIDED_BUILD_CARDS.length} subproses sudah dipahami
                 </p>
                 <p className="mt-1 text-xs text-ink-500">
-                  Memahami materi berbeda dari mengisi draft. Bahan dapat dilengkapi bertahap.
+                  “Sudah dipahami” berarti Anda sudah meninjau materinya — bukan draft lengkap atau dokumen disetujui. Format kerja dapat dilengkapi bertahap.
                 </p>
                 {!phase3Done ? (
                   <>
@@ -803,7 +727,7 @@ export function GuidedPhasePage() {
                       </p>
                     ) : (
                       <p className="mt-2 text-xs text-ink-500">
-                        Tandai semua materi sebagai sudah dipahami untuk menyelesaikan tahap
+                        Tandai semua subproses sebagai sudah dipahami untuk menyelesaikan tahap
                         belajar ini.
                       </p>
                     )}
@@ -814,9 +738,9 @@ export function GuidedPhasePage() {
                 <div className="rounded-2xl border border-ink-900/10 bg-ink-50 px-4 py-4">
                   <p className="flex items-center gap-2 text-sm font-semibold text-ink-950">
                     <TickCircle size={18} variant="Bold" color="currentColor" aria-hidden />
-                    Build selesai dipelajari.
+                    Pembangunan selesai dipelajari.
                   </p>
-                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Collect</p>
+                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Pengumpulan Data</p>
                   <p className="mt-1 text-xs text-ink-500">
                     Ini bukan klaim bahwa kegiatan sudah siap operasional atau disetujui secara
                     resmi.
@@ -828,7 +752,7 @@ export function GuidedPhasePage() {
                       setOpenCardId(null)
                     }}
                   >
-                    Lanjut ke Collect
+                    Lanjut ke Pengumpulan Data
                   </Button>
                 </div>
               ) : (
@@ -850,39 +774,16 @@ export function GuidedPhasePage() {
 
           {showPhase4 ? (
             <section aria-labelledby="guided-phase-heading" className="space-y-5">
-              <header>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                  4 · Collect
-                </p>
-                <h1
-                  id="guided-phase-heading"
-                  tabIndex={-1}
-                  className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
-                >
-                  {COLLECT_INTRO.title}
-                </h1>
-                <p className="mt-2 text-sm font-medium text-ink-900">{COLLECT_INTRO.question}</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-700">
-                  {COLLECT_INTRO.explanation}
-                </p>
-                {collectPhaseDates ? (
-                  <p className="mt-3 text-sm text-ink-800">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                      Rencana waktu Anda
-                    </span>
-                    <br />
-                    {formatDateID(collectPhaseDates.startISO)} –{' '}
-                    {formatDateID(collectPhaseDates.endISO)}
-                  </p>
-                ) : null}
-              </header>
-              <aside className="rounded-xl border border-border/80 bg-ink-50/80 px-3.5 py-3">
-                <p className="text-xs font-semibold text-ink-900">Berbasis GSBPM 5.2</p>
-                <p className="mt-1 text-xs leading-relaxed text-ink-600">{COLLECT_INTRO.gsbpmNote}</p>
-              </aside>
+              <PhaseChapter
+                index={4}
+                intro={COLLECT_INTRO}
+                cards={GUIDED_COLLECT_CARDS}
+                understood={activeSession.understood}
+                dates={collectPhaseDates}
+              />
               {renderCardList(GUIDED_COLLECT_CARDS)}
               <GuidedMaterialsSummary
-                title="Bahan Collect Anda"
+                title="Bahan pengumpulan data Anda"
                 rows={collectMaterialsRows}
                 onContinue={() => {
                   const firstEmpty = collectMaterialsRows.find((r) => r.status === 'empty')
@@ -893,11 +794,10 @@ export function GuidedPhasePage() {
               />
               <div className="rounded-2xl border border-border/80 bg-white px-4 py-4">
                 <p className="text-sm font-medium text-ink-950">
-                  Progress: {collectUnderstoodCount} dari {GUIDED_COLLECT_CARDS.length} materi
-                  dipahami
+                  {collectUnderstoodCount} dari {GUIDED_COLLECT_CARDS.length} subproses sudah dipahami
                 </p>
                 <p className="mt-1 text-xs text-ink-500">
-                  Memahami materi berbeda dari mengisi draft. Bahan dapat dilengkapi bertahap.
+                  “Sudah dipahami” berarti Anda sudah meninjau materinya — bukan draft lengkap atau dokumen disetujui. Format kerja dapat dilengkapi bertahap.
                   Persiapan bukan pelaksanaan pengumpulan.
                 </p>
                 {!phase4Done ? (
@@ -918,7 +818,7 @@ export function GuidedPhasePage() {
                       </p>
                     ) : (
                       <p className="mt-2 text-xs text-ink-500">
-                        Tandai semua materi sebagai sudah dipahami untuk menyelesaikan tahap
+                        Tandai semua subproses sebagai sudah dipahami untuk menyelesaikan tahap
                         belajar ini.
                       </p>
                     )}
@@ -929,9 +829,9 @@ export function GuidedPhasePage() {
                 <div className="rounded-2xl border border-ink-900/10 bg-ink-50 px-4 py-4">
                   <p className="flex items-center gap-2 text-sm font-semibold text-ink-950">
                     <TickCircle size={18} variant="Bold" color="currentColor" aria-hidden />
-                    Collect selesai dipelajari.
+                    Pengumpulan Data selesai dipelajari.
                   </p>
-                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Process</p>
+                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Pengolahan Data</p>
                   <p className="mt-1 text-xs text-ink-500">
                     Ini bukan klaim bahwa pengumpulan data telah dilaksanakan atau disetujui
                     secara resmi.
@@ -943,7 +843,7 @@ export function GuidedPhasePage() {
                       setOpenCardId(null)
                     }}
                   >
-                    Lanjut ke Process
+                    Lanjut ke Pengolahan Data
                   </Button>
                 </div>
               ) : (
@@ -957,7 +857,7 @@ export function GuidedPhasePage() {
                     setOpenCardId(null)
                   }}
                 >
-                  Kembali ke Build
+                  Kembali ke Pembangunan
                 </Button>
               )}
             </section>
@@ -965,39 +865,16 @@ export function GuidedPhasePage() {
 
           {showPhase5 ? (
             <section aria-labelledby="guided-phase-heading" className="space-y-5">
-              <header>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                  5 · Process
-                </p>
-                <h1
-                  id="guided-phase-heading"
-                  tabIndex={-1}
-                  className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
-                >
-                  {PROCESS_INTRO.title}
-                </h1>
-                <p className="mt-2 text-sm font-medium text-ink-900">{PROCESS_INTRO.question}</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-700">
-                  {PROCESS_INTRO.explanation}
-                </p>
-                {processPhaseDates ? (
-                  <p className="mt-3 text-sm text-ink-800">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                      Rencana waktu Anda
-                    </span>
-                    <br />
-                    {formatDateID(processPhaseDates.startISO)} –{' '}
-                    {formatDateID(processPhaseDates.endISO)}
-                  </p>
-                ) : null}
-              </header>
-              <aside className="rounded-xl border border-border/80 bg-ink-50/80 px-3.5 py-3">
-                <p className="text-xs font-semibold text-ink-900">Berbasis GSBPM 5.2</p>
-                <p className="mt-1 text-xs leading-relaxed text-ink-600">{PROCESS_INTRO.gsbpmNote}</p>
-              </aside>
+              <PhaseChapter
+                index={5}
+                intro={PROCESS_INTRO}
+                cards={GUIDED_PROCESS_CARDS}
+                understood={activeSession.understood}
+                dates={processPhaseDates}
+              />
               {renderCardList(GUIDED_PROCESS_CARDS)}
               <GuidedMaterialsSummary
-                title="Bahan Process Anda"
+                title="Bahan pengolahan data Anda"
                 rows={processMaterialsRows}
                 onContinue={() => {
                   const firstEmpty = processMaterialsRows.find((r) => r.status === 'empty')
@@ -1008,11 +885,10 @@ export function GuidedPhasePage() {
               />
               <div className="rounded-2xl border border-border/80 bg-white px-4 py-4">
                 <p className="text-sm font-medium text-ink-950">
-                  Progress: {processUnderstoodCount} dari {GUIDED_PROCESS_CARDS.length} materi
-                  dipahami
+                  {processUnderstoodCount} dari {GUIDED_PROCESS_CARDS.length} subproses sudah dipahami
                 </p>
                 <p className="mt-1 text-xs text-ink-500">
-                  Memahami materi berbeda dari mengisi draft. Bahan dapat dilengkapi bertahap.
+                  “Sudah dipahami” berarti Anda sudah meninjau materinya — bukan draft lengkap atau dokumen disetujui. Format kerja dapat dilengkapi bertahap.
                   Persiapan bukan pelaksanaan pengolahan data.
                 </p>
                 {!phase5Done ? (
@@ -1033,7 +909,7 @@ export function GuidedPhasePage() {
                       </p>
                     ) : (
                       <p className="mt-2 text-xs text-ink-500">
-                        Tandai semua materi sebagai sudah dipahami untuk menyelesaikan tahap
+                        Tandai semua subproses sebagai sudah dipahami untuk menyelesaikan tahap
                         belajar ini.
                       </p>
                     )}
@@ -1044,9 +920,9 @@ export function GuidedPhasePage() {
                 <div className="rounded-2xl border border-ink-900/10 bg-ink-50 px-4 py-4">
                   <p className="flex items-center gap-2 text-sm font-semibold text-ink-950">
                     <TickCircle size={18} variant="Bold" color="currentColor" aria-hidden />
-                    Process selesai dipelajari.
+                    Pengolahan Data selesai dipelajari.
                   </p>
-                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Analyse</p>
+                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Analisis Data</p>
                   <p className="mt-1 text-xs text-ink-500">
                     Ini bukan klaim bahwa data telah diolah atau disetujui secara resmi.
                   </p>
@@ -1057,7 +933,7 @@ export function GuidedPhasePage() {
                       setOpenCardId(null)
                     }}
                   >
-                    Lanjut ke Analyse
+                    Lanjut ke Analisis Data
                   </Button>
                 </div>
               ) : (
@@ -1071,7 +947,7 @@ export function GuidedPhasePage() {
                     setOpenCardId(null)
                   }}
                 >
-                  Kembali ke Collect
+                  Kembali ke Pengumpulan Data
                 </Button>
               )}
             </section>
@@ -1079,39 +955,16 @@ export function GuidedPhasePage() {
 
           {showPhase6 ? (
             <section aria-labelledby="guided-phase-heading" className="space-y-5">
-              <header>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                  6 · Analyse
-                </p>
-                <h1
-                  id="guided-phase-heading"
-                  tabIndex={-1}
-                  className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
-                >
-                  {ANALYSE_INTRO.title}
-                </h1>
-                <p className="mt-2 text-sm font-medium text-ink-900">{ANALYSE_INTRO.question}</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-700">
-                  {ANALYSE_INTRO.explanation}
-                </p>
-                {analysePhaseDates ? (
-                  <p className="mt-3 text-sm text-ink-800">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                      Rencana waktu Anda
-                    </span>
-                    <br />
-                    {formatDateID(analysePhaseDates.startISO)} –{' '}
-                    {formatDateID(analysePhaseDates.endISO)}
-                  </p>
-                ) : null}
-              </header>
-              <aside className="rounded-xl border border-border/80 bg-ink-50/80 px-3.5 py-3">
-                <p className="text-xs font-semibold text-ink-900">Berbasis GSBPM 5.2</p>
-                <p className="mt-1 text-xs leading-relaxed text-ink-600">{ANALYSE_INTRO.gsbpmNote}</p>
-              </aside>
+              <PhaseChapter
+                index={6}
+                intro={ANALYSE_INTRO}
+                cards={GUIDED_ANALYSE_CARDS}
+                understood={activeSession.understood}
+                dates={analysePhaseDates}
+              />
               {renderCardList(GUIDED_ANALYSE_CARDS)}
               <GuidedMaterialsSummary
-                title="Bahan Analyse Anda"
+                title="Bahan analisis data Anda"
                 rows={analyseMaterialsRows}
                 onContinue={() => {
                   const firstEmpty = analyseMaterialsRows.find((r) => r.status === 'empty')
@@ -1122,11 +975,10 @@ export function GuidedPhasePage() {
               />
               <div className="rounded-2xl border border-border/80 bg-white px-4 py-4">
                 <p className="text-sm font-medium text-ink-950">
-                  Progress: {analyseUnderstoodCount} dari {GUIDED_ANALYSE_CARDS.length} materi
-                  dipahami
+                  {analyseUnderstoodCount} dari {GUIDED_ANALYSE_CARDS.length} subproses sudah dipahami
                 </p>
                 <p className="mt-1 text-xs text-ink-500">
-                  Memahami materi berbeda dari mengisi draft. Bahan dapat dilengkapi bertahap.
+                  “Sudah dipahami” berarti Anda sudah meninjau materinya — bukan draft lengkap atau dokumen disetujui. Format kerja dapat dilengkapi bertahap.
                   Rencana analisis bukan hasil analisis.
                 </p>
                 {!phase6Done ? (
@@ -1147,7 +999,7 @@ export function GuidedPhasePage() {
                       </p>
                     ) : (
                       <p className="mt-2 text-xs text-ink-500">
-                        Tandai semua materi sebagai sudah dipahami untuk menyelesaikan tahap
+                        Tandai semua subproses sebagai sudah dipahami untuk menyelesaikan tahap
                         belajar ini.
                       </p>
                     )}
@@ -1158,9 +1010,9 @@ export function GuidedPhasePage() {
                 <div className="rounded-2xl border border-ink-900/10 bg-ink-50 px-4 py-4">
                   <p className="flex items-center gap-2 text-sm font-semibold text-ink-950">
                     <TickCircle size={18} variant="Bold" color="currentColor" aria-hidden />
-                    Analyse selesai dipelajari.
+                    Analisis Data selesai dipelajari.
                   </p>
-                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Disseminate</p>
+                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Penyajian & Penyebarluasan</p>
                   <p className="mt-1 text-xs text-ink-500">
                     Ini bukan klaim bahwa analisis telah dihitung, hasil dipublikasikan, atau
                     disetujui secara resmi.
@@ -1172,7 +1024,7 @@ export function GuidedPhasePage() {
                       setOpenCardId(null)
                     }}
                   >
-                    Lanjut ke Disseminate
+                    Lanjut ke Penyajian & Penyebarluasan
                   </Button>
                 </div>
               ) : (
@@ -1186,7 +1038,7 @@ export function GuidedPhasePage() {
                     setOpenCardId(null)
                   }}
                 >
-                  Kembali ke Process
+                  Kembali ke Pengolahan Data
                 </Button>
               )}
             </section>
@@ -1194,43 +1046,16 @@ export function GuidedPhasePage() {
 
           {showPhase7 ? (
             <section aria-labelledby="guided-phase-heading" className="space-y-5">
-              <header>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                  7 · Disseminate
-                </p>
-                <h1
-                  id="guided-phase-heading"
-                  tabIndex={-1}
-                  className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
-                >
-                  {DISSEMINATE_INTRO.title}
-                </h1>
-                <p className="mt-2 text-sm font-medium text-ink-900">
-                  {DISSEMINATE_INTRO.question}
-                </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-700">
-                  {DISSEMINATE_INTRO.explanation}
-                </p>
-                {disseminatePhaseDates ? (
-                  <p className="mt-3 text-sm text-ink-800">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                      Rencana waktu Anda
-                    </span>
-                    <br />
-                    {formatDateID(disseminatePhaseDates.startISO)} –{' '}
-                    {formatDateID(disseminatePhaseDates.endISO)}
-                  </p>
-                ) : null}
-              </header>
-              <aside className="rounded-xl border border-border/80 bg-ink-50/80 px-3.5 py-3">
-                <p className="text-xs font-semibold text-ink-900">Berbasis GSBPM 5.2</p>
-                <p className="mt-1 text-xs leading-relaxed text-ink-600">
-                  {DISSEMINATE_INTRO.gsbpmNote}
-                </p>
-              </aside>
+              <PhaseChapter
+                index={7}
+                intro={DISSEMINATE_INTRO}
+                cards={GUIDED_DISSEMINATE_CARDS}
+                understood={activeSession.understood}
+                dates={disseminatePhaseDates}
+              />
               {renderCardList(GUIDED_DISSEMINATE_CARDS)}
               <GuidedMaterialsSummary
-                title="Bahan Disseminate Anda"
+                title="Bahan penyajian dan penyebarluasan Anda"
                 rows={disseminateMaterialsRows}
                 onContinue={() => {
                   const firstEmpty = disseminateMaterialsRows.find((r) => r.status === 'empty')
@@ -1241,8 +1066,7 @@ export function GuidedPhasePage() {
               />
               <div className="rounded-2xl border border-border/80 bg-white px-4 py-4">
                 <p className="text-sm font-medium text-ink-950">
-                  Progress: {disseminateUnderstoodCount} dari {GUIDED_DISSEMINATE_CARDS.length}{' '}
-                  materi dipahami
+                  {disseminateUnderstoodCount} dari {GUIDED_DISSEMINATE_CARDS.length} subproses sudah dipahami
                 </p>
                 <p className="mt-1 text-xs text-ink-500">
                   Memahami materi berbeda dari mengisi draft. Rencana rilis dan penyebarluasan
@@ -1266,7 +1090,7 @@ export function GuidedPhasePage() {
                       </p>
                     ) : (
                       <p className="mt-2 text-xs text-ink-500">
-                        Tandai semua materi sebagai sudah dipahami untuk menyelesaikan tahap
+                        Tandai semua subproses sebagai sudah dipahami untuk menyelesaikan tahap
                         belajar ini.
                       </p>
                     )}
@@ -1277,9 +1101,9 @@ export function GuidedPhasePage() {
                 <div className="rounded-2xl border border-ink-900/10 bg-ink-50 px-4 py-4">
                   <p className="flex items-center gap-2 text-sm font-semibold text-ink-950">
                     <TickCircle size={18} variant="Bold" color="currentColor" aria-hidden />
-                    Persiapan Disseminate selesai dipelajari.
+                    Penyajian & Penyebarluasan selesai dipelajari.
                   </p>
-                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Evaluate</p>
+                  <p className="mt-2 text-sm text-ink-700">Berikutnya: Evaluasi</p>
                   <p className="mt-1 text-xs text-ink-500">
                     Ini bukan klaim bahwa produk dipublikasikan, rilis telah terjadi, atau
                     kegiatan disetujui secara resmi.
@@ -1291,7 +1115,7 @@ export function GuidedPhasePage() {
                       setOpenCardId(null)
                     }}
                   >
-                    Lanjut ke Evaluate
+                    Lanjut ke Evaluasi
                   </Button>
                 </div>
               ) : (
@@ -1305,7 +1129,7 @@ export function GuidedPhasePage() {
                     setOpenCardId(null)
                   }}
                 >
-                  Kembali ke Analyse
+                  Kembali ke Analisis Data
                 </Button>
               )}
             </section>
@@ -1313,41 +1137,17 @@ export function GuidedPhasePage() {
 
           {showPhase8 ? (
             <section aria-labelledby="guided-phase-heading" className="space-y-5">
-              <header>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                  8 · Evaluate
-                </p>
-                <h1
-                  id="guided-phase-heading"
-                  tabIndex={-1}
-                  className="mt-1 font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
-                >
-                  {EVALUATE_INTRO.title}
-                </h1>
-                <p className="mt-2 text-sm font-medium text-ink-900">
-                  {EVALUATE_INTRO.question}
-                </p>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-700">
-                  {EVALUATE_INTRO.explanation}
-                </p>
-                {evaluatePhaseDates ? (
-                  <p className="mt-3 text-sm text-ink-800">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                      Rencana waktu Anda
-                    </span>
-                    <br />
-                    {formatDateID(evaluatePhaseDates.startISO)} –{' '}
-                    {formatDateID(evaluatePhaseDates.endISO)}
-                  </p>
-                ) : null}
-                <p className="mt-3 text-xs leading-relaxed text-ink-500">
-                  {EVALUATE_INTRO.gsbpmNote}
-                </p>
-              </header>
+              <PhaseChapter
+                index={8}
+                intro={EVALUATE_INTRO}
+                cards={GUIDED_EVALUATE_CARDS}
+                understood={activeSession.understood}
+                dates={evaluatePhaseDates}
+              />
 
               {renderCardList(GUIDED_EVALUATE_CARDS)}
               <GuidedMaterialsSummary
-                title="Bahan Evaluate Anda"
+                title="Bahan evaluasi Anda"
                 rows={evaluateMaterialsRows}
                 onContinue={() => {
                   const firstEmpty = evaluateMaterialsRows.find((r) => r.status === 'empty')
@@ -1358,8 +1158,7 @@ export function GuidedPhasePage() {
               />
               <div className="rounded-2xl border border-border/80 bg-white px-4 py-4">
                 <p className="text-sm font-medium text-ink-900">
-                  Progress: {evaluateUnderstoodCount} dari {GUIDED_EVALUATE_CARDS.length} materi
-                  dipahami
+                  {evaluateUnderstoodCount} dari {GUIDED_EVALUATE_CARDS.length} subproses sudah dipahami
                 </p>
                 {!phase8Done ? (
                   <>
@@ -1380,7 +1179,7 @@ export function GuidedPhasePage() {
                       </p>
                     ) : (
                       <p className="mt-2 text-xs text-ink-500">
-                        Tandai semua materi sebagai sudah dipahami untuk menyelesaikan tahap
+                        Tandai semua subproses sebagai sudah dipahami untuk menyelesaikan tahap
                         belajar ini.
                       </p>
                     )}
@@ -1392,7 +1191,7 @@ export function GuidedPhasePage() {
                   <div className="rounded-2xl border border-ink-900/10 bg-ink-50 px-4 py-4">
                     <p className="flex items-center gap-2 text-sm font-semibold text-ink-950">
                       <TickCircle size={18} variant="Bold" color="currentColor" aria-hidden />
-                      Persiapan Evaluate selesai dipelajari.
+                      Evaluasi selesai dipelajari.
                     </p>
                     <p className="mt-2 text-sm text-ink-700">
                       Ini adalah draf perencanaan evaluasi dan tindak lanjut — bukan hasil
@@ -1508,7 +1307,7 @@ export function GuidedPhasePage() {
                       setOpenCardId(null)
                     }}
                   >
-                    Kembali ke Disseminate
+                    Kembali ke Penyajian & Penyebarluasan
                   </Button>
                 </div>
               ) : (
@@ -1522,7 +1321,7 @@ export function GuidedPhasePage() {
                     setOpenCardId(null)
                   }}
                 >
-                  Kembali ke Disseminate
+                  Kembali ke Penyajian & Penyebarluasan
                 </Button>
               )}
             </section>

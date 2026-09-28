@@ -21,4 +21,5 @@ npm-debug.log*
 ~$*
 
 # Local Playwright browser QA artifacts
-qa/browser/
+
+qa/

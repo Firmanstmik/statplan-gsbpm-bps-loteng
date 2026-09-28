@@ -29,16 +29,16 @@ function hasNamedRows(
 
 export const GUIDED_BUILD_PREPARATIONS: GuidedPreparationDef[] = [
   {
-    cardId: 'build-3.1',
+    cardId: 'gsbpm-3.1',
     title: 'Siapkan draft instrumen',
     explanation:
-      'Susun gambaran awal instrumen yang akan dipakai untuk memperoleh data. Ini perencanaan desain — bukan pembangun kuesioner lengkap.',
+      'Susun gambaran awal instrumen: nama, tujuan, data yang ingin diperoleh, dan urutan bloknya mengikuti prinsip materi Hal. 25.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 25',
     disclaimer: 'Format kerja StatPlan — bukan template resmi BPS.',
     exampleBody:
-      'Materi membahas aturan penyusunan kuesioner/instrumen. Contoh ilustratif: instrumen “Kuesioner kepuasan pelayanan” untuk mengumpulkan penilaian unsur layanan.',
-    exampleClass: 'A',
+      'Kuesioner SKM Pelayanan Perizinan.\nBlok I identitas layanan (mudah) → Blok II penilaian aspek → Blok III saran terbuka (akhir).\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     fields: [
       {
         id: 'nama_instrumen',
@@ -53,11 +53,10 @@ export const GUIDED_BUILD_PREPARATIONS: GuidedPreparationDef[] = [
         required: true,
         options: [
           { value: 'kuesioner', label: 'Kuesioner' },
-          { value: 'formulir', label: 'Formulir' },
-          { value: 'daftar_isian', label: 'Daftar isian' },
+          { value: 'panduan_teknis', label: 'Panduan teknis kegiatan' },
+          { value: 'formulir', label: 'Formulir / daftar isian' },
           { value: 'lainnya', label: 'Lainnya' },
         ],
-        hint: 'Pilihan generik untuk penyusunan awal — bukan taksonomi resmi BPS.',
       },
       {
         id: 'tujuan_instrumen',
@@ -72,44 +71,48 @@ export const GUIDED_BUILD_PREPARATIONS: GuidedPreparationDef[] = [
         required: true,
       },
       {
+        id: 'urutan_blok',
+        label: 'Urutan blok pertanyaan',
+        kind: 'repeatableText',
+        hint: 'Mulai dari pertanyaan mudah; letakkan pertanyaan sensitif/terbuka di akhir.',
+      },
+      {
         id: 'catatan_desain',
-        label: 'Catatan desain',
+        label: 'Catatan desain (mis. pertanyaan ganda yang dipecah)',
         kind: 'textarea',
       },
     ],
     evidence: [
       { id: 'e-3.1-a', label: 'Draft instrumen' },
       { id: 'e-3.1-b', label: 'Catatan desain instrumen' },
+      { id: 'ev-3.1-out', label: 'Instrumen (Kuesioner/Panduan Teknis Kegiatan)', pdfPage: 24 },
     ],
   },
   {
-    cardId: 'build-3.2',
-    title: 'Siapkan draft aturan pemeriksaan',
+    cardId: 'gsbpm-3.2',
+    title: 'Siapkan draft aturan validasi',
     explanation:
-      'Tuliskan aturan pemeriksaan awal agar data lebih konsisten. StatPlan tidak menjalankan validasi terhadap data responden.',
+      'Tulis aturan pemeriksaan seperti “Contoh Aturan Validasi” pada materi: kondisi, tindakan/pesan perbaikan jika Error.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 26',
     disclaimer:
-      'Format kerja StatPlan — bukan aturan validasi resmi BPS dan bukan mesin validasi otomatis. Contoh materi tidak otomatis berlaku untuk semua kegiatan.',
+      'Format kerja StatPlan — bukan aturan validasi resmi BPS dan bukan mesin validasi otomatis.',
     exampleBody:
-      'Setelah meninjau “Contoh Aturan Validasi” pada materi, tulis aturan pemeriksaan untuk kegiatan Anda. Contoh ilustratif isian: “Jika umur kosong, minta diisi ulang” — itu Data Anda.',
-    exampleClass: 'A',
-    materiExamples: [
-      {
-        title: 'Contoh Aturan Validasi',
-        kind: 'rule',
-        note: 'Visual contoh aturan validasi pada materi — referensi pembelajaran, bukan engine validasi.',
-      },
-    ],
-    materiLesson:
-      'Contoh ini menunjukkan bahwa data perlu aturan pemeriksaan agar konsisten. Susun aturan sederhana untuk kegiatan Anda; StatPlan tidak menjalankan validasi terhadap data responden.',
+      'Nama: Jenis layanan vs penilaian aspek waktu.\nKondisi Error: jenis layanan ada isian, penilaian waktu kosong.\nPerbaikan: tanyakan kembali penilaian aspek waktu.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     pdfPage: 26,
     fields: [
       {
         id: 'rules',
-        label: 'Daftar pemeriksaan kegiatan Anda',
+        label: 'Daftar aturan validasi',
         kind: 'repeatableValidation',
         required: true,
+      },
+      {
+        id: 'aplikasi',
+        label: 'Aplikasi yang dipakai',
+        kind: 'text',
+        placeholder: 'mis. aplikasi CAPI, Excel, SPSS',
       },
     ],
     evidence: [
@@ -119,33 +122,37 @@ export const GUIDED_BUILD_PREPARATIONS: GuidedPreparationDef[] = [
     isReady: (v) => hasNamedRows(v, 'rules', 'nama'),
   },
   {
-    cardId: 'build-3.3',
-    title: 'Siapkan tabulasi awal',
+    cardId: 'gsbpm-3.3',
+    title: 'Siapkan aturan tabulasi & rencana produk',
     explanation:
-      'Hubungkan output yang diinginkan dengan data yang akan digunakan. Format kerja sederhana — bukan mesin tabulasi statistik.',
+      'Hubungkan setiap tabel dengan kode variabel yang mengisinya (seperti Contoh Aturan Tabulasi Hal. 27), lalu catat produk diseminasi yang direncanakan.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 27',
     disclaimer:
-      'Format kerja StatPlan — bukan format tabulasi resmi BPS dan bukan formula/engine otomatis.',
+      'Format kerja StatPlan — bukan format tabulasi resmi BPS dan bukan mesin perhitungan.',
     exampleBody:
-      'Setelah meninjau “Contoh Aturan Tabulasi” pada materi, hubungkan output dengan data yang akan dipakai. Contoh ilustratif isian: tabel “Kepuasan menurut jenis layanan” memakai skor kepuasan dan jenis layanan — itu Data Anda.',
-    exampleClass: 'A',
-    materiExamples: [
-      {
-        title: 'Contoh Aturan Tabulasi',
-        kind: 'table',
-        note: 'Visual contoh aturan tabulasi pada materi — referensi, bukan mesin perhitungan.',
-      },
-    ],
-    materiLesson:
-      'Contoh ini membantu menghubungkan output yang diinginkan dengan data yang akan dipakai. Catat rencana tabulasi Anda tanpa menghitung angka hasil.',
+      'Tabel 1 · kolom (2) Nilai indeks ← rata-rata kode r201–r209.\nProduk: laporan ringkas + leaflet.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     pdfPage: 27,
     fields: [
       {
         id: 'tables',
-        label: 'Daftar tabel/output kegiatan Anda',
+        label: 'Aturan tabulasi per tabel',
         kind: 'repeatableBuildTabulation',
         required: true,
+      },
+      {
+        id: 'produk_rencana',
+        label: 'Rencana produk diseminasi',
+        kind: 'multiSelect',
+        options: [
+          { value: 'buku', label: 'Buku' },
+          { value: 'brosur', label: 'Brosur' },
+          { value: 'leaflet', label: 'Leaflet' },
+          { value: 'booklet', label: 'Booklet' },
+          { value: 'banner', label: 'Banner' },
+          { value: 'website', label: 'Tampilan website' },
+        ],
       },
     ],
     evidence: [
@@ -155,31 +162,17 @@ export const GUIDED_BUILD_PREPARATIONS: GuidedPreparationDef[] = [
     isReady: (v) => hasNamedRows(v, 'tables', 'nama'),
   },
   {
-    cardId: 'build-3.4',
-    title: 'Siapkan alur / pembagian kerja',
+    cardId: 'gsbpm-3.4',
+    title: 'Siapkan struktur & alur kerja',
     explanation:
-      'Jelaskan kegiatan, siapa yang berperan, dan hasil yang diharapkan. Contoh pada materi adalah rujukan belajar untuk konteks hortikultura — bukan template resmi yang harus disalin.',
+      'Tulis siapa mengerjakan apa dan ke mana hasilnya diserahkan. Contoh hortikultura pada materi adalah rujukan bentuk — bukan alur wajib.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 28',
     disclaimer:
-      'Format kerja StatPlan — bukan template resmi BPS. Contoh hortikultura pada materi bukan alur wajib untuk semua kegiatan. Draft Anda adalah perencanaan peran — bukan manajemen pegawai.',
+      'Format kerja StatPlan — bukan template resmi BPS. Draft Anda adalah perencanaan peran, bukan manajemen pegawai.',
     exampleBody:
-      'Materi menampilkan: (1) Struktur Organisasi Pengelolaan Data Hortikultura, dan (2) Alur Laporan Dokumen Data Hortikultura. Setelah meninjau contoh tersebut, susun versi kegiatan Anda di kolom Isian Anda.',
-    exampleClass: 'A',
-    materiExamples: [
-      {
-        title: 'Struktur Organisasi Pengelolaan Data Hortikultura',
-        kind: 'structure',
-        note: 'Contoh struktur organisasi pengelolaan data pada materi.',
-      },
-      {
-        title: 'Alur Laporan Dokumen Data Hortikultura',
-        kind: 'flow',
-        note: 'Contoh alur laporan dokumen pada materi.',
-      },
-    ],
-    materiLesson:
-      'Contoh ini menunjukkan bahwa kegiatan statistik perlu kejelasan struktur organisasi dan alur dokumen. Bentuknya menyesuaikan konteks kegiatan Anda — contoh hortikultura tidak wajib ditiru.',
+      'Kegiatan: wawancara di loket · Pelaksana: petugas SKM · Hasil: isian terkirim ke server.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     pdfPage: 28,
     fields: [
       {
@@ -187,42 +180,67 @@ export const GUIDED_BUILD_PREPARATIONS: GuidedPreparationDef[] = [
         label: 'Struktur / alur kegiatan Anda',
         kind: 'repeatableWorkflow',
         required: true,
-        hint: 'Format kerja StatPlan — isi untuk kegiatan Anda, bukan salinan contoh hortikultura.',
       },
     ],
     evidence: [
       { id: 'e-3.4-a', label: 'Draft alur kerja' },
       { id: 'e-3.4-b', label: 'Catatan pembagian peran' },
+      { id: 'ev-3.4-out', label: 'Sistem alur kerja (SOP)', pdfPage: 24 },
     ],
     isReady: (v) => hasNamedRows(v, 'workflow', 'kegiatan'),
   },
   {
-    cardId: 'build-3.5',
+    cardId: 'gsbpm-3.5',
+    title: 'Siapkan rencana pengujian sistem',
+    explanation:
+      'Daftar komponen yang diuji — sendiri-sendiri dan saat saling terhubung — beserta hasil yang diharapkan.',
+    sourceType: 'A',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 29',
+    disclaimer: 'Ini rencana pengujian. StatPlan tidak menjalankan pengujian aplikasi Anda.',
+    exampleBody:
+      'Uji: kirim 5 isian dari CAPI → server · Harapan: 5 isian terbaca aplikasi pengolahan.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
+    fields: [
+      {
+        id: 'uji_komponen',
+        label: 'Daftar pengujian',
+        kind: 'repeatableRows',
+        required: true,
+        addLabel: '+ Tambah pengujian',
+        columns: [
+          { key: 'uji', label: 'Yang diuji', placeholder: 'Komponen atau interaksi antarkomponen' },
+          { key: 'harapan', label: 'Hasil yang diharapkan' },
+          { key: 'hasil', label: 'Hasil / catatan (diisi saat pengujian)' },
+        ],
+      },
+    ],
+    evidence: [
+      { id: 'ev-3.5-a', label: 'Rencana dan catatan hasil pengujian sistem' },
+      { id: 'ev-3.5-b', label: 'Daftar perbaikan dari pengujian' },
+    ],
+  },
+  {
+    cardId: 'gsbpm-3.6',
     title: 'Siapkan rencana uji coba / pilot',
     explanation:
-      'Rencanakan bagian mana yang akan diuji sebelum kegiatan utama. StatPlan tidak mengumpulkan data pilot dan tidak menghitung hasil statistik uji coba.',
+      'Pilih lingkup uji coba sesuai materi Hal. 30 dan tuliskan tujuan serta ukuran yang ingin diperoleh.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 30',
-    disclaimer:
-      'Ini rencana uji coba — bukan pelaksanaan pilot dan bukan pengumpulan data responden.',
+    disclaimer: 'Ini rencana uji coba — bukan pelaksanaan pilot dan bukan data responden.',
     exampleBody:
-      'Lingkup uji coba pada materi mencakup: kuesioner/instrumen, metodologi, pengolahan, dan tabel dummy.',
-    exampleClass: 'A',
-    educationalNote:
-      'Uji coba membantu melihat apakah rancangan dapat digunakan sebelum kegiatan utama dilaksanakan.',
-    educationalNoteClass: 'B',
-    educationalNotePage: 30,
+      'Lingkup: uji coba kuesioner dan pengolahan.\nTujuan: apakah kondef “aspek pelayanan” dipahami responden.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     fields: [
       {
         id: 'bagian_diuji',
-        label: 'Bagian yang akan diuji',
+        label: 'Lingkup uji coba',
         kind: 'multiSelect',
         required: true,
         options: [
-          { value: 'instrumen', label: 'Instrumen/kuesioner' },
-          { value: 'metodologi', label: 'Metodologi' },
-          { value: 'pengolahan', label: 'Pengolahan' },
-          { value: 'tabel_dummy', label: 'Tabel dummy' },
+          { value: 'instrumen', label: 'Uji coba kuesioner' },
+          { value: 'metodologi', label: 'Uji coba metodologi' },
+          { value: 'pengolahan', label: 'Uji coba pengolahan data' },
+          { value: 'tabel_dummy', label: 'Dummy table' },
         ],
       },
       {
@@ -254,25 +272,46 @@ export const GUIDED_BUILD_PREPARATIONS: GuidedPreparationDef[] = [
     },
   },
   {
-    cardId: 'build-3.6',
-    title: 'Finalisasi persiapan Build',
+    cardId: 'gsbpm-3.7',
+    title: 'Siapkan finalisasi sistem produksi',
     explanation:
-      'Tinjau status bahan Build dan catat perbaikan yang masih diperlukan. Ini ringkasan persiapan Mode Terpandu — bukan status resmi kegiatan.',
-    sourceType: 'C',
-    sourceLabel: 'Format kerja StatPlan',
+      'Catat dokumentasi yang sudah disusun dan status pemindahan komponen ke lingkungan produksi.',
+    sourceType: 'A',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 31',
     disclaimer:
-      'Finalisasi ini tidak membuka Collect secara otomatis dan tidak merupakan persetujuan resmi BPS.',
+      'Finalisasi ini tidak membuka tahap berikutnya secara otomatis dan bukan persetujuan resmi BPS.',
     exampleBody:
-      'Contoh ilustratif: instrumen sudah berstatus bahan siap, aturan pemeriksaan masih draft, uji coba masih perlu perbaikan pada tabel dummy.',
+      'Dokumentasi: panduan aplikasi SKM, daftar aturan validasi.\nPemindahan: aplikasi versi final terpasang di semua tablet.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
     summaryFromCardIds: [
-      { cardId: 'build-3.1', label: 'Instrumen' },
-      { cardId: 'build-3.2', label: 'Aturan pemeriksaan' },
-      { cardId: 'build-3.3', label: 'Tabulasi awal' },
-      { cardId: 'build-3.4', label: 'Alur kerja' },
-      { cardId: 'build-3.5', label: 'Uji coba' },
+      { cardId: 'gsbpm-3.1', label: 'Instrumen' },
+      { cardId: 'gsbpm-3.2', label: 'Aturan validasi' },
+      { cardId: 'gsbpm-3.3', label: 'Aturan tabulasi' },
+      { cardId: 'gsbpm-3.4', label: 'Alur kerja' },
+      { cardId: 'gsbpm-3.5', label: 'Pengujian sistem' },
+      { cardId: 'gsbpm-3.6', label: 'Uji coba (pilot)' },
     ],
     fields: [
+      {
+        id: 'dokumentasi',
+        label: 'Dokumentasi yang disusun',
+        kind: 'multiSelect',
+        options: [
+          { value: 'teknis', label: 'Dokumentasi teknis' },
+          { value: 'panduan', label: 'Panduan pengguna' },
+          { value: 'pedoman', label: 'Buku pedoman petugas' },
+        ],
+      },
+      {
+        id: 'status_produksi',
+        label: 'Komponen sudah dipindahkan ke lingkungan produksi?',
+        kind: 'select',
+        options: [
+          { value: 'sudah', label: 'Sudah dan berfungsi' },
+          { value: 'sebagian', label: 'Sebagian' },
+          { value: 'belum', label: 'Belum' },
+        ],
+      },
       {
         id: 'catatan_finalisasi',
         label: 'Catatan finalisasi',
@@ -283,12 +322,16 @@ export const GUIDED_BUILD_PREPARATIONS: GuidedPreparationDef[] = [
         id: 'perbaikan_list',
         label: 'Hal yang masih perlu diperbaiki',
         kind: 'repeatableText',
-        hint: 'Tambahkan satu atau beberapa butir perbaikan.',
       },
     ],
     evidence: [
       { id: 'e-3.6-a', label: 'Daftar bahan yang sudah disiapkan' },
       { id: 'e-3.6-b', label: 'Catatan perbaikan' },
+      {
+        id: 'ev-3.7-out',
+        label: 'Sistem Pengumpulan, Pengolahan dan Diseminasi Data yang siap digunakan',
+        pdfPage: 24,
+      },
     ],
   },
 ]

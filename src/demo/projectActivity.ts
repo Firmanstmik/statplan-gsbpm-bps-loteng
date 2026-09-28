@@ -56,7 +56,7 @@ export function getProjectActivity(project: Project): ActivityLogItem[] {
       projectId: project.id,
       projectName: project.name,
       action: 'Rekomendasi BPS disiapkan',
-      detail: 'Checklist Design 2.5 ditandai selesai',
+      detail: 'Checklist Design 2.6 ditandai selesai',
       at: project.updatedAt,
       actor: project.rekomendasiBps.penyelenggara || 'OPD',
     })

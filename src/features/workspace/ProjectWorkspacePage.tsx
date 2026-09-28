@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useReducedMotion } from 'framer-motion'
 import {
-  ArrowLeft2,
+  ArrowDown2,
+  ArrowRight2,
   Calendar,
   TickCircle,
   TickSquare,
@@ -63,42 +64,58 @@ import {
 } from '@/lib/projectMeta'
 import { useAutosaveFeedback } from '@/hooks/useAutosaveFeedback'
 import { cn, formatDateTime, jenisLabel, statusLabel } from '@/lib/utils'
+import { getGuidedSession } from '@/lib/guidedSession'
+import { FaqLink } from '@/components/ui/FaqLink'
+import { formatDateID, formatDateRangeID } from '@/content/planningTimeline'
 import { buildShareUrl, copyText, encodeProjectShare } from '@/lib/shareLink'
 
 type TabId =
+  | 'timeline'
   | 'workflow'
   | 'checklist'
   | 'design'
   | 'variables'
   | 'instruments'
-  | 'timeline'
   | 'metadata'
   | 'activity'
   | 'export'
 
+// StatPlan's reading order (kapan → alur → apa yang disiapkan → detail), not a GSBPM sequence.
 const tabs: { id: TabId; label: string; icon: Icon }[] = [
+  { id: 'timeline', label: 'Timeline', icon: Calendar },
   { id: 'workflow', label: 'Alur kerja', icon: Hierarchy },
   { id: 'checklist', label: 'Checklist', icon: TaskSquare },
   { id: 'design', label: 'Perancangan', icon: Edit2 },
   { id: 'variables', label: 'Variabel', icon: Hashtag },
   { id: 'instruments', label: 'Instrumen', icon: ClipboardText },
-  { id: 'timeline', label: 'Timeline', icon: Calendar },
   { id: 'metadata', label: 'Metadata', icon: DocumentText },
   { id: 'activity', label: 'Riwayat', icon: TickSquare },
   { id: 'export', label: 'Ekspor', icon: DocumentDownload },
 ]
 
+/** Opened when the URL names no tab (`/app/projects/:id`). Explicit `?tab=` always wins. */
+const DEFAULT_TAB: TabId = 'timeline'
+
 const demoBadgeClass =
   'bg-ink-50 font-medium text-ink-700 ring-1 ring-dashed ring-ink-900/15'
 
+/** One contextual FAQ question inside a tab's "Cara kerja" box (see docs/faq-content-map.md). */
+const TAB_FAQ: Partial<Record<TabId, { id: string; label?: string }>> = {
+  variables: { id: 'apa-itu-variabel' },
+  metadata: { id: 'metadata-perlu' },
+  export: { id: 'word-resmi', label: 'Apakah hasil ini dokumen resmi BPS?' },
+}
+
 function TabHowTo({ tabId }: { tabId: TabId }) {
   const g = TAB_GUIDES[tabId]
+  const faq = TAB_FAQ[tabId]
   return (
     <div className="mb-4 rounded-xl border border-border/80 bg-ink-50/70 px-3 py-2.5 text-sm">
       <div className="text-[11px] font-semibold uppercase tracking-wide text-ink-600">
         {g.title}
       </div>
       <p className="mt-1 text-ink-700">{g.body}</p>
+      {faq ? <FaqLink id={faq.id} label={faq.label} className="mt-1.5" /> : null}
     </div>
   )
 }
@@ -123,7 +140,7 @@ export function ProjectWorkspacePage() {
   const initialTab = (() => {
     const q = searchParams.get('tab')
     if (q && tabs.some((t) => t.id === q)) return q as TabId
-    return 'workflow'
+    return DEFAULT_TAB
   })()
   const [tab, setTab] = useState<TabId>(initialTab)
   const [exporting, setExporting] = useState(false)
@@ -140,6 +157,19 @@ export function ProjectWorkspacePage() {
     'Perubahan berhasil disimpan',
   )
 
+  // Timeline display only: dates chosen at intake live in the guided session; the scale grows with the
+  // plan so long projects (e.g. the 6-month preset) stay inside their track.
+  const guidedPlan = id ? getGuidedSession(id) : null
+  const timelineRange =
+    guidedPlan?.startISO && guidedPlan.endISO
+      ? formatDateRangeID(guidedPlan.startISO, guidedPlan.endISO)
+      : project?.rekomendasiBps.periode || null
+  const timelineDates =
+    guidedPlan && project && guidedPlan.phasePlan.length === project.timeline.length
+      ? guidedPlan.phasePlan
+      : null
+  const timelineWeeks = Math.max(16, ...(project?.timeline.map((t) => t.endWeek) ?? []))
+
   const tabPanelRef = useRef<HTMLDivElement>(null)
   const reduceMotion = useReducedMotion()
 
@@ -155,7 +185,7 @@ export function ProjectWorkspacePage() {
     setSearchParams(
       (prev) => {
         const p = new URLSearchParams(prev)
-        if (next === 'workflow') p.delete('tab')
+        if (next === DEFAULT_TAB) p.delete('tab')
         else p.set('tab', next)
         return p
       },
@@ -194,7 +224,10 @@ export function ProjectWorkspacePage() {
     if (!nextId) return
     goTab(nextId)
     window.requestAnimationFrame(() => {
-      document.getElementById(`tab-${nextId}`)?.focus()
+      const el = document.getElementById(`tab-${nextId}`)
+      el?.focus()
+      // Keep the focused tab visible inside the horizontally scrolling tablist.
+      el?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
     })
   }
 
@@ -317,87 +350,98 @@ export function ProjectWorkspacePage() {
   return (
     <div>
       <div className="mb-8">
-        <Link
-          to="/app"
-          className="focus-ring mb-4 inline-flex items-center gap-1.5 rounded-lg text-sm text-ink-700 hover:text-ink-950"
-        >
-          <ArrowLeft2 size={16} variant="Bold" color="currentColor" aria-hidden /> Beranda
-        </Link>
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+        <nav aria-label="Lokasi" className="mb-5 flex flex-wrap items-center gap-1.5 text-sm text-ink-500">
+          <Link to="/app" className="focus-ring rounded hover:text-ink-950">
+            Proyek saya
+          </Link>
+          <span aria-hidden className="hidden sm:inline">/</span>
+          <span className="hidden truncate text-ink-800 sm:inline">{project.name}</span>
+        </nav>
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="min-w-0 flex-1">
-            <p className="mb-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-ink-600">
-              Ruang kerja perencanaan
-            </p>
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <Badge>{statusLabel(project.status)}</Badge>
-              {demo ? (
-                <Badge className={demoBadgeClass}>Demo · contoh ilustratif</Badge>
-              ) : null}
+            <p className="t-eyebrow mb-2">Ruang kerja lanjutan</p>
+            <h1 className="t-page-title break-words">{project.name}</h1>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               <Badge tone="brand">{jenisLabel(project.jenisKegiatan)}</Badge>
+              <Badge>{statusLabel(project.status)}</Badge>
+              {demo ? <Badge className={demoBadgeClass}>Demo · contoh ilustratif</Badge> : null}
             </div>
-            <h1 className="break-words font-display text-[1.85rem] font-semibold leading-tight tracking-tight text-ink-950 sm:text-4xl">
-              {project.name}
-            </h1>
-            {project.description ? (
-              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink-700 sm:text-base">
+            {project.description && project.description.trim() !== project.name.trim() ? (
+              <p className="t-body reading-width mt-3">
+                <span className="text-ink-500">Kebutuhan: </span>
                 {project.description}
               </p>
             ) : null}
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-6">
-              <div className="min-w-0">
-                <div className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-600">
-                  Fase saat ini
-                </div>
-                <div className="mt-0.5 text-sm font-medium text-ink-950">
-                  {stage?.title ?? '—'} · {phase.titleId}
-                </div>
+
+            <div className="mt-6 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-3">
+              <div className="bg-surface px-4 py-3.5">
+                <p className="t-label">Fase saat ini</p>
+                <p className="mt-1 text-[15px] font-semibold text-ink-950">{phase.titleId}</p>
+                <p className="text-xs text-ink-500">{stage?.title ?? '—'}</p>
               </div>
-              <div className="min-w-0 max-w-sm flex-1">
-                <div className="mb-1.5 flex justify-between text-xs text-ink-600">
-                  <span>Penyelesaian wajib</span>
-                  <span className="font-semibold text-ink-900">{progress.pct}%</span>
+              <div className="bg-surface px-4 py-3.5">
+                <div className="flex items-baseline justify-between">
+                  <p className="t-label">Checklist wajib</p>
+                  <span className="text-sm font-semibold tabular-nums text-ink-950">{progress.pct}%</span>
                 </div>
                 <ProgressBar
+                  className="mt-2.5"
                   value={progress.pct}
                   premium={progress.pct >= 80}
                   label="Progres checklist wajib"
                   delta={progressDelta}
                 />
+                <p className="mt-1.5 text-xs text-ink-500">Minimal 80% untuk ekspor draf</p>
+              </div>
+              <div className="bg-surface px-4 py-3.5">
+                <p className="t-label">Draf dokumen</p>
+                <p className="mt-1 text-[15px] font-semibold text-ink-950">
+                  {exportAllowed ? 'Siap diunduh' : 'Belum siap'}
+                </p>
+                <p className="text-xs text-ink-500">{exportStatusLabel(project)}</p>
               </div>
             </div>
-            <SaveIndicator
-              className="mt-3"
-              phase={savePhase}
-              updatedAt={project.updatedAt}
-            />
-            <dl className="mt-5 grid grid-cols-1 gap-x-8 gap-y-2.5 border-t border-border/70 pt-4 sm:grid-cols-2">
-              {(
-                [
-                  ['OPD', opd],
-                  ['Penanggung jawab', owner],
-                  ['Klasifikasi', klasifikasiLabel(project.klasifikasi)],
-                  ['Metode', methodLabel(project)],
-                  ['Portal rujukan', portalComplete ? 'Sudah dikonfirmasi' : 'Belum lengkap'],
+            <SaveIndicator className="mt-3" phase={savePhase} updatedAt={project.updatedAt} />
+
+            <details className="group mt-4">
+              <summary className="focus-ring inline-flex cursor-pointer list-none items-center gap-1.5 rounded text-sm font-semibold text-ink-800 hover:text-ink-950">
+                Detail proyek
+                <ArrowDown2
+                  size={12}
+                  variant="Bold"
+                  color="currentColor"
+                  className="transition-transform group-open:rotate-180"
+                  aria-hidden
+                />
+              </summary>
+              <dl className="mt-3 grid grid-cols-1 gap-x-8 gap-y-3 rounded-2xl border border-border bg-surface px-4 py-4 sm:grid-cols-2">
+                {(
                   [
-                    'Rekomendasi BPS',
-                    project.checklistState['de-12'] ? 'Disiapkan' : 'Belum / tidak wajib',
-                  ],
-                  ['Dibuat', formatDateTime(project.createdAt)],
-                  ['Diperbarui', formatDateTime(project.updatedAt)],
-                  ['Ekspor draf', exportStatusLabel(project)],
-                ] as const
-              ).map(([k, v]) => (
-                <div key={k} className="min-w-0">
-                  <dt className="text-xs font-medium text-ink-600">{k}</dt>
-                  <dd className="mt-0.5 break-words text-sm text-ink-900">{v}</dd>
-                </div>
-              ))}
-            </dl>
+                    ['OPD', opd],
+                    ['Penanggung jawab', owner],
+                    ['Klasifikasi', klasifikasiLabel(project.klasifikasi)],
+                    ['Metode', methodLabel(project)],
+                    ['Portal rujukan', portalComplete ? 'Sudah dikonfirmasi' : 'Belum lengkap'],
+                    [
+                      'Rekomendasi BPS',
+                      project.checklistState['de-12'] ? 'Disiapkan' : 'Belum / tidak wajib',
+                    ],
+                    ['Dibuat', formatDateTime(project.createdAt)],
+                    ['Diperbarui', formatDateTime(project.updatedAt)],
+                  ] as const
+                ).map(([k, v]) => (
+                  <div key={k} className="min-w-0">
+                    <dt className="text-xs font-medium text-ink-500">{k}</dt>
+                    <dd className="mt-0.5 break-words text-sm text-ink-900">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </details>
           </div>
           <div className="flex w-full shrink-0 flex-col gap-2 sm:max-w-xs lg:w-56">
             <Button
               className="w-full min-h-12"
-              variant={exportAllowed ? 'gold' : 'secondary'}
+              variant={exportAllowed ? 'primary' : 'secondary'}
               loading={exporting}
               success={exportSuccess}
               leftIcon={<DocumentDownload size={16} variant="Bold" color="currentColor" aria-hidden />}
@@ -454,40 +498,25 @@ export function ProjectWorkspacePage() {
             >
               Salin tautan berbagi
             </Button>
+            <Link
+              to={`/app/projects/${project.id}/guided`}
+              className="focus-ring mt-1 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-semibold text-ink-800 hover:text-ink-950"
+            >
+              Kembali ke Mode Terpandu
+              <ArrowRight2 size={14} variant="Bold" color="currentColor" aria-hidden />
+            </Link>
           </div>
         </div>
       </div>
 
-      <NextStepsCard
-        project={project}
-        onGoTab={(t, focusId) => goTab(t as TabId, focusId)}
-      />
-
-      {!exportAllowed ? (
-        <ValidationBanner
-          issues={validationIssues}
-          className="mb-4"
-          onNavigate={(t) => {
-            const focus =
-              t === 'workflow'
-                ? !project.portalSdi.sirusaChecked || !project.portalSdi.romantikChecked
-                  ? 'focus-portal'
-                  : 'focus-rekomendasi'
-                : t === 'checklist'
-                  ? 'focus-checklist'
-                  : t === 'metadata'
-                    ? 'focus-metadata'
-                    : undefined
-            goTab(t as TabId, focus)
-          }}
-        />
-      ) : validationIssues.some((i) => i.severity === 'warning') ? (
-        <ValidationBanner
-          issues={validationIssues.filter((i) => i.severity === 'warning')}
-          className="mb-4"
-          onNavigate={(t) => goTab(t as TabId)}
+      {/* The Ekspor tab shows the full review (why + how to fix); don't list the same issues twice. */}
+      {tab !== 'export' ? (
+        <NextStepsCard
+          project={project}
+          onGoTab={(t, focusId) => goTab(t as TabId, focusId)}
         />
       ) : null}
+
 
       {project.aiRecommendation ? (
         <Card className="mb-6 bg-ink-50/80">
@@ -528,13 +557,13 @@ export function ProjectWorkspacePage() {
         id="workspace-tab-panel"
         className="scroll-mt-24"
       >
-      <div className="relative mb-5 max-w-full sm:mb-6">
+      <div className="relative mb-5 min-w-0 max-w-full overflow-hidden border-b border-border sm:mb-6">
         <div
           role="tablist"
           aria-label="Bagian workspace"
           aria-orientation="horizontal"
           onKeyDown={onTabListKeyDown}
-          className="flex min-w-0 w-full gap-1 overflow-x-auto overscroll-x-contain rounded-2xl bg-ink-50/80 p-1 ring-1 ring-border/70 [-webkit-overflow-scrolling:touch] [scrollbar-width:thin]"
+          className="-mb-px flex min-w-0 w-full gap-1 overflow-x-auto overscroll-x-contain [-webkit-overflow-scrolling:touch] [scrollbar-width:none]"
         >
         {tabs.map((t) => (
           <button
@@ -547,10 +576,10 @@ export function ProjectWorkspacePage() {
             tabIndex={tab === t.id ? 0 : -1}
             onClick={() => goTab(t.id)}
             className={cn(
-              'focus-ring inline-flex min-h-12 shrink-0 items-center gap-2 rounded-xl px-3 text-sm font-medium transition-colors duration-200',
+              'focus-ring inline-flex min-h-12 shrink-0 items-center gap-2 border-b-2 px-3 text-sm font-medium transition-colors duration-200',
               tab === t.id
-                ? 'bg-ink-900 text-white'
-                : 'text-ink-700 hover:bg-white hover:text-ink-950',
+                ? 'border-ink-900 text-ink-950'
+                : 'border-transparent text-ink-500 hover:text-ink-950',
             )}
           >
             <t.icon
@@ -574,7 +603,7 @@ export function ProjectWorkspacePage() {
       {tab === 'workflow' && (
         <div className="space-y-4">
           <TabHowTo tabId="workflow" />
-        <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
           <Card className="h-fit space-y-4">
             <div className="text-xs font-medium uppercase tracking-wide text-ink-600">
               Kelompok pembelajaran
@@ -613,7 +642,7 @@ export function ProjectWorkspacePage() {
                         <span>
                           {ph.code}. {ph.titleId}
                         </span>
-                        <span className={cn('text-xs', active ? 'text-gold-400' : 'text-ink-600')}>
+                        <span className={cn('text-xs', active ? 'text-ink-500' : 'text-ink-600')}>
                           {pr.pct}%
                         </span>
                       </button>
@@ -881,8 +910,8 @@ export function ProjectWorkspacePage() {
                   ) : null}
                 </div>
                 <p className="mb-4 text-sm text-ink-700">
-                  Wajib bagi penyelenggara statistik sektoral (Design 2.5). Setelah formulir lengkap,
-                  centang checklist &quot;Pengajuan rekomendasi ke BPS&quot; pada subproses 2.5.
+                  Wajib bagi penyelenggara statistik sektoral (Design 2.6). Setelah formulir lengkap,
+                  centang checklist &quot;Pengajuan rekomendasi ke BPS&quot; pada subproses 2.6.
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <Field>
@@ -1478,26 +1507,37 @@ export function ProjectWorkspacePage() {
             <h2 className="text-lg font-semibold">Timeline perencanaan</h2>
             <HelpTip topic="timeline" />
           </div>
+          {timelineRange ? (
+            <p className="mb-1 text-sm font-semibold text-ink-900">{timelineRange}</p>
+          ) : null}
           <p className="mb-4 text-sm text-ink-700">
-            Batang menunjukkan minggu mulai–selesai per fase (skala 16 minggu). Ini gambaran jadwal
-            diskusi perencanaan — bukan syarat ekspor.
+            Jadwal per fase GSBPM (minggu ke-berapa sejak mulai) sebagai alat bantu perencanaan —
+            durasinya bukan ketentuan resmi BPS dan bukan syarat ekspor.
           </p>
           {project.timeline.length === 0 ? (
             <p className="text-sm text-ink-600">Belum ada item timeline pada proyek ini.</p>
           ) : (
           <div className="space-y-3">
-            {project.timeline.map((t) => {
+            {project.timeline.map((t, i) => {
               const span = Math.max(1, t.endWeek - t.startWeek + 1)
+              const dates = timelineDates?.[i]
               return (
-                <div key={t.id} className="grid gap-2 sm:grid-cols-[180px_1fr]">
-                  <div className="text-sm font-medium text-ink-900">{t.title}</div>
-                  <div className="relative h-10 rounded-xl bg-ink-100">
+                <div key={t.id} className="grid gap-2 sm:grid-cols-[180px_minmax(0,1fr)]">
+                  <div className="text-sm font-medium text-ink-900">
+                    {t.title}
+                    {dates ? (
+                      <span className="block text-xs font-normal text-ink-500">
+                        {formatDateID(dates.startISO)} – {formatDateID(dates.endISO)}
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="relative h-10 overflow-hidden rounded-xl bg-ink-100">
                     <div
-                      className="absolute top-1.5 h-7 rounded-lg bg-ink-900 text-[11px] font-medium leading-7 text-white"
+                      className="absolute top-1.5 h-7 whitespace-nowrap rounded-lg bg-ink-900 text-[11px] font-medium leading-7 text-white"
                       style={{
-                        left: `${((t.startWeek - 1) / 16) * 100}%`,
-                        width: `${(span / 16) * 100}%`,
-                        minWidth: '48px',
+                        left: `min(${((t.startWeek - 1) / timelineWeeks) * 100}%, calc(100% - 64px))`,
+                        width: `${(span / timelineWeeks) * 100}%`,
+                        minWidth: '64px',
                         paddingLeft: '8px',
                         paddingRight: '8px',
                       }}
@@ -1614,63 +1654,93 @@ export function ProjectWorkspacePage() {
       {tab === 'export' && (
         <div className="space-y-4">
           <TabHowTo tabId="export" />
-        <Card className={cn('max-w-2xl', !exportAllowed && 'error-shake')}>
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold">Pusat ekspor dokumen</h2>
-            <HelpTip topic="export" />
-            {project.klasifikasi === 'sektoral' ? <HelpTip topic="rekomendasi" /> : null}
-          </div>
-          <p className="mt-2 text-sm text-ink-700">
-            Unduh draf Word berisi identitas kegiatan, pemeriksaan portal rujukan statistik, perancangan,
-            variabel, instrumen, rekomendasi BPS (jika sektoral), timeline, checklist GSBPM 5.2,
-            dan metadata MS-Keg/Var/Ind.
-          </p>
-          <ValidationBanner
-            issues={validationIssues}
-            className="mt-4"
-            onNavigate={(t) => goTab(t as TabId)}
-          />
-          <ul className="mt-4 space-y-2 text-sm text-ink-800">
-            <li>• Format: .docx (diproses di perangkat, tanpa unggah ke server)</li>
-            <li>• Status dokumen: draf — perlu validasi BPS</li>
-            <li>
-              • Progres checklist wajib: {progress.done}/{progress.total} ({progress.pct}%)
-            </li>
-          </ul>
-          {!exportAllowed ? (
-            <p className="mt-3 text-xs text-ink-600">
-              Klik item pada daftar persyaratan di atas untuk membuka tab yang perlu dilengkapi.
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]">
+          <Card className="h-fit p-5 sm:p-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="t-section-title">Draf rencana kegiatan</h2>
+              <HelpTip topic="export" />
+              {project.klasifikasi === 'sektoral' ? <HelpTip topic="rekomendasi" /> : null}
+            </div>
+            <p className="mt-2 inline-flex rounded-md bg-accent-soft px-2 py-1 text-xs font-semibold text-accent-700">
+              Draf bahan kerja — bukan dokumen resmi BPS
             </p>
-          ) : null}
-          <Button
-            className={cn('mt-6', exportAllowed && !exporting && 'success-flash')}
-            variant="gold"
-            loading={exporting}
-            success={exportSuccess}
-            leftIcon={<DocumentDownload size={16} variant="Bold" color="currentColor" />}
-            disabled={exporting || !exportAllowed}
-            tooltip={
-              !exportAllowed
-                ? 'Lengkapi persyaratan ekspor terlebih dahulu'
-                : 'Unduh draf Word ke perangkat'
-            }
-            onClick={() => {
-              if (!exportAllowed) return
-              void handleExport()
-            }}
-          >
-            {exporting
-              ? exportStage ?? 'Menyiapkan dokumen…'
-              : exportAllowed
-                ? 'Unduh draf perencanaan'
-                : 'Lengkapi persyaratan di atas'}
-          </Button>
-          {exporting && exportStage ? (
-            <p className="mt-2 text-xs text-ink-600" aria-live="polite">
-              {exportStage}
+            <p className="t-support mt-3">
+              Dokumen Word (.docx) disusun di perangkat Anda, tanpa unggahan ke server. Isinya:
             </p>
-          ) : null}
-        </Card>
+            <ul className="mt-3 divide-y divide-border rounded-xl border border-border">
+              {(
+                [
+                  ['Identitas kegiatan', project.name],
+                  ['Pemeriksaan portal rujukan', portalComplete ? 'Sudah dicatat' : 'Belum dicatat'],
+                  ['Perancangan (cara, metode, moda, sampel)', methodLabel(project)],
+                  ['Variabel & indikator', `${project.variables.length} variabel · ${project.indicators.length} indikator`],
+                  ['Instrumen', `${project.questionnaire.length} pertanyaan`],
+                  ...(project.klasifikasi === 'sektoral'
+                    ? ([['Draf rekomendasi BPS', project.checklistState['de-12'] ? 'Disiapkan' : 'Belum disiapkan']] as const)
+                    : []),
+                  ['Timeline', `${project.timeline.length} fase`],
+                  ['Checklist GSBPM 5.2', `${progress.done}/${progress.total} butir wajib (${progress.pct}%)`],
+                  ['Metadata MS-Keg / MS-Var / MS-Ind', 'Sesuai isian tab Metadata'],
+                ] as const
+              ).map(([label, value]) => (
+                <li key={label} className="flex flex-col gap-0.5 px-4 py-2.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                  <span className="text-sm font-medium text-ink-900">{label}</span>
+                  <span className="text-xs text-ink-500 sm:text-right">{value}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-6 border-t border-border pt-5">
+              {exportAllowed ? (
+                <Button
+                  className={cn('w-full sm:w-auto', !exporting && 'success-flash')}
+                  loading={exporting}
+                  success={exportSuccess}
+                  leftIcon={<DocumentDownload size={16} variant="Bold" color="currentColor" />}
+                  disabled={exporting}
+                  onClick={() => void handleExport()}
+                >
+                  {exporting ? exportStage ?? 'Menyiapkan dokumen…' : 'Unduh draf perencanaan'}
+                </Button>
+              ) : (
+                <div>
+                  <p className="text-sm font-semibold text-ink-950">
+                    {validationIssues.filter((i) => i.severity === 'error').length} hal perlu
+                    dilengkapi sebelum draf dapat diunduh
+                  </p>
+                  <p className="t-support mt-1">
+                    Gunakan tombol pada daftar tinjauan untuk membuka bagian yang perlu dilengkapi.
+                  </p>
+                  <Button
+                    className="mt-3 w-full sm:w-auto"
+                    variant="secondary"
+                    disabled
+                    leftIcon={<DocumentDownload size={16} variant="Bold" color="currentColor" />}
+                  >
+                    Unduh draf perencanaan
+                  </Button>
+                </div>
+              )}
+              {exporting && exportStage ? (
+                <p className="mt-2 text-xs text-ink-600" aria-live="polite">
+                  {exportStage}
+                </p>
+              ) : null}
+            </div>
+          </Card>
+          <section aria-labelledby="tinjauan-ekspor">
+            <h2 id="tinjauan-ekspor" className="t-label mb-3">
+              Tinjauan sebelum ekspor
+            </h2>
+            <ValidationBanner
+              issues={validationIssues}
+              onNavigate={(t) => goTab(t as TabId)}
+            />
+            <p className="t-support mt-4">
+              Tinjauan ini dibuat oleh aturan StatPlan untuk membantu kelengkapan draf — bukan
+              validasi resmi BPS.
+            </p>
+          </section>
+        </div>
         </div>
       )}
 

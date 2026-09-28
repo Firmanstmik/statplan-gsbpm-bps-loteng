@@ -61,7 +61,7 @@ export function validateProject(project: Project): ValidationIssue[] {
       issues.push({
         code: 'rekomendasi_required',
         message:
-          'Penyelenggara statistik sektoral wajib menyiapkan pengajuan rekomendasi kegiatan statistik ke BPS (Design 2.5, PDF hal. 17 & 23).',
+          'Penyelenggara statistik sektoral perlu menyiapkan pengajuan rekomendasi kegiatan statistik ke BPS (Design 2.6, PDF hal. 17 & 23).',
         severity: 'error',
         tab: 'workflow',
       })

@@ -65,6 +65,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'sn-2', label: 'Daftar data/indikator kebutuhan sudah disusun', required: true },
         ],
         outputs: ['Daftar kebutuhan data dan data prioritas'],
+        pdfRef: 'Hal. 11',
       },
       {
         id: '1.2',
@@ -81,6 +82,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'sn-4', label: 'Kebutuhan pengguna sudah dikonfirmasi', required: true },
         ],
         outputs: ['Dokumentasi rapat pembahasan kebutuhan data'],
+        pdfRef: 'Hal. 12',
       },
       {
         id: '1.3',
@@ -97,6 +99,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'sn-6', label: 'Output statistik sudah dirumuskan', required: true },
         ],
         outputs: ['Tujuan dan bentuk output statistik'],
+        pdfRef: 'Hal. 13',
       },
       {
         id: '1.4',
@@ -113,6 +116,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'sn-8', label: 'Kondef merujuk standar statistik', required: true },
         ],
         outputs: ['Dokumen konsep dan definisi'],
+        pdfRef: 'Hal. 14',
       },
       {
         id: '1.5',
@@ -148,6 +152,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'sn-12', label: 'Analisis biaya-manfaat sudah dilampirkan', required: false },
         ],
         outputs: ['Kerangka Acuan Kerja (KAK) / Proposal kegiatan'],
+        pdfRef: 'Hal. 16',
       },
     ],
   },
@@ -176,6 +181,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'de-2', label: 'Rencana produk diseminasi sudah ditetapkan', required: true },
         ],
         outputs: ['Rancangan tabel/layout', 'Formulasi indikator'],
+        pdfRef: 'Hal. 18',
       },
       {
         id: '2.2',
@@ -192,6 +198,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'de-4', label: 'Variabel dicek terhadap standar nasional', required: true },
         ],
         outputs: ['Daftar variabel dan kondef'],
+        pdfRef: 'Hal. 19',
       },
       {
         id: '2.3',
@@ -248,6 +255,22 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
       {
         id: '2.5',
         code: '2.5',
+        title: 'Merancang Pengolahan & Analisis',
+        description: 'Rancang editing, coding, validasi, dan metode analisis (deskriptif/inferensia).',
+        activities: [
+          'Rancang penyuntingan, pengkodean, dan pensahihan',
+          'Rancang metode analisis data',
+        ],
+        checklist: [
+          { id: 'de-13', label: 'Aturan editing/coding/validasi sudah dirancang', required: true },
+          { id: 'de-14', label: 'Metode analisis sudah ditetapkan', required: true },
+        ],
+        outputs: ['Rancangan pengolahan dan analisis'],
+        pdfRef: 'Hal. 22',
+      },
+      {
+        id: '2.6',
+        code: '2.6',
         title: 'Merancang Sistem Produksi & Alur Kerja',
         description: 'Susun jadwal, SOP, dan (untuk statistik sektoral) ajukan rekomendasi ke BPS.',
         activities: [
@@ -267,21 +290,6 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
         ],
         outputs: ['SOP', 'Jadwal', 'Surat rekomendasi (jika wajib)'],
         pdfRef: 'Hal. 17 & 23',
-      },
-      {
-        id: '2.6',
-        code: '2.6',
-        title: 'Merancang Pengolahan & Analisis',
-        description: 'Rancang editing, coding, validasi, dan metode analisis (deskriptif/inferensia).',
-        activities: [
-          'Rancang penyuntingan, pengkodean, dan pensahihan',
-          'Rancang metode analisis data',
-        ],
-        checklist: [
-          { id: 'de-13', label: 'Aturan editing/coding/validasi sudah dirancang', required: true },
-          { id: 'de-14', label: 'Metode analisis sudah ditetapkan', required: true },
-        ],
-        outputs: ['Rancangan pengolahan dan analisis'],
       },
     ],
   },
@@ -311,6 +319,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'bu-2', label: 'Pedoman teknis / buku pedoman tersedia', required: true },
         ],
         outputs: ['Instrumen (kuesioner/panduan)', 'Buku pedoman'],
+        pdfRef: 'Hal. 25',
       },
       {
         id: '3.2',
@@ -327,6 +336,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'bu-4', label: 'Aturan validasi terdokumentasi', required: true },
         ],
         outputs: ['Sistem pengolahan', 'Aturan validasi'],
+        pdfRef: 'Hal. 26',
       },
       {
         id: '3.3',
@@ -342,6 +352,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'bu-6', label: 'Rencana produk diseminasi final', required: true },
         ],
         outputs: ['Sistem diseminasi', 'Rencana produk'],
+        pdfRef: 'Hal. 27',
       },
       {
         id: '3.4',
@@ -357,10 +368,28 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'bu-8', label: 'Alur dokumen sudah dikonfigurasi', required: true },
         ],
         outputs: ['Alur kerja / workflow'],
+        pdfRef: 'Hal. 28',
       },
       {
         id: '3.5',
         code: '3.5',
+        title: 'Pengujian Sistem Produksi',
+        description:
+          'Uji interaksi antar komponen dan pastikan seluruh komponen berfungsi sesuai rancangan.',
+        activities: [
+          'Uji interaksi antar komponen',
+          'Pastikan seluruh komponen berfungsi',
+        ],
+        checklist: [
+          { id: 'bu-11', label: 'Uji interaksi antar komponen selesai', required: true },
+          { id: 'bu-12', label: 'Seluruh komponen berfungsi sesuai rancangan', required: true },
+        ],
+        outputs: ['Laporan pengujian sistem produksi'],
+        pdfRef: 'Hal. 29',
+      },
+      {
+        id: '3.6',
+        code: '3.6',
         title: 'Uji Proses Bisnis Statistik (Pilot)',
         description:
           'Uji coba kuesioner, metodologi lapangan, dan pengolahan (editing, coding, entry, dummy table).',
@@ -380,23 +409,6 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
         ],
         outputs: ['Hasil uji coba / pilot'],
         pdfRef: 'Hal. 30',
-      },
-      {
-        id: '3.6',
-        code: '3.6',
-        title: 'Pengujian Sistem Produksi',
-        description:
-          'Uji interaksi antar komponen dan pastikan seluruh komponen berfungsi sesuai rancangan.',
-        activities: [
-          'Uji interaksi antar komponen',
-          'Pastikan seluruh komponen berfungsi',
-        ],
-        checklist: [
-          { id: 'bu-11', label: 'Uji interaksi antar komponen selesai', required: true },
-          { id: 'bu-12', label: 'Seluruh komponen berfungsi sesuai rancangan', required: true },
-        ],
-        outputs: ['Laporan pengujian sistem produksi'],
-        pdfRef: 'Hal. 29',
       },
       {
         id: '3.7',
@@ -473,6 +485,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'co-5', label: 'Sumber daya dan instrumen siap', required: true },
         ],
         outputs: ['Dokumentasi pelatihan', 'PKS/LADU (jika relevan)'],
+        pdfRef: 'Hal. 34',
       },
       {
         id: '4.3',
@@ -490,6 +503,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'co-7', label: 'Monitoring kualitas terdokumentasi', required: true },
         ],
         outputs: ['Laporan progress pengumpulan', 'Metadata kegiatan'],
+        pdfRef: 'Hal. 35',
       },
       {
         id: '4.4',
@@ -505,6 +519,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'co-9', label: 'Metadata kegiatan sudah diisi', required: true },
         ],
         outputs: ['Dataset terkumpul', 'Metadata statistik kegiatan'],
+        pdfRef: 'Hal. 36',
       },
     ],
   },
@@ -533,6 +548,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'pr-2', label: 'Laporan penerimaan data tersedia', required: false },
         ],
         outputs: ['Dataset terintegrasi'],
+        pdfRef: 'Hal. 38',
       },
       {
         id: '5.2',
@@ -548,6 +564,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'pr-3', label: 'Editing dan coding selesai', required: true },
         ],
         outputs: ['Dataset terkode'],
+        pdfRef: 'Hal. 39',
       },
       {
         id: '5.3',
@@ -563,6 +580,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'pr-4', label: 'Validasi data selesai', required: true },
         ],
         outputs: ['Laporan validasi'],
+        pdfRef: 'Hal. 40',
       },
       {
         id: '5.4',
@@ -578,10 +596,26 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'pr-5', label: 'Editing dan imputasi terdokumentasi', required: true },
         ],
         outputs: ['Dataset bersih', 'Metadata editing'],
+        pdfRef: 'Hal. 41',
       },
       {
         id: '5.5',
         code: '5.5',
+        title: 'Penurunan Variabel & Unit',
+        description: 'Bentuk variabel dan unit statistik baru dari data yang telah diolah.',
+        activities: [
+          'Bentuk variabel statistik baru',
+          'Bentuk unit statistik baru',
+        ],
+        checklist: [
+          { id: 'pr-7', label: 'Variabel dan unit statistik baru sudah diturunkan', required: true },
+        ],
+        outputs: ['Variabel dan unit statistik turunan'],
+        pdfRef: 'Hal. 42',
+      },
+      {
+        id: '5.6',
+        code: '5.6',
         title: 'Perhitungan Bobot',
         description: 'Hitung penimbang dan kalibrasi. Tidak untuk sensus lengkap dan kompromin.',
         activities: [
@@ -601,38 +635,8 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
         pdfRef: 'Hal. 43',
       },
       {
-        id: '5.6',
-        code: '5.6',
-        title: 'Penurunan Variabel & Unit',
-        description: 'Bentuk variabel dan unit statistik baru dari data yang telah diolah.',
-        activities: [
-          'Bentuk variabel statistik baru',
-          'Bentuk unit statistik baru',
-        ],
-        checklist: [
-          { id: 'pr-7', label: 'Variabel dan unit statistik baru sudah diturunkan', required: true },
-        ],
-        outputs: ['Variabel dan unit statistik turunan'],
-        pdfRef: 'Hal. 42',
-      },
-      {
         id: '5.7',
         code: '5.7',
-        title: 'Finalisasi File Data',
-        description: 'Finalisasi file data agar siap untuk tahap analisis.',
-        activities: [
-          'Finalisasi struktur file data',
-          'Pastikan file data siap untuk analisis',
-        ],
-        checklist: [
-          { id: 'pr-8', label: 'File data final siap untuk analisis', required: true },
-        ],
-        outputs: ['File data final'],
-        pdfRef: 'Hal. 45',
-      },
-      {
-        id: '5.8',
-        code: '5.8',
         title: 'Perhitungan Agregat',
         description:
           'Hitung agregat (jumlah, rata-rata, sebaran) dan sampling error untuk survei.',
@@ -651,6 +655,21 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
         ],
         outputs: ['Dataset mikro/makro', 'Metadata statistik variabel'],
         pdfRef: 'Hal. 44',
+      },
+      {
+        id: '5.8',
+        code: '5.8',
+        title: 'Finalisasi File Data',
+        description: 'Finalisasi file data agar siap untuk tahap analisis.',
+        activities: [
+          'Finalisasi struktur file data',
+          'Pastikan file data siap untuk analisis',
+        ],
+        checklist: [
+          { id: 'pr-8', label: 'File data final siap untuk analisis', required: true },
+        ],
+        outputs: ['File data final'],
+        pdfRef: 'Hal. 45',
       },
     ],
   },
@@ -676,6 +695,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'an-1', label: 'Output awal sudah disusun', required: true },
         ],
         outputs: ['Draft output statistik'],
+        pdfRef: 'Hal. 47',
       },
       {
         id: '6.2',
@@ -693,6 +713,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'an-3', label: 'Dokumentasi pembahasan validasi tersedia', required: false },
         ],
         outputs: ['Output tervalidasi'],
+        pdfRef: 'Hal. 48',
       },
       {
         id: '6.3',
@@ -708,6 +729,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'an-4', label: 'Interpretasi dan catatan teknis siap', required: true },
         ],
         outputs: ['Narasi analisis', 'Metadata statistik indikator'],
+        pdfRef: 'Hal. 49',
       },
       {
         id: '6.4',
@@ -724,6 +746,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'an-5', label: 'Disclosure control sudah diterapkan', required: true },
         ],
         outputs: ['Output aman untuk diseminasi'],
+        pdfRef: 'Hal. 50',
       },
       {
         id: '6.5',
@@ -740,6 +763,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'an-7', label: 'Catatan kehati-hatian disusun', required: false },
         ],
         outputs: ['Output final layak diseminasi'],
+        pdfRef: 'Hal. 51',
       },
     ],
   },
@@ -767,6 +791,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'di-2', label: 'Metadata mengikuti format baku BPS', required: true },
         ],
         outputs: ['Data & metadata di sistem output'],
+        pdfRef: 'Hal. 53',
       },
       {
         id: '7.2',
@@ -782,6 +807,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'di-3', label: 'Produk diseminasi sudah dihasilkan', required: true },
         ],
         outputs: ['Publikasi / produk diseminasi'],
+        pdfRef: 'Hal. 54',
       },
       {
         id: '7.3',
@@ -798,17 +824,19 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'di-5', label: 'Dokumentasi rilis tersedia', required: true },
         ],
         outputs: ['Dokumentasi rilis'],
+        pdfRef: 'Hal. 55',
       },
       {
         id: '7.4',
         code: '7.4',
-        title: 'Mempromosikan Produk',
+        title: 'Mempromosikan Produk Statistik',
         description: 'Promosi aktif melalui website, media sosial, dan platform digital.',
         activities: ['Promosikan produk agar menjangkau pengguna luas'],
         checklist: [
           { id: 'di-6', label: 'Promosi produk sudah direncanakan/dilaksanakan', required: false },
         ],
         outputs: ['Dokumentasi promosi'],
+        pdfRef: 'Hal. 56',
       },
       {
         id: '7.5',
@@ -823,6 +851,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'di-7', label: 'Kanal dukungan pengguna siap', required: false },
         ],
         outputs: ['Log layanan pengguna'],
+        pdfRef: 'Hal. 57',
       },
     ],
   },
@@ -849,6 +878,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'ev-1', label: 'Bahan evaluasi terkumpul', required: true },
         ],
         outputs: ['Paket bahan evaluasi'],
+        pdfRef: 'Hal. 61',
       },
       {
         id: '8.2',
@@ -864,6 +894,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'ev-2', label: 'Laporan evaluasi selesai', required: true },
         ],
         outputs: ['Laporan evaluasi'],
+        pdfRef: 'Hal. 62',
       },
       {
         id: '8.3',
@@ -879,6 +910,7 @@ export const GSBPM_PHASES: GsbpmPhase[] = [
           { id: 'ev-3', label: 'RTL disepakati dan terdokumentasi', required: true },
         ],
         outputs: ['Rencana Tindak Lanjut (RTL)'],
+        pdfRef: 'Hal. 63',
       },
     ],
   },

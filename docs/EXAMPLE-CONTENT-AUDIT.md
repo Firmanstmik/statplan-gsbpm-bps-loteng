@@ -8,7 +8,7 @@ Classification: A = PDF direct · B = paraphrase · C = StatPlan illustrative ·
 
 ## Presentation
 
-- Progressive disclosure via `GuidedExampleBlock`: summary → **Lihat contoh lengkap** → structured rows
+- Progressive disclosure: summary → full example (`MateriExampleBlock`; the earlier `GuidedExampleBlock` was removed as unused)
 - Type A named visuals via `MateriExampleBlock` (preview title/note; no fake PDF rasters)
 - Every card: Apa? · Contoh · Yang bisa dipelajari · Format kerja StatPlan · Bukti dukung · Sudah dipahami
 

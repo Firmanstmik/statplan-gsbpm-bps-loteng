@@ -290,7 +290,11 @@ test(
   'Attention extraCount covers remaining issues',
   (portalAttention[0]?.extraCount ?? 0) === validateProject(portalBlocked).length - 1,
 )
-test('Attention portal link opens the project', portalAttention[0]?.href === `/app/projects/${portalBlocked.id}`)
+// Portal issues are fixed in Alur kerja; the bare URL now opens Timeline, so the link must name the tab.
+test(
+  'Attention portal link opens the project on Alur kerja',
+  portalAttention[0]?.href === `/app/projects/${portalBlocked.id}?tab=workflow`,
+)
 test(
   'Attention next action matches primary issue',
   nextActionForProject(portalBlocked).label === 'Lengkapi pemeriksaan portal',

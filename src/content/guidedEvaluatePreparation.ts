@@ -29,25 +29,21 @@ function hasNamedRows(
 
 export const GUIDED_EVALUATE_PREPARATIONS: GuidedPreparationDef[] = [
   {
-    cardId: 'evaluate-8.1',
-    title: 'Siapkan rencana pengumpulan masukan',
+    cardId: 'gsbpm-8.1',
+    title: 'Siapkan rencana menghimpun bahan evaluasi',
     explanation:
-      'Rencanakan sumber dan cara memperoleh masukan. StatPlan tidak mengumpulkan respons dan tidak menjalankan survei umpan balik.',
+      'Tentukan sumber bahan evaluasi (materi: umpan balik pengguna, paradata, metrik sistem, masukan staf), apa yang dikumpulkan, dan caranya.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 60–63',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 61',
     disclaimer:
-      'Format kerja StatPlan. Rencana pengumpulan ≠ masukan yang sudah terkumpul secara operasional.',
+      'StatPlan tidak mengumpulkan respons atau menjalankan survei umpan balik.',
     exampleBody:
-      'Contoh ilustratif: sumber — staf pelaksana dan pengguna hasil; hal yang dikumpulkan — catatan kendala jadwal; cara — diskusi singkat internal.',
+      'Sumber: umpan balik DPMPTSP, paradata durasi wawancara, catatan petugas.\nCara: dicatat berkelanjutan sejak tahap 1.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Evaluasi dimulai dengan merencanakan masukan apa yang perlu dikumpulkan — bukan dengan menilai skor kegiatan.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '60–63',
     fields: [
       {
         id: 'sumber_masukan',
-        label: 'Sumber masukan',
+        label: 'Sumber bahan evaluasi',
         kind: 'repeatableText',
         required: true,
       },
@@ -59,9 +55,14 @@ export const GUIDED_EVALUATE_PREPARATIONS: GuidedPreparationDef[] = [
       },
       {
         id: 'cara_memperoleh',
-        label: 'Cara memperoleh masukan',
+        label: 'Cara menghimpun (manual / otomatis, kapan)',
         kind: 'textarea',
         required: true,
+      },
+      {
+        id: 'aspects',
+        label: 'Aspek yang akan dievaluasi',
+        kind: 'repeatableAspect',
       },
       {
         id: 'catatan',
@@ -72,6 +73,8 @@ export const GUIDED_EVALUATE_PREPARATIONS: GuidedPreparationDef[] = [
     evidence: [
       { id: 'e-8.1-a', label: 'Catatan sumber masukan' },
       { id: 'e-8.1-b', label: 'Rencana cara memperoleh masukan' },
+      { id: 'e-8.2-a', label: 'Daftar aspek evaluasi' },
+      { id: 'ev-8.1-out', label: 'Tingkat kepuasan pengguna data', pdfPage: 60 },
     ],
     isReady: (v) => {
       const sources = v.sumber_masukan
@@ -81,75 +84,45 @@ export const GUIDED_EVALUATE_PREPARATIONS: GuidedPreparationDef[] = [
     },
   },
   {
-    cardId: 'evaluate-8.2',
-    title: 'Siapkan daftar aspek yang dievaluasi',
+    cardId: 'gsbpm-8.2',
+    title: 'Siapkan kerangka laporan evaluasi',
     explanation:
-      'Tentukan aspek yang ingin ditinjau dan alasan singkatnya. Ini daftar fokus — bukan skor otomatis.',
+      'Isi observasi Anda sendiri: apa yang sesuai target, masalah, ketidaksesuaian kinerja dengan harapan, dan rekomendasi perubahan.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 60–63',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 62',
     disclaimer:
-      'Format kerja StatPlan. Daftar aspek ≠ hasil penilaian dan ≠ sertifikasi kualitas.',
+      'Semua temuan adalah isian Anda. StatPlan tidak menghasilkan temuan, skor, atau kesimpulan berhasil/gagal.',
     exampleBody:
-      'Contoh ilustratif: aspek “ketepatan waktu pengumpulan”; alasan “sering terlambat di tahap lapangan”; informasi yang diperlukan “catatan jadwal aktual”.',
+      'Kendala: antrean panjang → responden menolak.\nTemuan: tingkat respon di bawah rencana.\nRekomendasi: wawancara di area tunggu.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Tentukan aspek kegiatan yang ingin ditinjau sebelum menyusun observasi.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '60–63',
-    fields: [
-      {
-        id: 'aspects',
-        label: 'Daftar aspek',
-        kind: 'repeatableAspect',
-        required: true,
-      },
-    ],
-    evidence: [
-      { id: 'e-8.2-a', label: 'Daftar aspek evaluasi' },
-      { id: 'e-8.2-b', label: 'Catatan informasi yang diperlukan' },
-    ],
-    isReady: (v) => hasNamedRows(v, 'aspects', 'aspek'),
-  },
-  {
-    cardId: 'evaluate-8.3',
-    title: 'Siapkan catatan observasi pelaksanaan dan hasil',
-    explanation:
-      'Isi observasi sendiri. Persiapan evaluasi — bukan penilaian otomatis. StatPlan tidak menyimpulkan berhasil atau gagal.',
-    sourceType: 'B',
-    sourceLabel: 'Penjelasan sederhana',
-    disclaimer:
-      'Semua temuan diisi oleh Anda (Input Anda). StatPlan tidak menghasilkan temuan, skor, atau kesimpulan berhasil/gagal.',
-    exampleBody:
-      'Contoh ilustratif format: “Hal yang berjalan baik…” / “Kendala…” / “Temuan…” — biarkan kosong hingga Anda mengisi sendiri.',
-    exampleClass: 'C',
-    educationalNote:
-      'Siapkan pertanyaan atau observasi untuk meninjau pelaksanaan — tanpa mesin penilaian otomatis.',
-    educationalNoteClass: 'B',
     fields: [
       {
         id: 'berjalan_baik',
-        label: 'Hal yang berjalan baik',
+        label: 'Yang sesuai target / berjalan baik',
         kind: 'textarea',
         required: true,
-        placeholder: 'Tuliskan observasi Anda…',
       },
       {
         id: 'kendala',
-        label: 'Kendala',
+        label: 'Permasalahan yang terjadi',
         kind: 'textarea',
         required: true,
       },
       {
         id: 'temuan',
-        label: 'Temuan',
+        label: 'Ketidaksesuaian kinerja dengan harapan',
         kind: 'textarea',
         required: true,
-        hint: 'Input Anda — bukan temuan yang digenerate StatPlan.',
       },
       {
         id: 'dampak',
         label: 'Dampak terhadap kegiatan',
         kind: 'textarea',
+      },
+      {
+        id: 'improvements',
+        label: 'Rekomendasi perubahan',
+        kind: 'repeatableImprovement',
       },
       {
         id: 'catatan',
@@ -160,106 +133,56 @@ export const GUIDED_EVALUATE_PREPARATIONS: GuidedPreparationDef[] = [
     evidence: [
       { id: 'e-8.3-a', label: 'Catatan observasi pelaksanaan' },
       { id: 'e-8.3-b', label: 'Catatan temuan (input Anda)' },
+      { id: 'e-8.4-a', label: 'Daftar rekomendasi perubahan' },
+      { id: 'ev-8.2-c', label: 'Laporan evaluasi' },
     ],
   },
   {
-    cardId: 'evaluate-8.4',
-    title: 'Siapkan usulan perbaikan',
-    explanation:
-      'Ubah observasi menjadi usulan perbaikan. Prioritas adalah pilihan perencanaan Anda — bukan ranking otomatis StatPlan.',
-    sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 60–63',
-    disclaimer:
-      'Usulan perbaikan = rencana. Bukan keputusan resmi dan bukan aksi yang sudah selesai. Prioritas diisi pengguna.',
-    exampleBody:
-      'Contoh ilustratif: masalah “jadwal field terlambat”; usulan “rapat koordinasi mingguan”; prioritas “Sedang” — diisi sendiri.',
-    exampleClass: 'C',
-    educationalNote:
-      'Identifikasi perbaikan menerjemahkan observasi menjadi usulan tindak lanjut.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '60–63',
-    fields: [
-      {
-        id: 'improvements',
-        label: 'Daftar usulan perbaikan',
-        kind: 'repeatableImprovement',
-        required: true,
-        hint: 'Prioritas adalah pilihan Anda — bukan ranking otomatis.',
-      },
-    ],
-    evidence: [
-      { id: 'e-8.4-a', label: 'Daftar usulan perbaikan' },
-      { id: 'e-8.4-b', label: 'Catatan prioritas (rencana Anda)' },
-    ],
-    isReady: (v) => hasNamedRows(v, 'improvements', 'masalah'),
-  },
-  {
-    cardId: 'evaluate-8.5',
+    cardId: 'gsbpm-8.3',
     title: 'Siapkan rencana tindak lanjut',
     explanation:
-      'Susun tindakan, tujuan, penanggung jawab, dan target waktu. Status rencana adalah status perencanaan — bukan bukti pelaksanaan.',
+      'Susun rencana aksi dengan prioritas, penanggung jawab, target waktu, dan cara memantau dampaknya — lalu catat persetujuannya.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 60–63',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 63',
     disclaimer:
-      'Target waktu = tanggal rencana. Status rencana ≠ tindakan sudah selesai. Tidak ada klaim aksi operasional.',
+      'Target waktu = tanggal rencana. Status rencana ≠ tindakan sudah selesai.',
     exampleBody:
-      'Contoh ilustratif: tindakan “perbarui daftar peran”; status rencana “Direncanakan”; target waktu sesuai rencana Anda.',
+      'Tindakan: pindahkan wawancara ke area tunggu · PJ: Koordinator SKM · Status: Direncanakan.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Rencana tindak lanjut mengubah usulan perbaikan menjadi rencana aksi yang dapat ditinjau kembali.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '60–63',
     fields: [
       {
         id: 'actions',
-        label: 'Daftar tindakan',
+        label: 'Rencana aksi',
         kind: 'repeatableActionPlan',
         required: true,
-        hint: 'Status rencana: Belum direncanakan / Direncanakan / Sedang disiapkan — bukan “sudah dilaksanakan”.',
+      },
+      {
+        id: 'pemantauan_dampak',
+        label: 'Mekanisme pemantauan dampak perbaikan',
+        kind: 'textarea',
+      },
+      {
+        id: 'persetujuan',
+        label: 'Persetujuan rencana aksi',
+        kind: 'select',
+        options: [
+          { value: 'belum', label: 'Belum dibahas' },
+          { value: 'dibahas', label: 'Sudah dibahas, belum disetujui' },
+          { value: 'disetujui', label: 'Sudah disetujui' },
+        ],
       },
     ],
     evidence: [
       { id: 'e-8.5-a', label: 'Daftar tindakan rencana' },
       { id: 'e-8.5-b', label: 'Catatan target waktu (rencana)' },
+      {
+        id: 'ev-8.3-out',
+        label:
+          'Dokumentasi Rapat/Diskusi Penyusunan Rencana Tindak Lanjut dan aksi perbaikan siklus berikutnya',
+        pdfPage: 60,
+      },
     ],
     isReady: (v) => hasNamedRows(v, 'actions', 'tindakan'),
-  },
-  {
-    cardId: 'evaluate-8.6',
-    title: 'Catatan finalisasi Evaluate',
-    explanation:
-      'Tinjau bahan Evaluate. Persiapan Evaluate selesai dipelajari — bukan evaluasi kegiatan selesai, bukan kegiatan dinyatakan berhasil, dan bukan kegiatan dinyatakan memenuhi standar.',
-    sourceType: 'C',
-    sourceLabel: 'Format kerja StatPlan',
-    disclaimer:
-      'Ringkasan pembelajaran Mode Terpandu. Bukan laporan evaluasi resmi, bukan sertifikasi kualitas, dan bukan persetujuan BPS.',
-    exampleBody:
-      'Contoh ilustratif: masukan dan aspek bahan siap; observasi masih draft; rencana tindak lanjut perlu penanggung jawab.',
-    exampleClass: 'C',
-    summaryFromCardIds: [
-      { cardId: 'evaluate-8.1', label: 'Masukan' },
-      { cardId: 'evaluate-8.2', label: 'Aspek evaluasi' },
-      { cardId: 'evaluate-8.3', label: 'Observasi' },
-      { cardId: 'evaluate-8.4', label: 'Perbaikan' },
-      { cardId: 'evaluate-8.5', label: 'Tindak lanjut' },
-    ],
-    fields: [
-      {
-        id: 'catatan_finalisasi',
-        label: 'Catatan finalisasi',
-        kind: 'textarea',
-        required: true,
-      },
-      {
-        id: 'hal_terbuka',
-        label: 'Hal yang masih terbuka',
-        kind: 'repeatableText',
-      },
-    ],
-    evidence: [
-      { id: 'e-8.6-a', label: 'Ringkasan persiapan evaluasi' },
-      { id: 'e-8.6-b', label: 'Daftar catatan terbuka' },
-    ],
   },
 ]
 

@@ -34,15 +34,16 @@ export function AboutPage() {
           <h2 className="font-semibold">Visi</h2>
         </div>
         <p className="text-sm leading-relaxed text-ink-700">
-          Menjadi workspace perencanaan statistik sektoral yang dapat diaudit, konsisten dengan
-          modul BPS, dan siap didemonstrasikan sebagai sistem produksi pemerintahan daerah.
+          Menjadi alat bantu belajar dan perencanaan yang membantu penyelenggara kegiatan statistik
+          memahami apa yang perlu disiapkan, dengan rujukan yang jelas ke Materi Proses Bisnis.
         </p>
       </Card>
 
       <Card>
         <h2 className="mb-2 font-semibold">Manfaat</h2>
         <ul className="space-y-2 text-sm text-ink-700">
-          <li>• Rekomendasi jenis kegiatan (Survei / Sensus / Kompromin) berbasis aturan modul</li>
+          <li>• Saran awal jenis kegiatan (Survei / Sensus / Kompromin) dari aturan sederhana</li>
+          <li>• Mode Terpandu: 44 subproses GSBPM 5.2 dengan penjelasan, contoh, dan format kerja</li>
           <li>• Checklist GSBPM per fase dengan branching sesuai jenis kegiatan</li>
           <li>• Penyusunan variabel, instrumen, metadata MS-Keg/Var/Ind</li>
           <li>• Ekspor draf dokumen perencanaan (.docx) di perangkat pengguna</li>
@@ -67,10 +68,9 @@ export function AboutPage() {
           <HelpTip topic="gsbpm" />
         </div>
         <p className="text-sm leading-relaxed text-ink-700">
-          Konten fase dan subproses merujuk Materi Proses Bisnis Statistik (GSBPM 5.2) BPS.
-          Empat tahap navigasi aplikasi digunakan di atas delapan fase GSBPM (bukan tahap resmi
-          dalam Materi Proses Bisnis PDF — di PDF, “portal SDI” merujuk portal Satu Data Indonesia
-          pada Specify Need 1.5).
+          Nama dan kode 8 fase serta 44 subproses mengikuti Materi Proses Bisnis (GSBPM 5.2).
+          Urutan di Mode Terpandu adalah urutan belajar StatPlan; GSBPM sendiri bersifat fleksibel
+          dan tahapannya dapat saling terkait (Materi Hal. 5 dan 8).
         </p>
       </Card>
 

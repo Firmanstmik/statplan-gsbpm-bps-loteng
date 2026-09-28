@@ -5,6 +5,7 @@ import { recommendJenisKegiatan } from '@/domain/aiPlanner'
 import { useAppStore } from '@/store/appStore'
 import { toast } from '@/store/toastStore'
 import type { JenisKegiatan, Klasifikasi } from '@/domain/types'
+import { FaqInline } from '@/components/ui/FaqLink'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Badge'
 import { Field, Label, Textarea } from '@/components/ui/Field'
@@ -36,6 +37,45 @@ import { cn } from '@/lib/utils'
 import { createGuidedSession } from '@/lib/guidedSession'
 
 type Step = 1 | 2 | 3 | 'handoff'
+
+const STORY_CHOICES = [
+  { label: 'Kepuasan pelayanan', story: STORY_EXAMPLE },
+  {
+    label: 'Pendataan UMKM',
+    story:
+      'Saya ingin mendata unit usaha UMKM di wilayah untuk memperbarui basis data pemberdayaan.',
+  },
+  {
+    label: 'Statistik dari data administratif',
+    story:
+      'Saya ingin menyusun statistik kependudukan dari data administratif yang sudah tersedia.',
+  },
+]
+
+/** Proportional bar of a phase inside the activity range (visual aid only). */
+function PhaseBar({
+  rangeStart,
+  rangeEnd,
+  start,
+  end,
+}: {
+  rangeStart: string
+  rangeEnd: string
+  start: string
+  end: string
+}) {
+  const total = inclusiveDayCount(rangeStart, rangeEnd)
+  if (!total || total < 1) return null
+  const offset = Math.max(0, inclusiveDayCount(rangeStart, start) - 1)
+  const width = Math.max(1, inclusiveDayCount(start, end))
+  const left = Math.min(100, (offset / total) * 100)
+  const w = Math.min(100 - left, Math.max(2, (width / total) * 100))
+  return (
+    <div className="mt-2 h-1.5 rounded-full bg-ink-100" aria-hidden>
+      <div className="h-full rounded-full bg-ink-900" style={{ marginLeft: `${left}%`, width: `${w}%` }} />
+    </div>
+  )
+}
 
 export function NewProjectPage() {
   const navigate = useNavigate()
@@ -184,7 +224,7 @@ export function NewProjectPage() {
       }
     }
 
-    const name = deriveProjectName(story)
+    const name = deriveProjectName(story, effectiveJenis)
     const topik = deriveTopik(story)
     const needCoverage =
       effectiveJenis === 'kompromin' ? 'admin' : effectiveJenis === 'sensus' ? 'full' : 'sample'
@@ -235,14 +275,15 @@ export function NewProjectPage() {
   return (
     <div className="mx-auto max-w-2xl pb-8">
       {fromExample ? (
-        <aside className="mt-4 rounded-xl border border-border/80 bg-ink-50/90 px-3.5 py-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-            Dari contoh · {fromExample.title}
-          </p>
-          <p className="mt-1 text-sm leading-relaxed text-ink-700">
-            Isian awal diambil dari contoh ilustratif. Ubah bebas — ini rencana Anda, bukan
-            salinan wajib.
-          </p>
+        <aside className="mb-6 mt-2 flex items-start gap-3 rounded-2xl border border-border bg-surface px-4 py-3">
+          <span aria-hidden className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent" />
+          <div>
+            <p className="text-sm font-semibold text-ink-950">Dimulai dari contoh: {fromExample.title}</p>
+            <p className="t-support mt-0.5">
+              Isian awal diambil dari contoh ilustratif — ubah bebas. Ini rencana Anda sendiri; contoh
+              aslinya tidak berubah.
+            </p>
+          </div>
         </aside>
       ) : null}
       {step !== 'handoff' ? <GuidedProgress current={step} /> : null}
@@ -253,19 +294,20 @@ export function NewProjectPage() {
             <h1
               id="guided-step-heading"
               tabIndex={-1}
-              className="font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
+              className="t-page-title outline-none"
             >
-              Ceritakan kegiatan yang ingin Anda lakukan
+              Apa kegiatan yang ingin Anda rencanakan?
             </h1>
-            <p className="mt-2 text-sm leading-relaxed text-ink-700">
-              Jelaskan dengan bahasa sehari-hari. Tidak perlu memahami GSBPM terlebih dahulu.
+            <p className="t-body mt-2">
+              Ceritakan dengan bahasa sehari-hari — satu atau dua kalimat cukup. Tidak perlu
+              memahami istilah statistik atau GSBPM.
             </p>
           </header>
 
           <Card className="space-y-4">
             <Field>
               <Label htmlFor="guided-story">
-                Apa yang ingin Anda ukur, ketahui, atau data apa yang ingin Anda hasilkan?
+                Informasi apa yang ingin Anda ketahui atau hasilkan?
               </Label>
               <Textarea
                 id="guided-story"
@@ -277,23 +319,36 @@ export function NewProjectPage() {
               />
             </Field>
             <div>
-              <Button type="button" size="sm" variant="secondary" onClick={applyStoryExample}>
-                Gunakan contoh
-              </Button>
+              <p className="mb-2 text-xs text-ink-500">Belum tahu cara menuliskannya? Pilih salah satu contoh:</p>
+              <div className="flex flex-wrap gap-2">
+                {STORY_CHOICES.map((c) => (
+                  <button
+                    key={c.label}
+                    type="button"
+                    onClick={() => (c.story === STORY_EXAMPLE ? applyStoryExample() : setStory(c.story))}
+                    className="focus-ring min-h-10 rounded-full border border-border bg-surface px-3.5 py-1.5 text-sm text-ink-800 transition-colors hover:border-ink-400"
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+              <FaqInline id="mulai-dari-mana" label="Bingung mulai dari mana?" className="mt-3" />
             </div>
 
             {storyOk && recommendation ? (
               <div className="space-y-3 rounded-xl bg-ink-50 p-4">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                    Kami memahami kebutuhan Anda sebagai
+                  <p className="t-label">Nama kegiatan (draf)</p>
+                  <p className="mt-1 text-[15px] font-semibold text-ink-950">
+                    {deriveProjectName(story, effectiveJenis)}
                   </p>
-                  <p className="mt-1 text-sm font-medium text-ink-950">{needSummary}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                    Pendekatan yang disarankan
-                  </p>
+                  <p className="t-label">Ringkasan kebutuhan</p>
+                  <p className="mt-1 text-sm text-ink-900">{needSummary}</p>
+                </div>
+                <div>
+                  <p className="t-label">Cara memperoleh data yang disarankan</p>
                   <p className="mt-1 text-lg font-semibold text-ink-950">
                     {jenisLabel(effectiveJenis)}
                   </p>
@@ -301,7 +356,8 @@ export function NewProjectPage() {
                     {jenisPlainExplanation(effectiveJenis)}
                   </p>
                   <p className="mt-2 text-xs text-ink-500">
-                    Berdasarkan informasi yang Anda berikan. Saran awal — dapat disesuaikan.
+                    Saran awal dari aturan sederhana berdasarkan kata-kata Anda — bukan AI dan
+                    bukan keputusan BPS. Silakan ubah bila kurang tepat.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2" role="group" aria-label="Pilih jenis kegiatan">
@@ -352,11 +408,11 @@ export function NewProjectPage() {
             <h1
               id="guided-step-heading"
               tabIndex={-1}
-              className="font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
+              className="t-page-title outline-none"
             >
               Apa yang ingin Anda dapatkan dari kegiatan ini?
             </h1>
-            <p className="mt-2 text-sm leading-relaxed text-ink-700">
+            <p className="t-body mt-2">
               Tentukan hasil yang ingin dibuat. Mulai dari contoh, lalu sesuaikan.
             </p>
           </header>
@@ -374,7 +430,7 @@ export function NewProjectPage() {
             {!writingOwn ? (
               <>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-bps-orange">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-accent-700">
                     Contoh ilustratif
                   </p>
                   <h2 className="mt-1 text-base font-semibold text-ink-950">{outcomePack.title}</h2>
@@ -461,13 +517,13 @@ export function NewProjectPage() {
             <h1
               id="guided-step-heading"
               tabIndex={-1}
-              className="font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
+              className="t-page-title outline-none"
             >
-              Kapan kegiatan ini akan dilaksanakan?
+              Kapan kegiatan ini dilakukan?
             </h1>
-            <p className="mt-2 text-sm leading-relaxed text-ink-700">
-              Atur rentang waktu kegiatan. Setelah itu StatPlan membantu membagi waktu ke dalam
-              tahapan perencanaan.
+            <p className="t-body mt-2">
+              Pilih tanggal mulai dan selesai. StatPlan membagi rentang itu ke delapan fase sebagai
+              rencana awal yang bisa Anda ubah.
             </p>
           </header>
 
@@ -566,8 +622,8 @@ export function NewProjectPage() {
                 </Button>
               </div>
               <p className="mb-3 text-xs leading-relaxed text-ink-500">
-                StatPlan membantu membagi rentang waktu Anda ke dalam tahapan GSBPM sebagai titik
-                awal. Durasi dapat disesuaikan — ini rencana awal, bukan durasi wajib BPS.
+                Ini adalah rencana awal yang dapat disesuaikan — bukan durasi wajib BPS. Dalam
+                praktik, fase GSBPM bisa tumpang tindih atau diulang.
               </p>
 
               {phasePlan.length > 0 ? (
@@ -575,7 +631,7 @@ export function NewProjectPage() {
                   {phasePlan.map((phase, idx) => (
                     <li
                       key={phase.phaseId}
-                      className="rounded-xl border border-border/70 bg-white px-3.5 py-3"
+                      className="rounded-xl border border-border bg-surface px-3.5 py-3"
                     >
                       <div className="flex gap-3">
                         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink-100 text-xs font-semibold text-ink-800">
@@ -588,9 +644,12 @@ export function NewProjectPage() {
                               <p className="mt-0.5 text-xs font-medium text-ink-600">
                                 {formatDateID(phase.startISO)} – {formatDateID(phase.endISO)}
                               </p>
-                              <p className="mt-1 text-xs leading-relaxed text-ink-500 line-clamp-2">
-                                {phase.purpose}
-                              </p>
+                              <PhaseBar
+                                rangeStart={startISO}
+                                rangeEnd={endISO}
+                                start={phase.startISO}
+                                end={phase.endISO}
+                              />
                             </>
                           ) : (
                             <div className="mt-2 grid gap-2 sm:grid-cols-2">
@@ -679,11 +738,11 @@ export function NewProjectPage() {
             <h1
               id="guided-step-heading"
               tabIndex={-1}
-              className="font-display text-2xl font-semibold tracking-tight text-ink-950 sm:text-3xl"
+              className="t-page-title outline-none"
             >
               Rencana waktu sudah dibuat
             </h1>
-            <p className="mt-2 text-sm leading-relaxed text-ink-700">
+            <p className="t-body mt-2">
               Anda sudah punya kerangka waktu. Langkah berikutnya: mulai dari Identifikasi
               Kebutuhan.
             </p>
@@ -739,14 +798,6 @@ export function NewProjectPage() {
               onClick={openIdentifyNeed}
             >
               Lanjut ke Identifikasi Kebutuhan
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              className="w-full"
-              onClick={() => createdId && navigate(`/app/projects/${createdId}`)}
-            >
-              Buka ruang kerja lengkap
             </Button>
           </Card>
         </section>

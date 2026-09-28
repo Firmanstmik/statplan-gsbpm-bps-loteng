@@ -4,7 +4,8 @@ import { TickCircle } from 'iconsax-react'
 import { cn } from '@/lib/utils'
 import { Tooltip } from '@/components/ui/Tooltip'
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'gold'
+/** inverse / inverseOutline are for dark surfaces (landing hero, closing bands). */
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'gold' | 'inverse' | 'inverseOutline'
 type Size = 'sm' | 'md' | 'lg'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -20,12 +21,14 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants: Record<Variant, string> = {
   primary:
-    'bg-ink-900 text-white hover:bg-ink-800 motion-safe:hover:-translate-y-0.5 hover:shadow-(--shadow-lift) active:translate-y-0 active:bg-ink-950 disabled:bg-ink-900/40 disabled:translate-y-0 disabled:shadow-none',
+    'bg-ink-900 text-white shadow-[0_1px_0_rgb(255_255_255/0.08)_inset] hover:bg-[#1c3f5e] active:bg-ink-950 disabled:bg-ink-900/35 disabled:shadow-none',
   secondary:
-    'bg-white/90 text-ink-900 border border-border-strong hover:bg-ink-50 hover:border-ink-600/30 motion-safe:hover:-translate-y-0.5 hover:shadow-(--shadow-soft) active:translate-y-0 active:bg-ink-100',
-  ghost: 'bg-transparent text-ink-800 hover:bg-ink-100/80 active:bg-ink-100',
-  danger: 'bg-danger text-white hover:bg-danger/90 hover:shadow-md active:bg-danger/80',
-  gold: 'bg-gold-500 text-ink-950 hover:bg-gold-400 font-semibold motion-safe:hover:-translate-y-0.5 hover:shadow-(--shadow-glow) active:translate-y-0 active:bg-gold-400',
+    'bg-white text-ink-900 border border-border-strong hover:border-ink-400 hover:bg-surface-muted active:bg-ink-100',
+  ghost: 'bg-transparent text-ink-800 hover:bg-ink-100/70 active:bg-ink-100',
+  danger: 'bg-danger text-white hover:bg-danger/90 active:bg-danger/80',
+  gold: 'bg-accent text-white font-semibold hover:bg-[#d87a12] active:bg-accent-700',
+  inverse: 'bg-white text-ink-950 hover:bg-white/90 active:bg-white/80',
+  inverseOutline: 'border border-white/35 bg-transparent text-white hover:bg-white/10 active:bg-white/15',
 }
 
 const sizes: Record<Size, string> = {

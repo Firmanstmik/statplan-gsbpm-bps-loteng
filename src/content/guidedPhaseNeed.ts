@@ -1,8 +1,15 @@
 /**
- * Mode Terpandu — Identifikasi Kebutuhan learning cards (Slice 3).
+ * Mode Terpandu — Identifikasi Kebutuhan learning cards.
  * Educational layer only. Does NOT mutate domain checklist / progress / export.
  *
- * Source classification: A = PDF direct, B = PDF paraphrase, C = StatPlan illustration
+ * Source classification (see docs/claude-source-inventory.md):
+ *   A = teks/visual langsung dari Materi Proses Bisnis (wajib pdfPage)
+ *   B = penjelasan sederhana (parafrase) atas materi
+ *   C = contoh ilustratif buatan StatPlan
+ *   D = isian pengguna (hanya di Format kerja — tidak pernah di file konten)
+ *
+ * Card ids use the official GSBPM 5.2 code (`gsbpm-1.1` …). Legacy positional ids
+ * (`need-1.1` …) are migrated in src/lib/guidedSession.ts — never reuse them.
  */
 export type GuidedSourceClass = 'A' | 'B' | 'C'
 
@@ -17,11 +24,21 @@ export type GuidedMateriExample = {
   kind: 'structure' | 'flow' | 'table' | 'rule' | 'document' | 'method' | 'schedule' | 'other'
   /** Optional short note grounded in the PDF context */
   note?: string
+  /** Page of this specific example when it differs from the card page */
+  pdfPage?: number | string
   /**
-   * Optional public asset path for a PDF page/region preview.
-   * Only set when a verified extract exists under public/ — never a reconstructed fake diagram.
+   * Public asset path of an image extracted byte-for-byte from the PDF (see public/materi).
+   * Never a redrawn or reconstructed diagram.
    */
   imageSrc?: string
+  imageWidth?: number
+  imageHeight?: number
+  /** Text alternative that describes what the source visual actually shows */
+  imageAlt?: string
+  /** Exact list from the PDF (e.g. sampling methods on Hal. 21) */
+  items?: string[]
+  /** Exact table text from the PDF (e.g. jadwal on Hal. 23) */
+  table?: { columns: string[]; rows: string[][] }
 }
 
 /** Structured illustrative or grounded example rows (shown via progressive disclosure). */
@@ -37,358 +54,339 @@ export type GuidedLearningCard = {
    * from src/domain/gsbpm.ts. For 'statplan' use a non-GSBPM label (e.g. SP-1).
    */
   code: string
+  /** Beginner-friendly paraphrase of the subprocess */
   title: string
   /**
    * gsbpm = card maps to an official GSBPM 5.2 subprocess.
    * statplan = StatPlan learning/planning aid — NOT an official subprocess code.
    */
   mappingKind: 'gsbpm' | 'statplan'
-  /** Official subprocess title when beginner title is a paraphrase */
+  /** Official subprocess title exactly as written in the PDF */
   officialTitle?: string
+  /** Type B — simple explanation */
   apa: string
-  /** Short summary shown by default (2–4 lines ideal) */
+  /** Type A — activity points for this subprocess, as written in the PDF */
+  materiPoints?: string[]
+  /** One-line summary of the example (class = contohClass) */
   contoh: string
   contohClass: GuidedSourceClass
-  /** Required for class A; optional for B. Number or range string (e.g. "32–36"). */
+  /** Page of the subprocess in the PDF. Number or range string (e.g. "32–36"). */
   pdfPage?: number | string
-  /**
-   * Named Type A examples from the PDF (e.g. Hal. 28 hortikultura).
-   * When set, UI shows “Contoh dari Materi Proses Bisnis” as preview — not an editable template.
-   */
+  /** Named Type A examples from the PDF (visual, list, or table). */
   materiExamples?: GuidedMateriExample[]
   /** What the user can learn from materiExamples (Type B paraphrase) */
   materiLesson?: string
-  /** Structured full example (label/value). Type C unless paired with Class A materiExamples. */
+  /** Structured worked example (Type C unless contohClass says otherwise). */
   contohDetail?: GuidedExampleRow[]
   /** Short learning bullets — “Yang bisa dipelajari” */
   lessonPoints?: string[]
-  templateTitle: string
-  templateFields: GuidedTemplateField[]
-  buktiIntro: string
-  buktiItems: string[]
+  /** @deprecated Format kerja lives in the preparation def; kept optional for old data. */
+  templateTitle?: string
+  /** @deprecated see templateTitle */
+  templateFields?: GuidedTemplateField[]
+  buktiIntro?: string
+  /** Fallback evidence labels when no preparation def exists */
+  buktiItems?: string[]
   buktiClass: GuidedSourceClass
   buktiPdfPage?: number
 }
 
-export const GUIDED_NEED_INTRO = {
-  phaseId: 'specify_need' as const,
-  title: 'Identifikasi Kebutuhan',
-  question: 'Apa yang perlu dipahami sebelum mulai?',
-  explanation:
-    'Tahap ini membantu Anda memahami kebutuhan statistik, siapa yang memakai hasilnya, tujuan dan output, serta apakah data yang sudah ada cukup sebelum merancang pengumpulan baru.',
-  gsbpmNote:
-    'Ini adalah mode panduan StatPlan. GSBPM bersifat fleksibel; Anda dapat kembali dan menyesuaikan langkah sebelumnya. Mode Terpandu bukan urutan wajib GSBPM.',
+/** Shared phase-intro shape used by all eight guided phases. */
+export type GuidedPhaseIntro = {
+  phaseId:
+    | 'specify_need'
+    | 'design'
+    | 'build'
+    | 'collect'
+    | 'process'
+    | 'analyse'
+    | 'disseminate'
+    | 'evaluate'
+  title: string
+  /** Title exactly as on the PDF phase slide */
+  officialTitle: string
+  question: string
+  explanation: string
+  gsbpmNote: string
+  /** Page range of the phase in the PDF */
+  pdfRange: string
+  /** Type A — phase output documents listed on the PDF phase slide */
+  outputs: string[]
+  outputsPage: number
 }
 
-/** Six beginner learning cards for Phase 1 — mapped to official GSBPM 1.1–1.6. */
+export const GSBPM_FLEXIBLE_NOTE =
+  'StatPlan menggunakan urutan terpandu untuk membantu Anda mempelajari proses secara bertahap. GSBPM sendiri bersifat fleksibel dan tidak harus digunakan secara linear (Materi Proses Bisnis · Hal. 8).'
+
+export const GUIDED_NEED_INTRO: GuidedPhaseIntro = {
+  phaseId: 'specify_need',
+  title: 'Identifikasi Kebutuhan',
+  officialTitle: 'Specify Need (Identifikasi Kebutuhan)',
+  question: 'Apa yang perlu dipahami sebelum mulai?',
+  explanation:
+    'Tahap ini membantu Anda memahami kebutuhan statistik, siapa yang memakai hasilnya, tujuan dan output, konsep yang akan diukur, serta apakah data yang sudah ada cukup sebelum merancang pengumpulan baru.',
+  gsbpmNote: GSBPM_FLEXIBLE_NOTE,
+  pdfRange: 'Hal. 10–16',
+  outputs: [
+    'Kerangka Acuan Kerja',
+    'Dokumentasi rapat pembahasan kebutuhan data',
+    'Daftar Kebutuhan Data (Daftar Data dan Data Prioritas)',
+  ],
+  outputsPage: 10,
+}
+
+/** Six official subprocesses of Specify Need (Materi Hal. 11–16). */
 export const GUIDED_NEED_CARDS: GuidedLearningCard[] = [
   {
-    id: 'need-1.1',
+    id: 'gsbpm-1.1',
     code: '1.1',
     mappingKind: 'gsbpm',
-    title: 'Identifikasi Kebutuhan',
-    apa: 'Menjelaskan kebutuhan informasi atau masalah yang ingin dijawab melalui kegiatan statistik. Rumusan yang jelas menjadi dasar langkah-langkah berikutnya.',
+    officialTitle: 'Identifikasi Kebutuhan',
+    title: 'Merumuskan kebutuhan statistik',
+    apa: 'Langkah pertama kegiatan statistik: merumuskan masalah yang ingin dijawab, lalu statistik (data atau indikator) apa yang diperlukan untuk menjawabnya.',
+    materiPoints: [
+      'Identifikasi kebutuhan merupakan langkah pertama dalam melakukan suatu kegiatan statistik yang ditentukan dari perumusan masalah yang dikembangkan.',
+      'Identifikasi awal statistik yang diperlukan, baik berupa data maupun indikator.',
+      'Identifikasi hal-hal yang dibutuhkan dari statistik tersebut.',
+    ],
+    pdfPage: 11,
     contoh:
-      'Kegiatan: Survei Kepuasan Masyarakat terhadap Pelayanan Perizinan — kebutuhan informasi untuk perbaikan layanan.',
+      'Kegiatan: Survei Kepuasan Masyarakat (SKM) terhadap Pelayanan Perizinan — kebutuhan informasi untuk perbaikan layanan.',
     contohClass: 'C',
     contohDetail: [
+      { label: 'Kegiatan', value: 'Survei Kepuasan Masyarakat terhadap Pelayanan Perizinan' },
       {
-        label: 'Kegiatan',
-        value: 'Survei Kepuasan Masyarakat terhadap Pelayanan Perizinan',
-      },
-      {
-        label: 'Masalah / kondisi',
+        label: 'Masalah',
         value:
           'Belum tersedia informasi yang cukup mengenai pengalaman masyarakat setelah menerima pelayanan perizinan.',
       },
       {
-        label: 'Mengapa informasi dibutuhkan',
-        value:
-          'Informasi diperlukan untuk mengetahui aspek pelayanan yang masih perlu diperbaiki.',
+        label: 'Mengapa dibutuhkan',
+        value: 'Untuk mengetahui aspek pelayanan yang masih perlu diperbaiki.',
       },
+      { label: 'Pengguna', value: 'DPMPTSP dan pihak terkait pelayanan publik.' },
       {
-        label: 'Pengguna informasi',
-        value: 'DPMPTSP dan pihak terkait pelayanan publik.',
-      },
-      {
-        label: 'Informasi yang diharapkan',
-        value:
-          'Gambaran kepuasan masyarakat terhadap beberapa aspek pelayanan.',
+        label: 'Informasi (data / indikator)',
+        value: 'Indikator kepuasan masyarakat per aspek pelayanan.',
       },
     ],
     lessonPoints: [
-      'Rumusan kebutuhan memuat kegiatan, masalah, alasan, pengguna, dan informasi yang diharapkan.',
-      'Tuliskan kondisi yang belum tersedia — bukan hanya topik umum.',
-      'Sebutkan siapa yang akan memakai hasil agar arah kegiatan jelas.',
+      'Kebutuhan berangkat dari masalah — bukan dari topik umum.',
+      'Rumusan yang baik memuat kegiatan, masalah, alasan, pengguna, dan informasi yang diharapkan.',
+      'Sebut data atau indikator yang dibutuhkan, belum perlu variabel rinci.',
     ],
-    templateTitle: 'Format rumusan kebutuhan',
-    templateFields: [
-      { label: 'Kebutuhan statistik' },
-      { label: 'Masalah yang ingin dijawab' },
-      { label: 'Pengguna hasil (jika sudah diketahui)' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: [
-      'Catatan rumusan masalah / kebutuhan informasi',
-      'Surat atau usulan kebutuhan dari instansi',
-      'Catatan awal dari rapat atau diskusi internal',
-    ],
-    buktiClass: 'C',
+    buktiClass: 'A',
+    buktiPdfPage: 10,
   },
   {
-    id: 'need-1.2',
+    id: 'gsbpm-1.2',
     code: '1.2',
     mappingKind: 'gsbpm',
-    title: 'Konsultasi & Konfirmasi Kebutuhan',
-    apa: 'Memahami siapa yang membutuhkan hasil statistik dan informasi apa yang mereka perlukan, agar hasil kegiatan benar-benar dipakai.',
+    officialTitle: 'Konsultasi & Konfirmasi Kebutuhan',
+    title: 'Mengonfirmasi kebutuhan dengan pengguna',
+    apa: 'Membicarakan kebutuhan dengan pemangku kepentingan agar jelas mengapa statistik diperlukan, apa yang diharapkan, kapan dibutuhkan, dan bagaimana menghitungnya.',
+    materiPoints: [
+      'Konsultasi dengan stakeholder dan melakukan konfirmasi secara rinci atas kebutuhan data statistik.',
+      'Manfaat data statistik yang akan dikumpulkan harus dipahami secara detail agar penyelenggara kegiatan statistik dapat mengetahui mengapa statistik itu diperlukan, apa yang diharapkan, kapan didiseminasikan, bagaimana penghitungannya, dll.',
+    ],
+    pdfPage: 12,
     contoh:
-      'Pengguna: DPMPTSP — membutuhkan gambaran kepuasan masyarakat untuk evaluasi pelayanan.',
+      'Pengguna: DPMPTSP — membutuhkan gambaran kepuasan masyarakat untuk evaluasi pelayanan, paling lambat akhir tahun.',
     contohClass: 'C',
     contohDetail: [
       { label: 'Pengguna', value: 'DPMPTSP' },
       {
-        label: 'Informasi yang dibutuhkan',
-        value:
-          'Informasi mengenai pengalaman dan tingkat kepuasan masyarakat terhadap pelayanan perizinan.',
+        label: 'Mengapa diperlukan',
+        value: 'Bahan evaluasi dan perbaikan pelayanan perizinan.',
       },
       {
-        label: 'Keperluan',
-        value: 'Bahan untuk evaluasi dan perbaikan pelayanan.',
+        label: 'Apa yang diharapkan',
+        value: 'Gambaran kepuasan masyarakat per aspek pelayanan.',
       },
+      { label: 'Kapan didiseminasikan', value: 'Sebelum rapat evaluasi akhir tahun.' },
       {
-        label: 'Bentuk informasi',
-        value: 'Ringkasan indikator / tabel / gambaran hasil.',
+        label: 'Bagaimana penghitungan',
+        value: 'Disepakati bersama pengguna (mis. indeks per aspek) — dicatat, belum dihitung.',
       },
     ],
     lessonPoints: [
-      'Bedakan siapa pengguna, apa yang mereka butuhkan, dan untuk keperluan apa.',
-      'Bentuk informasi (tabel, ringkasan, indeks) ikut dikonfirmasi sejak awal.',
-      'Konsultasi membantu memastikan hasil benar-benar dipakai.',
+      'Materi menyebut empat hal yang dikonfirmasi: mengapa, apa, kapan, dan bagaimana.',
+      'Konfirmasi dicatat — notulen menjadi bukti dukung.',
+      'Konsultasi mencegah hasil yang akhirnya tidak dipakai.',
     ],
-    templateTitle: 'Format kebutuhan pengguna',
-    templateFields: [
-      { label: 'Siapa pengguna hasil' },
-      { label: 'Informasi yang dibutuhkan' },
-      { label: 'Kapan hasil diharapkan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: [
-      'Notulen konsultasi atau rapat',
-      'Catatan konfirmasi kebutuhan pengguna',
-      'Daftar pemangku kepentingan terkait',
-    ],
-    buktiClass: 'C',
+    buktiClass: 'A',
+    buktiPdfPage: 10,
   },
   {
-    id: 'need-1.3',
+    id: 'gsbpm-1.3',
     code: '1.3',
     mappingKind: 'gsbpm',
-    title: 'Penetapan Tujuan Output',
-    apa: 'Merumuskan tujuan kegiatan dan output statistik berdasarkan kebutuhan yang sudah diidentifikasi, dalam bahasa yang singkat dan dapat diperiksa.',
+    officialTitle: 'Penetapan Tujuan Output',
+    title: 'Menetapkan tujuan dan output',
+    apa: 'Merumuskan tujuan kegiatan beserta output statistik yang harus dihasilkan untuk menjawab kebutuhan pengguna, lalu memastikan langkah kegiatan sesuai dengan output tersebut.',
+    materiPoints: [
+      'Tujuan dapat berisi output statistik yang diperlukan.',
+      'Output statistik dirumuskan untuk menjawab kebutuhan pengguna.',
+      'Setelah tujuan ditentukan, perlu dilakukan kesesuaian antara output statistik yang diusulkan dalam tujuan dengan langkah-langkah yang akan dilakukan.',
+    ],
+    pdfPage: 13,
     contoh:
-      'Tujuan utama: menghasilkan informasi kepuasan masyarakat terhadap pelayanan perizinan.',
+      'Tujuan: menghasilkan indikator kepuasan masyarakat terhadap pelayanan perizinan — output: tabel indeks per aspek.',
     contohClass: 'C',
     contohDetail: [
       {
         label: 'Tujuan utama',
-        value:
-          'Menghasilkan informasi mengenai kepuasan masyarakat terhadap pelayanan perizinan.',
+        value: 'Menghasilkan informasi mengenai kepuasan masyarakat terhadap pelayanan perizinan.',
       },
       {
-        label: 'Tujuan khusus',
-        value:
-          '• Mengidentifikasi aspek pelayanan yang dinilai masyarakat.\n• Menghasilkan informasi yang dapat digunakan untuk evaluasi.\n• Menyediakan gambaran hasil berdasarkan karakteristik yang relevan.',
+        label: 'Output statistik',
+        value: 'Tabel indeks kepuasan per aspek pelayanan; ringkasan menurut jenis layanan.',
+      },
+      {
+        label: 'Menjawab kebutuhan',
+        value: 'DPMPTSP dapat melihat aspek yang perlu diperbaiki (kebutuhan di 1.1).',
+      },
+      {
+        label: 'Cek kesesuaian langkah',
+        value: 'Output per aspek → instrumen harus menanyakan penilaian tiap aspek.',
       },
     ],
     lessonPoints: [
-      'Tujuan utama menjawab kebutuhan informasi secara ringkas.',
-      'Tujuan khusus memecah tujuan utama menjadi hasil yang dapat diperiksa.',
-      'Hindari tujuan yang terlalu luas atau tidak terkait pengguna.',
+      'Tujuan yang baik menyebut output statistik, bukan hanya niat umum.',
+      'Setiap output harus bisa ditelusuri ke kebutuhan pengguna.',
+      'Periksa: apakah langkah kegiatan nanti benar-benar menghasilkan output ini?',
     ],
-    templateTitle: 'Format tujuan kegiatan',
-    templateFields: [
-      { label: 'Tujuan utama kegiatan' },
-      { label: 'Tujuan tambahan (jika ada)' },
-      { label: 'Kaitan tujuan dengan kebutuhan pengguna' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Catatan tujuan kegiatan', 'Ringkasan kesepakatan tujuan dengan pengguna'],
     buktiClass: 'C',
   },
   {
-    id: 'need-1.4',
+    id: 'gsbpm-1.4',
     code: '1.4',
     mappingKind: 'gsbpm',
-    title: 'Identifikasi Konsep Definisi',
-    apa: 'Menyamakan pengertian istilah dan indikator yang akan diukur, serta bentuk hasil statistik yang diharapkan, agar hasil tidak ambigu.',
+    officialTitle: 'Identifikasi Konsep Definisi',
+    title: 'Menyepakati konsep dan definisi',
+    apa: 'Menentukan konsep dan definisi (kondef) dari indikator yang akan diukur, sesuai tujuan. Kondef diambil dari rujukan yang jelas dan sebaiknya mengikuti standar statistik, agar semua pihak memaknai istilah dengan sama.',
+    materiPoints: [
+      'Identifikasi konsep dan definisi dari indikator yang akan diukur (sesuai tujuan).',
+      'Kondef berdasarkan referensi berbagai sumber.',
+      'Kondef sebaiknya sesuai standar statistik.',
+    ],
+    pdfPage: 14,
     contoh:
-      'Pasangkan data yang dikumpulkan dengan output yang diharapkan — tanpa angka hasil fiktif.',
+      'Konsep “kepuasan masyarakat” didefinisikan dan dicatat sumber rujukannya sebelum instrumen disusun.',
     contohClass: 'C',
     contohDetail: [
+      { label: 'Indikator', value: 'Indeks kepuasan masyarakat terhadap pelayanan perizinan' },
+      { label: 'Konsep', value: 'Kepuasan masyarakat' },
       {
-        label: 'Data → Output (1)',
+        label: 'Definisi (draf)',
         value:
-          'Data: Penilaian masyarakat terhadap pelayanan\nOutput: Indikator kepuasan',
+          'Pendapat masyarakat setelah menerima pelayanan, dibandingkan dengan harapannya, untuk tiap aspek pelayanan.',
       },
       {
-        label: 'Data → Output (2)',
+        label: 'Rujukan',
         value:
-          'Data: Karakteristik responden\nOutput: Tabulasi / gambaran hasil berdasarkan karakteristik tertentu',
+          'Pedoman penyusunan SKM yang berlaku di instansi Anda; periksa apakah sudah ada standar statistiknya.',
       },
       {
-        label: 'Definisi yang perlu disepakati',
-        value:
-          'Arti “kepuasan”, aspek pelayanan yang diukur, dan satuan penyajian hasil.',
+        label: 'Istilah lain yang perlu disepakati',
+        value: '“Pengguna layanan”, “aspek pelayanan”, periode pelayanan yang dinilai.',
       },
     ],
     lessonPoints: [
-      'Setiap data yang dikumpulkan sebaiknya punya output yang jelas.',
-      'Definisi istilah (misalnya “kepuasan”) disepakati sebelum instrumen dibuat.',
-      'Jangan mengisi contoh dengan angka hasil statistik — fokus pada bentuk data dan output.',
-    ],
-    templateTitle: 'Format konsep-definisi & output',
-    templateFields: [
-      { label: 'Output utama yang diharapkan' },
-      { label: 'Bentuk penyajian (tabel, indeks, laporan, dll.)' },
-      { label: 'Indikator atau data yang akan diukur' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: [
-      'Daftar output yang diharapkan',
-      'Catatan indikator atau data prioritas',
-      'Contoh bentuk hasil yang diinginkan pengguna',
+      'Kondef ditetapkan untuk indikator yang akan diukur — bukan untuk semua kata.',
+      'Selalu catat rujukan; materi menganjurkan mengikuti standar statistik.',
+      'Kondef yang disepakati sekarang akan dipakai di Merancang Variabel (2.2) dan uji coba (3.6).',
     ],
     buktiClass: 'C',
   },
   {
-    id: 'need-1.5',
+    id: 'gsbpm-1.5',
     code: '1.5',
     mappingKind: 'gsbpm',
-    title: 'Pemeriksaan Ketersediaan & Kelayakan Data',
-    apa: 'Memeriksa apakah data yang dibutuhkan sudah tersedia pada portal atau sumber rujukan sebelum memutuskan pengumpulan data baru. Ini membantu menghindari duplikasi kegiatan.',
-    contoh:
-      'Materi menunjuk pemeriksaan sumber/portal sebelum memutuskan pengumpulan baru.',
-    contohClass: 'A',
+    officialTitle: 'Pemeriksaan Ketersediaan & Kelayakan Data',
+    title: 'Memeriksa data yang sudah tersedia',
+    apa: 'Sebelum mengumpulkan data baru, periksa apakah data yang dibutuhkan sudah tersedia pada portal rujukan. Hasilnya menentukan apakah kegiatan cukup berupa kompilasi atau memerlukan sensus/survei.',
+    materiPoints: [
+      'Untuk menghindari duplikasi data, cek terlebih dahulu ketersediaan data pada berbagai portal data yang menjadi rujukan statistik, seperti: sirusa.web.bps.go.id, romantik.bps.go.id, portal SDI, dll.',
+      'Jika data sesuai kebutuhan, maka kegiatan statistik (yang akan dilakukan) bersifat kompilasi data.',
+      'Jika data yang tersedia belum sesuai kebutuhan, maka kegiatan statistik dapat berupa sensus/survei.',
+      'Data yang tersedia dapat digunakan sebagai data pendukung terhadap hasil sensus/survei.',
+    ],
     pdfPage: 15,
+    contoh:
+      'Cek SIRuSa, Romantik, dan Portal SDI — catat apa yang ditemukan dan keputusan sementara jenis kegiatan.',
+    contohClass: 'C',
     materiExamples: [
       {
-        title: 'SIRuSa',
+        title: 'Portal rujukan yang disebut materi',
         kind: 'other',
-        note: 'Portal rujukan yang disebut dalam materi untuk pemeriksaan ketersediaan data.',
-      },
-      {
-        title: 'Romantik',
-        kind: 'other',
-        note: 'Portal rujukan yang disebut dalam materi untuk pemeriksaan ketersediaan data.',
-      },
-      {
-        title: 'Portal SDI',
-        kind: 'other',
-        note: 'Portal rujukan yang disebut dalam materi untuk pemeriksaan ketersediaan data.',
+        items: ['sirusa.web.bps.go.id', 'romantik.bps.go.id', 'Portal SDI'],
+        note: 'StatPlan tidak terhubung ke portal ini — Anda mencatat hasil pengecekan sendiri.',
       },
     ],
-    materiLesson:
-      'Periksa apakah data sudah tersedia, dari mana sumbernya, apakah sesuai kebutuhan, dan apa tindak lanjut jika belum tersedia. StatPlan tidak mengisi isi portal — Anda yang mencatat hasil pengecekan.',
     contohDetail: [
+      { label: 'Data yang dicari', value: 'Indikator kepuasan pelayanan perizinan kabupaten' },
+      { label: 'Portal diperiksa', value: 'SIRuSa, Romantik, Portal SDI' },
       {
-        label: 'Apakah data sudah tersedia?',
-        value: 'Ya / sebagian / tidak — catat hasil pemeriksaan.',
+        label: 'Hasil',
+        value: 'Belum ditemukan data kepuasan per aspek untuk layanan ini.',
       },
       {
-        label: 'Dari mana sumber data diperoleh?',
-        value: 'Catat portal atau sumber yang diperiksa (mis. SIRuSa, Romantik, Portal SDI).',
-      },
-      {
-        label: 'Apakah data sesuai dengan kebutuhan?',
-        value: 'Sesuai / sebagian / tidak sesuai — bandingkan dengan rumusan kebutuhan.',
-      },
-      {
-        label: 'Jika belum tersedia, tindak lanjut',
-        value:
-          'Pertimbangkan pengumpulan baru atau gunakan data yang ada sebagai pendukung. Keputusan jenis kegiatan mengikuti hasil pemeriksaan.',
+        label: 'Keputusan sementara',
+        value: 'Data belum sesuai kebutuhan → kegiatan berupa survei (sesuai logika Hal. 15).',
       },
     ],
     lessonPoints: [
-      'Materi menekankan pemeriksaan sumber sebelum memutuskan pengumpulan baru.',
-      'Portal yang disebut di materi: SIRuSa, Romantik, dan Portal SDI — tanpa mengarang isi portal.',
-      'Isian contoh di bawah adalah format kerja StatPlan untuk membantu Anda mencatat hasil cek.',
-    ],
-    templateTitle: 'Format pemeriksaan data',
-    templateFields: [
-      { label: 'Portal / sumber yang dicek' },
-      { label: 'Data yang ditemukan (jika ada)' },
-      { label: 'Apakah sesuai kebutuhan? (ya / sebagian / tidak)' },
-      { label: 'Keputusan sementara jenis kegiatan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: [
-      'Catatan hasil cek Sirusa / Romantik / Portal SDI',
-      'Ringkasan kelayakan data terhadap kebutuhan',
-      'Catatan keputusan jenis kegiatan beserta alasannya',
+      'Pemeriksaan portal mencegah duplikasi kegiatan statistik.',
+      'Data sesuai kebutuhan → kompilasi; belum sesuai → sensus/survei.',
+      'Data yang ada tetap berguna sebagai data pendukung.',
     ],
     buktiClass: 'B',
     buktiPdfPage: 15,
   },
   {
-    id: 'need-1.6',
+    id: 'gsbpm-1.6',
     code: '1.6',
     mappingKind: 'gsbpm',
-    title: 'Penyusunan Proposal / KAK',
-    apa: 'Mendokumentasikan temuan tahap kebutuhan ke dalam proposal atau Kerangka Acuan Kerja (KAK) agar kegiatan dapat dipertimbangkan untuk dilanjutkan. Format di StatPlan adalah format kerja — bukan template resmi BPS.',
-    contoh:
-      'Struktur pada Materi Proses Bisnis Hal. 16: Proses yang berjalan · Solusi · Biaya dan manfaat · Kendala.',
-    contohClass: 'A',
-    pdfPage: 16,
-    materiExamples: [
-      { title: 'Proses yang berjalan', kind: 'document' },
-      { title: 'Solusi', kind: 'document' },
-      { title: 'Biaya dan manfaat', kind: 'document' },
-      { title: 'Kendala', kind: 'document' },
+    officialTitle: 'Penyusunan Proposal Kegiatan / Kerangka Acuan Kerja (KAK)',
+    title: 'Menyusun proposal / KAK',
+    apa: 'Mendokumentasikan temuan subproses 1.1–1.5 menjadi proposal kegiatan (KAK) untuk mendapatkan persetujuan menjalankan proses bisnis statistik yang baru atau yang dimodifikasi.',
+    materiPoints: [
+      'Mendokumentasikan hasil temuan ataupun kesimpulan dari subproses-subproses lain pada tahapan penentuan kebutuhan dalam bentuk proposal kegiatan untuk mendapatkan persetujuan.',
+      'Proposal berisi: uraian tentang proses bisnis statistik yang sedang berjalan.',
+      'Uraian tentang solusi atau proses bisnis yang diusulkan.',
+      'Penilaian terkait biaya dan manfaat, serta kendala eksternal yang mungkin terjadi.',
     ],
-    materiLesson:
-      'Format kerja StatPlan berdasarkan materi Hal. 16. Bagian di bawah adalah contoh ilustratif pengisian — bukan template resmi BPS.',
+    pdfPage: 16,
+    contoh:
+      'Empat bagian isi proposal mengikuti Hal. 16; isian di bawah adalah contoh ilustratif untuk SKM.',
+    contohClass: 'C',
     contohDetail: [
       {
-        label: 'Proses yang berjalan',
+        label: 'Proses yang sedang berjalan',
         value:
-          'Pelayanan perizinan sudah berjalan, tetapi belum ada ringkasan sistematis mengenai kepuasan masyarakat terhadap layanan tersebut.',
+          'Pelayanan perizinan sudah berjalan, tetapi belum ada ringkasan sistematis mengenai kepuasan masyarakat.',
       },
       {
-        label: 'Solusi',
-        value:
-          'Melakukan kegiatan statistik untuk menghasilkan informasi kepuasan masyarakat sebagai bahan evaluasi pelayanan.',
+        label: 'Solusi yang diusulkan',
+        value: 'Kegiatan SKM untuk menghasilkan indeks kepuasan per aspek sebagai bahan evaluasi.',
       },
       {
         label: 'Biaya dan manfaat',
-        value:
-          'Biaya: sumber daya penyusunan dan pengumpulan (ringkas).\nManfaat: bahan evaluasi yang dapat dipakai unit pelayanan.',
+        value: 'Biaya: petugas, pencetakan/aplikasi, waktu. Manfaat: dasar perbaikan layanan.',
       },
       {
-        label: 'Kendala',
-        value:
-          'Ketersediaan waktu responden, kesiapan instrumen, dan koordinasi antar unit.',
+        label: 'Kendala eksternal',
+        value: 'Ketersediaan waktu responden, koordinasi antar unit.',
       },
     ],
     lessonPoints: [
-      'Empat bagian di atas mengikuti kerangka Materi Proses Bisnis Hal. 16.',
-      'Isi contoh pengisian adalah ilustratif StatPlan — bukan salinan dokumen resmi.',
-      'Gunakan Format kerja StatPlan untuk mengisi versi kegiatan Anda sendiri.',
+      'Proposal/KAK merangkum 1.1–1.5 — bukan dokumen yang berdiri sendiri.',
+      'Materi menyebut tiga isi pokok: proses berjalan, solusi, biaya-manfaat & kendala.',
+      'Tujuan akhirnya adalah persetujuan untuk melanjutkan kegiatan.',
     ],
-    templateTitle: 'Format kerja StatPlan — draf proposal / KAK',
-    templateFields: [
-      { label: 'Proses / kondisi yang sedang berjalan' },
-      { label: 'Solusi yang diusulkan' },
-      { label: 'Biaya dan manfaat (ringkas)' },
-      { label: 'Kendala yang perlu diperhatikan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: [
-      'Draf proposal atau KAK',
-      'Ringkasan temuan tahap kebutuhan',
-      'Catatan biaya–manfaat dan kendala (versi awal)',
-    ],
-    buktiClass: 'B',
-    buktiPdfPage: 16,
+    buktiClass: 'A',
+    buktiPdfPage: 10,
   },
 ]
 
@@ -407,5 +405,5 @@ export function sourceBadgeLabel(
     return `Penjelasan sederhana · Hal. ${pdfPage}`
   }
   if (cls === 'B') return 'Penjelasan sederhana'
-  return 'Contoh ilustratif'
+  return 'Contoh ilustratif StatPlan'
 }

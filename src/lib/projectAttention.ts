@@ -80,7 +80,8 @@ function pickPrimaryIssue(issues: ValidationIssue[]): ValidationIssue | null {
 }
 
 export function projectHref(projectId: string, tab?: string): string {
-  if (!tab || tab === 'workflow') return `/app/projects/${projectId}`
+  // A bare workspace URL opens the default tab (Timeline), so every named tab is explicit.
+  if (!tab) return `/app/projects/${projectId}`
   return `/app/projects/${projectId}?tab=${tab}`
 }
 

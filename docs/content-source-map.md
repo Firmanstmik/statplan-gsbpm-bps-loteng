@@ -1,5 +1,7 @@
 # StatPlan — Content Source Map
 
+> **Pembaruan (Sep 2026):** Mode Terpandu kini mengikuti 44 subproses resmi GSBPM 5.2. Pemetaan halaman, kelas sumber, contoh, format kerja, bukti dukung, diskrepansi, dan migrasi state terbaru ada di [`claude-source-inventory.md`](claude-source-inventory.md). Rujukan kartu "SP-*" dan penomoran 6-kartu-per-fase di bawah ini adalah catatan historis.
+
 **Purpose:** Trace user-facing educational/example content to its source.  
 **Primary PDF:** `Materi Proses Bisnis.pdf` (64 slides, Jan 2026).  
 **Rule:** Never label content as “dari Materi Proses Bisnis” unless verified with a page number.

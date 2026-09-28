@@ -131,7 +131,7 @@ export function SubprocessLearningCard({
 
       {learning.conditionCopy ? (
         <div className="rounded-xl border border-bps-blue/20 bg-bps-blue/5 px-3 py-3 text-sm text-ink-800">
-          <p className="text-xs font-semibold uppercase tracking-wide text-bps-blue">Catatan kondisi</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">Catatan kondisi</p>
           <p className="mt-1.5 leading-relaxed">{learning.conditionCopy}</p>
         </div>
       ) : null}

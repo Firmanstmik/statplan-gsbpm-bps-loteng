@@ -1,249 +1,202 @@
 /**
- * Mode Terpandu — Analyse learning cards (Slice 9).
+ * Mode Terpandu — Analisis Data (Analyse) learning cards.
+ * Five official subprocesses, Materi Proses Bisnis Hal. 46–51.
  * Educational + preparation only. Does NOT calculate statistics or fabricate results.
  */
-import type { GuidedLearningCard } from '@/content/guidedPhaseNeed'
+import type { GuidedLearningCard, GuidedPhaseIntro } from '@/content/guidedPhaseNeed'
+import { GSBPM_FLEXIBLE_NOTE } from '@/content/guidedPhaseNeed'
 
-export const ANALYSE_INTRO = {
-  phaseId: 'analyse' as const,
-  title: 'Analyse',
-  question: 'Bagaimana hasil pengolahan dianalisis menjadi informasi yang dapat digunakan?',
+export const ANALYSE_INTRO: GuidedPhaseIntro = {
+  phaseId: 'analyse',
+  title: 'Analisis Data',
+  officialTitle: 'Analyse (Analisis Data)',
+  question: 'Bagaimana hasil pengolahan menjadi output yang layak dirilis?',
   explanation:
-    'Pada tahap ini, hasil yang sudah diproses dianalisis untuk menghasilkan informasi yang dapat digunakan.',
-  gsbpmNote:
-    'Ini adalah mode panduan StatPlan. GSBPM bersifat fleksibel; Anda dapat kembali dan menyesuaikan langkah sebelumnya. Mode Terpandu bukan urutan wajib GSBPM.',
+    'Pada tahap ini output awal disusun, divalidasi, diinterpretasi, dilindungi kerahasiaannya, lalu difinalisasi hingga disetujui untuk rilis.',
+  gsbpmNote: GSBPM_FLEXIBLE_NOTE,
+  pdfRange: 'Hal. 46–51',
+  outputs: [
+    'Output kegiatan layak digunakan sebelum diseminasi',
+    'Mikro data final (sudah anonimisasi)',
+    'Dokumentasi pembahasan validasi output, diskusi pra rilis, persetujuan rilis, dll',
+    'Metadata Statistik Indikator',
+  ],
+  outputsPage: 46,
 }
 
 export const GUIDED_ANALYSE_CARDS: GuidedLearningCard[] = [
   {
-    id: 'analyse-6.1',
-    code: 'SP-A1',
-    mappingKind: 'statplan',
-    title: 'Tujuan analisis',
-    apa: 'Tujuan analisis menjelaskan pertanyaan yang ingin dijawab dari hasil pengolahan. Ini berbeda dari tujuan kegiatan secara umum: di sini fokus pada apa yang ingin dibaca dari data yang sudah diproses.',
-    contoh:
-      'Contoh ilustratif: pertanyaan analisis dan bentuk jawaban — tanpa angka hasil fiktif.',
-    contohClass: 'C',
-    contohDetail: [
-      {
-        label: 'Pertanyaan yang ingin dijawab',
-        value: 'Bagaimana gambaran kepuasan masyarakat menurut aspek pelayanan?',
-      },
-      {
-        label: 'Informasi yang ingin diperoleh',
-        value: 'Aspek yang dinilai lebih rendah/tinggi relatif terhadap aspek lain (deskriptif).',
-      },
-      {
-        label: 'Output yang akan digunakan',
-        value: 'Ringkasan indikator / tabulasi sesuai rancangan — tanpa angka di StatPlan.',
-      },
-    ],
-    lessonPoints: [
-      'Tujuan analisis fokus pada apa yang dibaca dari data yang sudah diproses.',
-      'Bedakan dari tujuan kegiatan di tahap Specify Need.',
-      'Jangan mengisi contoh dengan angka hasil statistik.',
-    ],
-    templateTitle: 'Format tujuan analisis',
-    templateFields: [
-      { label: 'Pertanyaan yang ingin dijawab' },
-      { label: 'Informasi yang ingin diperoleh' },
-      { label: 'Output yang akan digunakan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: [
-      'Catatan tujuan/pertanyaan analisis',
-      'Daftar informasi yang ingin diperoleh',
-    ],
-    buktiClass: 'C',
-  },
-  {
-    id: 'analyse-6.2',
+    id: 'gsbpm-6.1',
     code: '6.1',
     mappingKind: 'gsbpm',
-    officialTitle: 'Menyusun Output Awal',
-    title: 'Output awal',
-    apa: 'Output awal digunakan untuk melihat hasil pengolahan sebelum ditetapkan sebagai output akhir. Mode Terpandu hanya membantu merencanakan output — bukan menghitung statistik.',
+    officialTitle: 'Menyusun output awal',
+    title: 'Menyusun output awal',
+    apa: 'Data hasil pengolahan diubah menjadi bentuk output atau indikator yang akan ditampilkan — tabel, grafik, atau peta — sebagai draf yang akan divalidasi di subproses berikutnya.',
+    materiPoints: [
+      'Pada subproses ini, data mentah (raw data) hasil dari tahap pengolahan dilakukan transformasi sesuai dengan output ataupun indikator yang akan ditampilkan (berupa tabulasi/grafik/peta), sehingga dapat dilakukan penyahihan (validasi) pada subproses berikutnya.',
+    ],
+    pdfPage: 47,
     contoh:
-      'Struktur output awal: nama, jenis, dan apa yang ingin dilihat — tanpa angka hasil.',
-    contohClass: 'A',
-    pdfPage: '46–51',
-    contohDetail: [
-      { label: 'Nama output', value: 'Ringkasan indikator kepuasan (draf awal)' },
-      { label: 'Jenis output', value: 'Tabel ringkas / gambaran indikator' },
-      {
-        label: 'Apa yang ingin dilihat?',
-        value: 'Gambaran per aspek pelayanan dan karakteristik yang relevan.',
-      },
-    ],
-    lessonPoints: [
-      'Output awal untuk ditinjau sebelum finalisasi.',
-      'Struktur lebih penting daripada angka di tahap perencanaan.',
-      'StatPlan tidak menghitung statistik untuk Anda.',
-    ],
-    templateTitle: 'Rencana output awal',
-    templateFields: [
-      { label: 'Nama output' },
-      { label: 'Jenis output' },
-      { label: 'Apa yang ingin dilihat?' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Rencana output awal', 'Draft tabel/visual jika tersedia'],
-    buktiClass: 'C',
-  },
-  {
-    id: 'analyse-6.3',
-    code: '6.3',
-    mappingKind: 'gsbpm',
-    officialTitle: 'Interpretasi dan Penjelasan',
-    title: 'Pemeriksaan / interpretasi output',
-    apa: 'Output perlu diperiksa sebelum digunakan atau disampaikan. Di Mode Terpandu Anda menyusun pertanyaan pemeriksaan — bukan mesin kualitas statistik otomatis.',
-    contoh:
-      'Contoh pemeriksaan konsistensi dan cara menjelaskan hasil — tanpa hasil statistik palsu.',
+      'SKM: Tabel 1 versi draf dan satu grafik batang indeks per aspek, diberi label “draf — belum divalidasi”.',
     contohClass: 'C',
     contohDetail: [
-      {
-        label: 'Apa yang perlu diperiksa?',
-        value: 'Kelengkapan tabel · Konsistensi antar-output · Kesesuaian dengan tujuan analisis',
-      },
-      {
-        label: 'Mengapa perlu diperiksa?',
-        value: 'Agar penjelasan kepada pengguna tidak bertentangan antar bagian output.',
-      },
-      {
-        label: 'Cara menjelaskan (struktur)',
-        value:
-          'Jelaskan konteks · sebutkan batasan · arahkan ke keputusan yang relevan — tanpa mengarang angka.',
-      },
-      {
-        label: 'Tindakan jika ada masalah',
-        value: 'Catat temuan, perbaiki output, atau kembali ke Process bila perlu.',
-      },
+      { label: 'Output awal 1', value: 'Tabel 1 (draf) — indeks per aspek pelayanan' },
+      { label: 'Output awal 2', value: 'Grafik batang indeks per aspek' },
+      { label: 'Bentuk', value: 'Tabulasi dan grafik sesuai rancangan 2.1' },
+      { label: 'Status', value: 'Draf — masuk ke validasi output (6.2)' },
     ],
     lessonPoints: [
-      'Validasi output memeriksa konsistensi, bukan “lolos otomatis”.',
-      'Interpretasi menjelaskan makna hasil tanpa mengarang statistik.',
-      'Siapkan pertanyaan pemeriksaan sebelum menyajikan ke pengguna.',
+      'Output awal adalah draf untuk divalidasi, bukan hasil akhir.',
+      'Bentuknya mengikuti rancangan output (2.1): tabulasi, grafik, atau peta.',
+      'Tandai jelas sebagai draf agar tidak tersebar sebelum waktunya.',
     ],
-    templateTitle: 'Rencana pemeriksaan output',
-    templateFields: [
-      { label: 'Apa yang perlu diperiksa?' },
-      { label: 'Mengapa perlu diperiksa?' },
-      { label: 'Tindakan jika ada masalah' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Catatan pemeriksaan output', 'Daftar pertanyaan review'],
     buktiClass: 'C',
   },
   {
-    id: 'analyse-6.4',
+    id: 'gsbpm-6.2',
+    code: '6.2',
+    mappingKind: 'gsbpm',
+    officialTitle: 'Validasi output',
+    title: 'Memvalidasi kualitas output',
+    apa: 'Memeriksa kualitas output terhadap pedoman dan target kualitas: konsistensi, cakupan dan tingkat respon, perbandingan dengan periode lalu dan sumber lain, serta kelengkapan metadata.',
+    materiPoints: [
+      'Memeriksa konsistensi.',
+      'Memeriksa dan memastikan cakupan populasi dan tingkat respon sesuai dengan kebutuhan.',
+      'Membandingkan output statistik dengan periode sebelumnya (jika ada).',
+      'Memeriksa dan memastikan bahwa metadata, paradata, dan indikator kualitas tersedia dan sesuai dengan harapan.',
+      'Membandingkan output statistik dengan data relevan lainnya, baik internal maupun eksternal (koherensi).',
+      'Menyelidiki ketidakkonsistenan pada output statistik.',
+      'Memeriksa dan melakukan penyuntingan pada tingkat agregat atau makro.',
+      'Memeriksa dan memastikan bahwa output statistik telah sesuai ekspektasi dan keilmuan terkait.',
+    ],
+    pdfPage: 48,
+    contoh:
+      'SKM: tingkat respon dicek, indeks dibandingkan dengan SKM tahun lalu, dan jumlah per kantor dicocokkan dengan total.',
+    contohClass: 'C',
+    contohDetail: [
+      { label: 'Konsistensi', value: 'Jumlah responden per aspek sama dengan total responden?' },
+      { label: 'Tingkat respon', value: 'Respon vs sampel — memenuhi kebutuhan?' },
+      { label: 'Periode sebelumnya', value: 'Bandingkan dengan SKM tahun lalu (jika ada)' },
+      { label: 'Koherensi', value: 'Selaras dengan data pengaduan layanan?' },
+      { label: 'Tindak lanjut', value: 'Selisih besar diselidiki sebelum output dilanjutkan' },
+    ],
+    lessonPoints: [
+      'Validasi output bekerja di tingkat agregat — berbeda dengan validasi data di 5.3.',
+      'Perbandingan dengan periode lalu dan sumber lain menguji koherensi.',
+      'Setiap ketidakkonsistenan diselidiki, bukan diabaikan.',
+    ],
+    buktiClass: 'A',
+    buktiPdfPage: 46,
+  },
+  {
+    id: 'gsbpm-6.3',
+    code: '6.3',
+    mappingKind: 'gsbpm',
+    officialTitle: 'Interpretasi dan penjelasan',
+    title: 'Menafsirkan dan menjelaskan output',
+    apa: 'Memberi pemahaman mendalam atas output: seberapa sesuai dengan ekspektasi awal, dilihat dari berbagai sudut pandang, dan bila perlu dianalisis lebih dalam.',
+    materiPoints: [
+      'Mengevaluasi seberapa baik output statistik tersebut mencerminkan ekspektasi (hipotesis awal).',
+      'Melihat statistik dari berbagai perspektif dengan menggunakan alat dan media yang berbeda.',
+      'Melakukan analisis secara mendalam, seperti analisis deret waktu, analisis dampak, analisis keterbandingan, analisis hasil revisi, analisis asimetri, dan lain-lain.',
+    ],
+    pdfPage: 49,
+    contoh:
+      'SKM: ekspektasi awal “aspek waktu paling rendah” dibandingkan dengan hasil; dijelaskan menurut jenis layanan.',
+    contohClass: 'C',
+    contohDetail: [
+      { label: 'Ekspektasi awal', value: 'Aspek waktu penyelesaian dinilai paling rendah' },
+      { label: 'Apa yang ditunjukkan output', value: 'Ditulis setelah output tersedia — bukan diisi sekarang' },
+      { label: 'Perspektif lain', value: 'Menurut jenis layanan dan menurut kantor layanan' },
+      { label: 'Analisis lanjutan', value: 'Keterbandingan dengan tahun lalu (jika tersedia)' },
+    ],
+    lessonPoints: [
+      'Tulis ekspektasi sebelum melihat hasil agar interpretasi jujur.',
+      'Satu angka dibaca dari beberapa sudut pandang sebelum disimpulkan.',
+      'Interpretasi menjelaskan makna — tidak mengubah angka.',
+    ],
+    buktiClass: 'C',
+  },
+  {
+    id: 'gsbpm-6.4',
     code: '6.4',
     mappingKind: 'gsbpm',
-    officialTitle: 'Pengendalian Kerahasiaan',
-    title: 'Disclosure / kerahasiaan',
-    apa: 'Sebelum output digunakan atau disebarluaskan, pertimbangkan apakah informasi yang ditampilkan dapat mengungkap informasi yang seharusnya tidak dibuka.',
-    contoh:
-      'Contoh pengendalian kerahasiaan pada Materi Proses Bisnis Hal. 50 — disajikan sebagai contoh/praktik, bukan aturan universal tunggal.',
-    contohClass: 'A',
+    officialTitle: 'Pengendalian Kerahasiaan (Disclosure Control)',
+    title: 'Menjaga kerahasiaan data',
+    apa: 'Memastikan data dan metadata yang akan dipublikasikan tidak melanggar kerahasiaan. Caranya berbeda untuk setiap output — mikro data berbeda dengan tabulasi.',
+    materiPoints: [
+      'Penerapan disclosure control merupakan subproses untuk memastikan bahwa data dan metadata yang akan dipublikasikan tidak melanggar kerahasiaan.',
+      'Penerapan disclosure control bervariasi untuk setiap output; disclosure control untuk micro data berbeda dengan untuk tabulasi.',
+    ],
     pdfPage: 50,
+    contoh: 'Materi memberi aturan konkret untuk data survei dan data kompilasi (di bawah).',
+    contohClass: 'A',
     materiExamples: [
       {
-        title: 'Anonimisasi data individu (survei)',
+        title: 'Disclosure control data hasil survei',
         kind: 'rule',
-        note: 'Materi: data individu yang disajikan harus dianonimisasi terlebih dahulu.',
+        items: [
+          'Data individu yang disajikan harus dianonimisasi (diubah dengan sandi tertentu) terlebih dahulu.',
+          'Data agregat yang unit sampelnya dapat ditelusuri/diungkap tidak dapat disajikan (misal: jumlah sampel yang kurang dari 3 unit pada suatu wilayah).',
+        ],
       },
       {
-        title: 'Agregat dengan n < 3',
+        title: 'Disclosure control data hasil kompilasi',
         kind: 'rule',
-        note: 'Materi: agregat yang unit sampelnya dapat ditelusuri (mis. jumlah sampel < 3 pada suatu wilayah) tidak dapat disajikan.',
-      },
-      {
-        title: 'Sensitivitas pada data kompilasi',
-        kind: 'rule',
-        note: 'Materi: data kompilasi yang berpotensi sensitif dan dapat diungkap dari karakteristiknya harus dianonimkan atau dihilangkan.',
+        items: [
+          'Data yang berpotensi sensitif dan dapat diungkap dari karakteristiknya harus dianonimkan atau dihilangkan.',
+        ],
       },
     ],
-    materiLesson:
-      'Disclosure control bervariasi untuk setiap output. Contoh di materi membedakan praktik survei dan kompilasi — bukan klaim hukum universal.',
+    contohDetail: [
+      { label: 'Mikro data SKM', value: 'Nama dan nomor tiket dihapus sebelum data dibagikan' },
+      {
+        label: 'Tabulasi',
+        value: 'Sel “kantor layanan × jenis izin” dengan < 3 responden tidak disajikan',
+      },
+      { label: 'Metadata', value: 'Catat aturan kerahasiaan yang diterapkan' },
+    ],
     lessonPoints: [
-      'Anonimisasi relevan untuk data individu yang akan disajikan.',
-      'Agregat dengan n kecil dapat berisiko pengungkapan (contoh materi: n < 3).',
-      'Data kompilasi punya pertimbangan sensitivitas tersendiri sesuai materi.',
+      'Anonimisasi untuk data individu; sel kecil (< 3 unit) untuk tabulasi.',
+      'Data kompilasi pun bisa sensitif dari karakteristiknya.',
+      'Terapkan sebelum output disetujui untuk rilis (6.5).',
     ],
-    templateTitle: 'Catatan disclosure',
-    templateFields: [
-      { label: 'Apakah disclosure perlu diperhatikan?' },
-      { label: 'Informasi yang perlu dilindungi' },
-      { label: 'Risiko pengungkapan' },
-      { label: 'Tindakan yang direncanakan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Catatan disclosure', 'Rencana perlindungan informasi'],
-    buktiClass: 'C',
+    buktiClass: 'A',
+    buktiPdfPage: 46,
   },
   {
-    id: 'analyse-6.5',
+    id: 'gsbpm-6.5',
     code: '6.5',
     mappingKind: 'gsbpm',
     officialTitle: 'Finalisasi Output',
-    title: 'Output akhir',
-    apa: 'Setelah output diperiksa dan hal-hal yang perlu diperbaiki ditangani, hasil dapat disiapkan sebagai output akhir. Ini perencanaan — bukan publikasi atau penyebarluasan.',
+    title: 'Memfinalisasi dan menyetujui output',
+    apa: 'Pemeriksaan konsistensi terakhir, melengkapi informasi pendukung, diskusi pra-rilis dengan pakar, menyetujui konten rilis, menetapkan level penyajian dan catatan kehati-hatian, serta menyusun dokumen pendukung.',
+    materiPoints: [
+      'Melengkapi pemeriksaan konsistensi (pengecekan ulang konsistensi).',
+      'Mengumpulkan informasi pendukung yang diperlukan, termasuk interpretasi, pendapat pakar, catatan teknis, penjelasan, ukuran ketidakpastian dan metadata lainnya.',
+      'Melakukan diskusi pra-rilis dengan para ahli atau pakar di bidangnya. Menyetujui konten statistik yang akan dirilis.',
+      'Menetapkan level penyajian rilis dan menyusun catatan khusus atau kondisi tertentu yang harus diperhatikan.',
+      'Menyusun dokumen pendukung internal.',
+      'Menerjemahkan output statistik dalam bahasa lain (jika diperlukan).',
+    ],
+    pdfPage: 51,
     contoh:
-      'Checklist persiapan output akhir — tanpa mengklaim hasil sudah dirilis.',
-    contohClass: 'A',
-    pdfPage: '46–51',
-    contohDetail: [
-      { label: 'Nama output', value: 'Ringkasan hasil untuk pengguna sasaran' },
-      { label: 'Siapa pengguna output?', value: 'Unit/pengelola yang membutuhkan informasi' },
-      { label: 'Bentuk penyajian', value: 'Tabel ringkas / laporan singkat / ringkasan indikator' },
-      {
-        label: 'Checklist finalisasi',
-        value: 'Sudah diperiksa · Disclosure ditinjau · Siap untuk rencana Disseminate',
-      },
-    ],
-    lessonPoints: [
-      'Finalisasi output ≠ publikasi.',
-      'Pastikan pemeriksaan dan disclosure sudah ditinjau.',
-      'Siapkan daftar output akhir sebelum Disseminate.',
-    ],
-    templateTitle: 'Rencana output akhir',
-    templateFields: [
-      { label: 'Nama output' },
-      { label: 'Siapa pengguna output?' },
-      { label: 'Bentuk penyajian' },
-      { label: 'Catatan finalisasi' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Daftar output akhir', 'Catatan finalisasi'],
-    buktiClass: 'C',
-  },
-  {
-    id: 'analyse-6.6',
-    code: 'SP-A6',
-    mappingKind: 'statplan',
-    title: 'Catatan finalisasi analisis',
-    apa: 'Tinjau apakah bahan Analyse sudah cukup sebagai persiapan awal. Ini ringkasan Mode Terpandu — bukan pernyataan bahwa analisis sudah selesai atau hasil sudah dihitung.',
-    contoh: 'Ringkasan kesiapan Analyse — dibuat StatPlan.',
+      'SKM: diskusi pra-rilis dengan pimpinan unit dan akademisi, lalu persetujuan konten rilis dicatat.',
     contohClass: 'C',
     contohDetail: [
-      { label: 'Tujuan analisis', value: 'Pertanyaan analisis sudah dirumuskan' },
-      { label: 'Output awal', value: 'Struktur output awal sudah direncanakan' },
-      { label: 'Pemeriksaan', value: 'Daftar pemeriksaan sudah disiapkan' },
-      { label: 'Disclosure', value: 'Catatan kerahasiaan sudah ditinjau' },
-      { label: 'Output akhir', value: 'Daftar output akhir sudah disusun' },
+      { label: 'Cek ulang konsistensi', value: 'Tabel 1 dan grafik memakai angka yang sama' },
+      { label: 'Informasi pendukung', value: 'Catatan teknis, sampling error, metadata indikator' },
+      { label: 'Diskusi pra-rilis', value: 'Pimpinan DPMPTSP dan satu akademisi' },
+      { label: 'Level penyajian', value: 'Kabupaten dan jenis layanan; tidak per kantor' },
+      { label: 'Catatan kehati-hatian', value: 'Hasil hanya menggambarkan periode survei' },
     ],
     lessonPoints: [
-      'Ini ringkasan pembelajaran — bukan bukti analisis selesai.',
-      'Catat perbaikan yang masih diperlukan sebelum Disseminate.',
+      'Finalisasi berakhir dengan persetujuan konten yang akan dirilis.',
+      'Level penyajian dan catatan kehati-hatian ditetapkan sebelum rilis.',
+      'Dokumentasi diskusi pra-rilis dan persetujuan rilis adalah output resmi tahap ini.',
     ],
-    templateTitle: 'Ringkasan finalisasi analisis',
-    templateFields: [
-      { label: 'Catatan analisis' },
-      { label: 'Hal yang masih perlu diperiksa' },
-      { label: 'Perbaikan yang masih diperlukan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Ringkasan analisis', 'Daftar perbaikan'],
-    buktiClass: 'C',
+    buktiClass: 'A',
+    buktiPdfPage: 46,
   },
 ]
 

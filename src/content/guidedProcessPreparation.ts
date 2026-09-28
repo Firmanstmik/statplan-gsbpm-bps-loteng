@@ -29,21 +29,17 @@ function hasNamedRows(
 
 export const GUIDED_PROCESS_PREPARATIONS: GuidedPreparationDef[] = [
   {
-    cardId: 'process-5.1',
-    title: 'Siapkan rencana integrasi data',
+    cardId: 'gsbpm-5.1',
+    title: 'Siapkan rencana integrasi & penerimaan data',
     explanation:
-      'Catat sumber yang akan digabungkan dan dasar penggabungannya. StatPlan tidak menjalankan join database dan tidak mengunggah berkas data.',
+      'Catat sumber yang akan digabungkan, kunci penggabungannya, dan bagaimana penerimaan data dicatat.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 37–45',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 38',
     disclaimer:
-      'Format kerja StatPlan. Tidak melakukan integrasi data nyata. Tidak semua kegiatan membutuhkan integrasi.',
+      'Format kerja StatPlan. Tidak melakukan integrasi data nyata dan tidak mengunggah berkas data.',
     exampleBody:
-      'Contoh ilustratif: gabungkan daftar isian lapangan dengan daftar administratif menggunakan kunci identitas yang sama.',
+      'Sumber: isian CAPI (internal) + daftar layanan sistem perizinan (eksternal).\nKunci: nomor tiket layanan.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Jika data berasal dari beberapa bagian atau sumber, data dapat perlu digabungkan agar dapat diproses sebagai satu kesatuan.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '37–45',
     fields: [
       {
         id: 'sources',
@@ -53,89 +49,35 @@ export const GUIDED_PROCESS_PREPARATIONS: GuidedPreparationDef[] = [
       },
       {
         id: 'dasar_penggabungan',
-        label: 'Dasar penggabungan',
+        label: 'Kunci / dasar penggabungan',
         kind: 'textarea',
         required: true,
-        placeholder: 'Misalnya: kunci identitas yang sama…',
       },
       {
         id: 'hal_diperhatikan',
-        label: 'Hal yang perlu diperhatikan',
+        label: 'Cara mencatat penerimaan data',
         kind: 'textarea',
+        placeholder: 'Siapa menerima, bagaimana kelengkapan jumlah diperiksa, laporan perkembangan…',
       },
     ],
     evidence: [
       { id: 'e-5.1-a', label: 'Catatan sumber data' },
       { id: 'e-5.1-b', label: 'Rencana integrasi' },
+      { id: 'ev-5.1-c', label: 'Daftar penerimaan data / laporan perkembangan penerimaan' },
     ],
-    isReady: (v) =>
-      hasNamedRows(v, 'sources', 'nama') && hasText(v.dasar_penggabungan),
+    isReady: (v) => hasNamedRows(v, 'sources', 'nama') && hasText(v.dasar_penggabungan),
   },
   {
-    cardId: 'process-5.2',
-    title: 'Siapkan rencana agregasi / pengelompokan',
-    explanation:
-      'Rencanakan bagaimana data diringkas atau dikelompokkan. StatPlan tidak menghitung total, rata-rata, atau angka fiktif.',
-    sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 44',
-    disclaimer:
-      'Format kerja StatPlan. Bukan mesin agregasi dan bukan hasil perhitungan statistik.',
-    exampleBody:
-      'Contoh ilustratif StatPlan: kelompokkan skor kepuasan berdasarkan wilayah atau jenis layanan. Contoh “wilayah / kelompok / kategori” bersifat ilustratif.',
-    exampleClass: 'C',
-    educationalNote:
-      'Data yang tersedia pada tingkat tertentu dapat diringkas atau dikelompokkan untuk menghasilkan informasi yang dibutuhkan.',
-    educationalNoteClass: 'B',
-    educationalNotePage: 44,
-    fields: [
-      {
-        id: 'data_dikelompokkan',
-        label: 'Data yang akan dikelompokkan',
-        kind: 'text',
-        required: true,
-      },
-      {
-        id: 'berdasarkan',
-        label: 'Berdasarkan',
-        kind: 'repeatableText',
-        required: true,
-        hint: 'Contoh ilustratif: wilayah, kelompok, kategori — bukan daftar wajib BPS.',
-      },
-      {
-        id: 'output_diharapkan',
-        label: 'Output yang diharapkan',
-        kind: 'textarea',
-        required: true,
-      },
-      {
-        id: 'catatan',
-        label: 'Catatan',
-        kind: 'textarea',
-      },
-    ],
-    evidence: [
-      { id: 'e-5.2-a', label: 'Rencana pengelompokan/agregasi' },
-      { id: 'e-5.2-b', label: 'Catatan output' },
-    ],
-    isReady: (v) => {
-      const dims = v.berdasarkan
-      const hasDims =
-        Array.isArray(dims) && dims.some((x) => typeof x === 'string' && x.trim())
-      return hasText(v.data_dikelompokkan) && hasDims && hasText(v.output_diharapkan)
-    },
-  },
-  {
-    cardId: 'process-5.3',
+    cardId: 'gsbpm-5.2',
     title: 'Siapkan draft coding',
     explanation:
-      'Susun draft kode dan kategori untuk variabel yang relevan. Ini rencana coding — bukan mesin pengodean dan bukan mengubah model variabel proyek.',
+      'Susun kode untuk variabel yang perlu dikode — seperti contoh materi: pilihan tertutup menjadi kode angka/huruf.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 39',
-    disclaimer:
-      'Contoh coding pada materi adalah rujukan konsep. Format tabel di bawah adalah format kerja StatPlan — bukan standar kode resmi BPS yang digandakan.',
+    disclaimer: 'Format kerja StatPlan — bukan standar kode resmi BPS.',
     exampleBody:
-      'Menurut Materi Proses Bisnis · Hal. 39: materi memuat contoh coding. Contoh ilustratif StatPlan: variabel “jenis kelamin” — kode 1 = Laki-laki, kode 2 = Perempuan.',
-    exampleClass: 'A',
+      'Variabel: penilaian aspek waktu.\nKode 1 = Tidak puas, 2 = Kurang puas, 3 = Puas, 4 = Sangat puas.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     fields: [
       {
         id: 'nama_variabel',
@@ -152,30 +94,113 @@ export const GUIDED_PROCESS_PREPARATIONS: GuidedPreparationDef[] = [
     ],
     evidence: [
       { id: 'e-5.3-a', label: 'Draft coding' },
-      { id: 'e-5.3-b', label: 'Daftar kode/kategori' },
+      { id: 'e-5.3-b', label: 'Daftar kode/kategori (kaidah coding)' },
     ],
     isReady: (v) => hasText(v.nama_variabel) && hasNamedRows(v, 'coding_rows', 'kode'),
   },
   {
-    cardId: 'process-5.4',
-    title: 'Siapkan rencana pembentukan unit baru',
+    cardId: 'gsbpm-5.3',
+    title: 'Siapkan rencana review & validasi',
     explanation:
-      'Tentukan apakah unit analisis baru perlu dibentuk. Contoh rumah tangga pada materi adalah contoh sumber — bukan unit wajib untuk semua kegiatan.',
+      'Tentukan jenis masalah yang dicari (materi: pencilan, nonresponse item, kesalahan kode), aturan yang dipakai, dan tindak lanjutnya.',
+    sourceType: 'A',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 40',
+    disclaimer: 'Rencana pemeriksaan — StatPlan tidak menjalankan validasi terhadap data Anda.',
+    exampleBody:
+      'Masalah: nonresponse item · Aturan: penilaian aspek tidak boleh kosong · Tindak lanjut: kembalikan ke petugas atau lanjut ke 5.4.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
+    fields: [
+      {
+        id: 'jenis_masalah',
+        label: 'Masalah yang diperiksa',
+        kind: 'multiSelect',
+        required: true,
+        options: [
+          { value: 'outlier', label: 'Pencilan (outlier)' },
+          { value: 'nonresponse_item', label: 'Nonresponse item' },
+          { value: 'kesalahan_kode', label: 'Kesalahan pemberian kode' },
+          { value: 'lainnya', label: 'Ketidaksesuaian lain' },
+        ],
+      },
+      {
+        id: 'pemeriksaan',
+        label: 'Aturan pemeriksaan dan tindak lanjut',
+        kind: 'repeatableRows',
+        addLabel: '+ Tambah aturan',
+        columns: [
+          { key: 'aturan', label: 'Aturan / yang diperiksa' },
+          { key: 'tindak', label: 'Tindak lanjut jika ditemukan' },
+        ],
+      },
+      {
+        id: 'validasi_saat_kumpul',
+        label: 'Apakah sebagian validasi sudah berjalan saat pengumpulan (CAPI/CAWI)?',
+        kind: 'select',
+        options: [
+          { value: 'ya', label: 'Ya' },
+          { value: 'tidak', label: 'Tidak' },
+          { value: 'belum', label: 'Belum tahu' },
+        ],
+      },
+    ],
+    evidence: [
+      { id: 'ev-5.3-a', label: 'Daftar aturan validasi yang dijalankan' },
+      { id: 'ev-5.3-b', label: 'Catatan hasil tiap putaran validasi' },
+    ],
+  },
+  {
+    cardId: 'gsbpm-5.4',
+    title: 'Siapkan rencana editing & imputasi',
+    explanation:
+      'Untuk setiap masalah data, tulis keputusan (tambah/ubah/hapus), metode, dan penanda (flag) yang dipakai.',
+    sourceType: 'A',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 41',
+    disclaimer:
+      'Rencana saja — StatPlan tidak mengubah atau mengimputasi data. Pilihan metode adalah keputusan tim Anda.',
+    exampleBody:
+      'Masalah: penilaian biaya kosong · Keputusan: tambah nilai · Metode: disepakati tim · Flag: flag_biaya = 1.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
+    fields: [
+      {
+        id: 'rencana_edit',
+        label: 'Rencana editing & imputasi',
+        kind: 'repeatableRows',
+        required: true,
+        addLabel: '+ Tambah kasus',
+        columns: [
+          { key: 'masalah', label: 'Masalah data', placeholder: 'tidak benar / missing / tidak wajar' },
+          { key: 'keputusan', label: 'Keputusan (tambah / ubah / hapus)' },
+          { key: 'metode', label: 'Metode yang dipakai' },
+          { key: 'flag', label: 'Penanda (flag)' },
+        ],
+      },
+      {
+        id: 'metadata_edit',
+        label: 'Metadata editing & imputasi yang akan dicatat',
+        kind: 'textarea',
+      },
+    ],
+    evidence: [
+      { id: 'ev-5.4-a', label: 'Rencana editing dan imputasi' },
+      { id: 'ev-5.4-b', label: 'Metadata proses editing dan imputasi' },
+    ],
+  },
+  {
+    cardId: 'gsbpm-5.5',
+    title: 'Siapkan rencana variabel & unit turunan',
+    explanation:
+      'Tentukan apakah perlu variabel atau unit statistik baru, dari apa dibentuk, dan urutan penurunannya.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 42',
     disclaimer:
-      'Catatan perencanaan. StatPlan tidak membentuk unit data nyata dan tidak menjalankan transformasi otomatis.',
+      'Catatan perencanaan. StatPlan tidak membentuk variabel atau unit data nyata.',
     exampleBody:
-      'Menurut Materi Proses Bisnis · Hal. 42: contoh sumber melibatkan pembentukan unit rumah tangga dari informasi individu. Gunakan hanya jika relevan bagi kegiatan Anda.',
-    exampleClass: 'A',
-    educationalNote:
-      'Dalam kondisi tertentu, informasi dari beberapa unit dapat digunakan untuk membentuk unit analisis baru.',
-    educationalNoteClass: 'B',
-    educationalNotePage: 42,
+      'Variabel baru: nilai_rata dari 9 aspek; lalu kategori_mutu dari nilai_rata.\nUnit baru: tidak diperlukan.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     fields: [
       {
         id: 'diperlukan',
-        label: 'Apakah pembentukan unit baru diperlukan?',
+        label: 'Apakah perlu variabel atau unit baru?',
         kind: 'select',
         required: true,
         options: [
@@ -186,19 +211,19 @@ export const GUIDED_PROCESS_PREPARATIONS: GuidedPreparationDef[] = [
       },
       {
         id: 'unit_asal',
-        label: 'Unit asal',
+        label: 'Dibentuk dari (variabel / unit asal)',
         kind: 'text',
         visibleWhen: { fieldId: 'diperlukan', values: ['ya'] },
       },
       {
         id: 'unit_baru',
-        label: 'Unit baru',
+        label: 'Variabel / unit baru',
         kind: 'text',
         visibleWhen: { fieldId: 'diperlukan', values: ['ya'] },
       },
       {
         id: 'dasar_pembentukan',
-        label: 'Dasar pembentukan',
+        label: 'Rumus / dasar pembentukan dan urutannya',
         kind: 'textarea',
         visibleWhen: { fieldId: 'diperlukan', values: ['ya'] },
       },
@@ -223,7 +248,7 @@ export const GUIDED_PROCESS_PREPARATIONS: GuidedPreparationDef[] = [
     ],
     evidence: [
       { id: 'e-5.4-a', label: 'Catatan unit analisis' },
-      { id: 'e-5.4-b', label: 'Rencana pembentukan unit baru jika relevan' },
+      { id: 'e-5.4-b', label: 'Rencana pembentukan variabel/unit baru jika relevan' },
     ],
     isReady: (v) => {
       const choice = typeof v.diperlukan === 'string' ? v.diperlukan : ''
@@ -236,42 +261,42 @@ export const GUIDED_PROCESS_PREPARATIONS: GuidedPreparationDef[] = [
     },
   },
   {
-    cardId: 'process-5.5',
-    title: 'Siapkan catatan perencanaan weighting',
+    cardId: 'gsbpm-5.6',
+    title: 'Siapkan catatan perhitungan bobot',
     explanation:
-      'Tentukan apakah weighting relevan. Materi membedakan konteks survei dengan sensus/kompilasi. StatPlan tidak menghitung bobot dan tidak menerapkan formula.',
+      'Tentukan apakah penimbang dihitung. Materi Hal. 43: tidak dilakukan untuk sensus/pendataan lengkap dan kompromin.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 43',
     disclaimer:
-      'Catatan perencanaan saja. StatPlan tidak menghitung bobot, tidak menerapkan formula, dan tidak menyatakan bobot telah dipakai.',
+      'Catatan perencanaan saja. StatPlan tidak menghitung bobot dan tidak menyatakan bobot telah dipakai.',
     exampleBody:
-      'Menurut Materi Proses Bisnis · Hal. 43: weighting relevan dalam konteks tertentu dan tidak diterapkan dengan cara yang sama untuk sensus lengkap/kompilasi. Jika Tidak: tuliskan alasan singkat.',
-    exampleClass: 'A',
+      'Relevan: Ya (survei).\nDasar: jumlah pengguna layanan ÷ jumlah sampel per jenis layanan.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     educationalNote:
-      'Weighting dapat digunakan dalam konteks tertentu, tetapi tidak semua jenis kegiatan menggunakannya.',
-    educationalNoteClass: 'B',
+      'Subproses ini tidak dilakukan jika pengumpulan data dilakukan secara sensus/pendataan lengkap dan kompilasi produk administrasi (kompromin).',
+    educationalNoteClass: 'A',
     educationalNotePage: 43,
     fields: [
       {
         id: 'relevan',
-        label: 'Apakah weighting relevan?',
+        label: 'Apakah penimbang dihitung?',
         kind: 'select',
         required: true,
         options: [
-          { value: 'ya', label: 'Ya' },
-          { value: 'tidak', label: 'Tidak' },
+          { value: 'ya', label: 'Ya (survei)' },
+          { value: 'tidak', label: 'Tidak (sensus / kompromin)' },
           { value: 'belum', label: 'Belum ditentukan' },
         ],
       },
       {
         id: 'dasar_weighting',
-        label: 'Dasar/rencana weighting',
+        label: 'Dasar penimbang',
         kind: 'textarea',
         visibleWhen: { fieldId: 'relevan', values: ['ya'] },
       },
       {
         id: 'catatan_ya',
-        label: 'Catatan perencanaan',
+        label: 'Tolok ukur eksternal / rencana kalibrasi',
         kind: 'textarea',
         visibleWhen: { fieldId: 'relevan', values: ['ya'] },
       },
@@ -289,8 +314,8 @@ export const GUIDED_PROCESS_PREPARATIONS: GuidedPreparationDef[] = [
       },
     ],
     evidence: [
-      { id: 'e-5.5-a', label: 'Catatan relevansi weighting' },
-      { id: 'e-5.5-b', label: 'Rencana weighting jika relevan' },
+      { id: 'e-5.5-a', label: 'Catatan relevansi penimbang' },
+      { id: 'e-5.5-b', label: 'Rencana penimbang dan kalibrasi jika relevan' },
     ],
     isReady: (v) => {
       const choice = typeof v.relevan === 'string' ? v.relevan : ''
@@ -301,47 +326,117 @@ export const GUIDED_PROCESS_PREPARATIONS: GuidedPreparationDef[] = [
     },
   },
   {
-    cardId: 'process-5.6',
-    title: 'Rencana finalisasi proses',
+    cardId: 'gsbpm-5.7',
+    title: 'Siapkan rencana perhitungan agregat',
     explanation:
-      'Tinjau status bahan Process dan catat pemeriksaan serta risiko. Ringkasan Mode Terpandu — bukan pernyataan “proses selesai” dan bukan persetujuan resmi.',
-    sourceType: 'C',
-    sourceLabel: 'Format kerja StatPlan',
-    disclaimer:
-      'Ringkasan ini tidak membuka Analyse secara otomatis dan tidak merupakan persetujuan resmi BPS.',
+      'Catat data yang diagregasi, dasar pengelompokannya, dan aktivitas Hal. 44 yang berlaku untuk kegiatan Anda.',
+    sourceType: 'A',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 44',
+    disclaimer: 'Format kerja StatPlan — bukan mesin agregasi dan tanpa angka hasil.',
     exampleBody:
-      'Contoh ilustratif: integrasi bahan siap, coding masih draft, weighting ditandai tidak relevan untuk kompilasi.',
+      'Data: penilaian aspek (berbobot).\nBerdasarkan: aspek pelayanan, jenis layanan.\nOutput: Tabel 1.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    summaryFromCardIds: [
-      { cardId: 'process-5.1', label: 'Integrasi' },
-      { cardId: 'process-5.2', label: 'Agregasi' },
-      { cardId: 'process-5.3', label: 'Coding' },
-      { cardId: 'process-5.4', label: 'Unit baru' },
-      { cardId: 'process-5.5', label: 'Weighting' },
-    ],
     fields: [
       {
-        id: 'catatan_proses',
-        label: 'Catatan proses',
+        id: 'data_dikelompokkan',
+        label: 'Data yang diagregasi',
+        kind: 'text',
+        required: true,
+      },
+      {
+        id: 'berdasarkan',
+        label: 'Dikelompokkan berdasarkan',
+        kind: 'repeatableText',
+        required: true,
+      },
+      {
+        id: 'aktivitas_agregat',
+        label: 'Aktivitas yang dilakukan (Hal. 44)',
+        kind: 'multiSelect',
+        options: [
+          { value: 'penimbang', label: 'Menggunakan penimbang (survei)' },
+          { value: 'tabulasi', label: 'Menghitung data/tabulasi agregat' },
+          { value: 'turunan', label: 'Menyusun data set turunan' },
+          { value: 'sampling_error', label: 'Menghitung sampling error (survei)' },
+          { value: 'estimasi', label: 'Melakukan estimasi (survei)' },
+          { value: 'rekonsiliasi', label: 'Rekonsiliasi antarwilayah' },
+        ],
+      },
+      {
+        id: 'output_diharapkan',
+        label: 'Output yang diharapkan',
         kind: 'textarea',
         required: true,
       },
       {
-        id: 'hal_diperiksa',
-        label: 'Hal yang masih perlu diperiksa',
-        kind: 'repeatableText',
-        hint: 'Tambahkan satu atau beberapa butir pemeriksaan.',
-      },
-      {
-        id: 'risiko_list',
-        label: 'Risiko/kendala',
-        kind: 'repeatableText',
-        hint: 'Tambahkan satu atau beberapa risiko/kendala.',
+        id: 'catatan',
+        label: 'Catatan',
+        kind: 'textarea',
       },
     ],
     evidence: [
-      { id: 'e-5.6-a', label: 'Ringkasan rencana proses' },
-      { id: 'e-5.6-b', label: 'Daftar pemeriksaan' },
+      { id: 'e-5.2-a', label: 'Rencana pengelompokan/agregasi' },
+      { id: 'e-5.2-b', label: 'Catatan output' },
+    ],
+    isReady: (v) => {
+      const dims = v.berdasarkan
+      const hasDims = Array.isArray(dims) && dims.some((x) => typeof x === 'string' && x.trim())
+      return hasText(v.data_dikelompokkan) && hasDims && hasText(v.output_diharapkan)
+    },
+  },
+  {
+    cardId: 'gsbpm-5.8',
+    title: 'Siapkan penyerahan file data final',
+    explanation:
+      'Catat file data final yang diserahkan ke tahap Analisis, penerimanya, dan pemeriksaan terakhir sebelum diserahkan.',
+    sourceType: 'A',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 45',
+    disclaimer:
+      'Catatan penyerahan — tidak membuka tahap Analisis otomatis dan bukan persetujuan resmi.',
+    exampleBody:
+      'File: skm_2026_final + tabel_agregat_2026 · Diserahkan ke: tim analisis · Disertai: metadata variabel.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
+    summaryFromCardIds: [
+      { cardId: 'gsbpm-5.1', label: 'Integrasi' },
+      { cardId: 'gsbpm-5.2', label: 'Coding' },
+      { cardId: 'gsbpm-5.3', label: 'Review & validasi' },
+      { cardId: 'gsbpm-5.4', label: 'Editing & imputasi' },
+      { cardId: 'gsbpm-5.5', label: 'Variabel & unit turunan' },
+      { cardId: 'gsbpm-5.6', label: 'Bobot' },
+      { cardId: 'gsbpm-5.7', label: 'Agregat' },
+    ],
+    fields: [
+      {
+        id: 'file_final',
+        label: 'File data final yang diserahkan',
+        kind: 'textarea',
+        required: true,
+      },
+      {
+        id: 'penerima',
+        label: 'Diserahkan kepada',
+        kind: 'text',
+      },
+      {
+        id: 'hal_diperiksa',
+        label: 'Pemeriksaan terakhir sebelum diserahkan',
+        kind: 'repeatableText',
+      },
+      {
+        id: 'catatan_proses',
+        label: 'Catatan penyerahan',
+        kind: 'textarea',
+      },
+    ],
+    evidence: [
+      { id: 'e-5.6-a', label: 'Ringkasan pengolahan' },
+      { id: 'e-5.6-b', label: 'Daftar pemeriksaan akhir' },
+      {
+        id: 'ev-5.8-out1',
+        label: 'Dataset mikro atau makro, baik data final maupun sementara',
+        pdfPage: 37,
+      },
+      { id: 'ev-5.8-out2', label: 'Metadata Statistik Variabel', pdfPage: 37 },
     ],
   },
 ]

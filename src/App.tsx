@@ -24,8 +24,8 @@ const SettingsPage = lazy(() =>
 const AboutPage = lazy(() =>
   import('@/features/about/AboutPage').then((m) => ({ default: m.AboutPage })),
 )
-const HelpPage = lazy(() =>
-  import('@/features/help/HelpPage').then((m) => ({ default: m.HelpPage })),
+const FaqPage = lazy(() =>
+  import('@/features/faq/FaqPage').then((m) => ({ default: m.FaqPage })),
 )
 const PresentationPage = lazy(() =>
   import('@/features/presentation/PresentationPage').then((m) => ({
@@ -76,7 +76,9 @@ export default function App() {
             <Route path="assistant" element={<AssistantPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="about" element={<AboutPage />} />
-            <Route path="help" element={<HelpPage />} />
+            <Route path="faq" element={<FaqPage />} />
+            {/* The old help page became the FAQ; keep existing links working. */}
+            <Route path="help" element={<Navigate to="/app/faq" replace />} />
             <Route path="presentation" element={<PresentationPage />} />
             <Route path="search" element={<SearchPage />} />
             <Route path="projects/:id/guided" element={<GuidedPhasePage />} />

@@ -493,10 +493,17 @@ export const useAppStore = create<AppState>()(
       },
       onRehydrateStorage: () => (state) => {
         if (!state) return
+        // Hydration runs inside create(), so assigning here only updates memory. Re-set through the
+        // store afterwards so persist actually writes the seeded/migrated list (otherwise the demo flag
+        // is saved but the demos are not, and they vanish on reload).
+        const commit = (projects: Project[]) => {
+          state.projects = projects
+          queueMicrotask(() => useAppStore.setState({ projects }))
+        }
 
         const looksLikeDemo = state.projects.some(isDemoProject)
         if (shouldRefreshDemoSeed() && looksLikeDemo) {
-          state.projects = mergeDemoProjects(state.projects, getDemoProjects())
+          commit(mergeDemoProjects(state.projects, getDemoProjects()))
           markDemoSeeded()
           return
         }
@@ -508,9 +515,7 @@ export const useAppStore = create<AppState>()(
             const parsed = JSON.parse(v1Raw) as { state?: { projects?: Partial<Project>[] } }
             const legacy = parsed.state?.projects ?? []
             if (legacy.length > 0) {
-              state.projects = legacy.map((p) =>
-                migrateProject(p as Partial<Project> & { id: string }),
-              )
+              commit(legacy.map((p) => migrateProject(p as Partial<Project> & { id: string })))
               return
             }
           }
@@ -518,7 +523,7 @@ export const useAppStore = create<AppState>()(
           /* ignore corrupt legacy storage */
         }
         if (shouldAutoSeed()) {
-          state.projects = getDemoProjects()
+          commit(getDemoProjects())
           markDemoSeeded()
         }
       },

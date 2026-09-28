@@ -29,73 +29,22 @@ function hasNamedRows(
 
 export const GUIDED_ANALYSE_PREPARATIONS: GuidedPreparationDef[] = [
   {
-    cardId: 'analyse-6.1',
-    title: 'Siapkan tujuan analisis',
-    explanation:
-      'Tuliskan pertanyaan yang ingin dijawab dari hasil pengolahan. Ini rencana analisis — bukan hasil statistik.',
-    sourceType: 'B',
-    sourceLabel: 'Penjelasan sederhana',
-    disclaimer:
-      'Format kerja StatPlan. Perbedaan “tujuan kegiatan” dan “tujuan analisis” adalah penjelasan sederhana — bukan taksonomi resmi PDF.',
-    exampleBody:
-      'Contoh ilustratif: pertanyaan “Bagaimana tingkat kepuasan menurut jenis layanan?”; informasi yang ingin diperoleh: pola kepuasan; output yang akan digunakan: tabel silang.',
-    exampleClass: 'C',
-    educationalNote:
-      'Tujuan analisis fokus pada pertanyaan dari data yang sudah diproses, berbeda dari tujuan kegiatan secara umum.',
-    educationalNoteClass: 'B',
-    fields: [
-      {
-        id: 'pertanyaan',
-        label: 'Pertanyaan yang ingin dijawab',
-        kind: 'textarea',
-        required: true,
-      },
-      {
-        id: 'informasi',
-        label: 'Informasi yang ingin diperoleh',
-        kind: 'textarea',
-        required: true,
-      },
-      {
-        id: 'output_digunakan',
-        label: 'Output yang akan digunakan',
-        kind: 'text',
-        required: true,
-      },
-      {
-        id: 'catatan',
-        label: 'Catatan',
-        kind: 'textarea',
-      },
-    ],
-    evidence: [
-      { id: 'e-6.1-a', label: 'Catatan tujuan/pertanyaan analisis' },
-      { id: 'e-6.1-b', label: 'Daftar informasi yang ingin diperoleh' },
-    ],
-  },
-  {
-    cardId: 'analyse-6.2',
+    cardId: 'gsbpm-6.1',
     title: 'Siapkan rencana output awal',
     explanation:
-      'Rencanakan output awal untuk meninjau hasil pengolahan sebelum output akhir. Jangan mengisi angka hasil fiktif.',
+      'Daftar output awal (tabulasi/grafik/peta) yang akan disusun dari data hasil pengolahan untuk divalidasi.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 46–51',
-    disclaimer:
-      'Jenis output adalah pilihan kerja StatPlan — bukan taksonomi resmi BPS. StatPlan tidak menghitung atau menampilkan statistik fiktif.',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 47',
+    disclaimer: 'StatPlan tidak menghitung atau menampilkan angka hasil.',
     exampleBody:
-      'Contoh ilustratif: output “Tabel kepuasan menurut layanan” — jenis Tabel — ingin melihat pola skor antar layanan. Tanpa angka hasil.',
+      'Output: Tabel 1 (draf) · Jenis: Tabel · Ingin dilihat: indeks per aspek.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Output awal digunakan untuk melihat hasil pengolahan sebelum ditetapkan sebagai output akhir.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '46–51',
     fields: [
       {
         id: 'outputs',
         label: 'Daftar output awal',
         kind: 'repeatableAnalyseOutput',
         required: true,
-        hint: 'Pilihan jenis: Tabel / Indikator / Grafik / Ringkasan / Lainnya — pilihan kerja StatPlan.',
       },
     ],
     evidence: [
@@ -105,23 +54,34 @@ export const GUIDED_ANALYSE_PREPARATIONS: GuidedPreparationDef[] = [
     isReady: (v) => hasNamedRows(v, 'outputs', 'nama'),
   },
   {
-    cardId: 'analyse-6.3',
-    title: 'Siapkan rencana pemeriksaan / interpretasi output',
+    cardId: 'gsbpm-6.2',
+    title: 'Siapkan daftar validasi output',
     explanation:
-      'Susun pertanyaan pemeriksaan sebelum output digunakan. Ini bantuan perencanaan — bukan mesin PASS/FAIL statistik.',
-    sourceType: 'B',
-    sourceLabel: 'Penjelasan sederhana',
-    disclaimer:
-      'Format kerja StatPlan. Tidak menjalankan validasi statistik otomatis dan tidak menghasilkan kesimpulan analisis.',
+      'Pilih pemeriksaan dari daftar materi Hal. 48 dan tuliskan apa yang diperiksa serta tindak lanjutnya.',
+    sourceType: 'A',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 48',
+    disclaimer: 'Bukan mesin PASS/FAIL statistik — ini daftar pemeriksaan Anda.',
     exampleBody:
-      'Contoh ilustratif: periksa kelengkapan kolom tabel — agar tidak menyesatkan pengguna — jika ada missing, tandai untuk diperbaiki.',
+      'Periksa: tingkat respon · Mengapa: memastikan cakupan cukup · Tindakan: jika rendah, beri catatan kehati-hatian.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote: 'Output perlu diperiksa sebelum digunakan atau disampaikan.',
-    educationalNoteClass: 'B',
     fields: [
       {
+        id: 'jenis_validasi',
+        label: 'Pemeriksaan yang dilakukan (Hal. 48)',
+        kind: 'multiSelect',
+        options: [
+          { value: 'konsistensi', label: 'Konsistensi' },
+          { value: 'cakupan', label: 'Cakupan populasi dan tingkat respon' },
+          { value: 'periode_lalu', label: 'Perbandingan dengan periode sebelumnya' },
+          { value: 'metadata', label: 'Metadata, paradata, indikator kualitas' },
+          { value: 'koherensi', label: 'Koherensi dengan data lain' },
+          { value: 'makro', label: 'Penyuntingan tingkat agregat/makro' },
+          { value: 'ekspektasi', label: 'Sesuai ekspektasi dan keilmuan' },
+        ],
+      },
+      {
         id: 'reviews',
-        label: 'Daftar pemeriksaan',
+        label: 'Rincian pemeriksaan',
         kind: 'repeatableReview',
         required: true,
       },
@@ -129,29 +89,73 @@ export const GUIDED_ANALYSE_PREPARATIONS: GuidedPreparationDef[] = [
     evidence: [
       { id: 'e-6.3-a', label: 'Catatan pemeriksaan output' },
       { id: 'e-6.3-b', label: 'Daftar pertanyaan review' },
+      { id: 'ev-6.2-out', label: 'Dokumentasi pembahasan validasi output', pdfPage: 46 },
     ],
     isReady: (v) => hasNamedRows(v, 'reviews', 'hal'),
   },
   {
-    cardId: 'analyse-6.4',
-    title: 'Siapkan catatan disclosure / kerahasiaan',
+    cardId: 'gsbpm-6.3',
+    title: 'Siapkan rencana interpretasi',
     explanation:
-      'Pertimbangkan risiko pengungkapan sebelum output digunakan. Contoh pada materi bersifat pertimbangan — bukan kesimpulan hukum universal.',
+      'Tulis ekspektasi awal sebelum melihat hasil, perspektif yang akan dipakai, dan analisis mendalam yang direncanakan.',
+    sourceType: 'A',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 49',
+    disclaimer: 'Jangan mengisi kesimpulan atau angka hasil sebelum output tersedia.',
+    exampleBody:
+      'Ekspektasi: aspek waktu paling rendah.\nPerspektif: menurut jenis layanan.\nAnalisis lanjutan: keterbandingan dengan tahun lalu.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
+    fields: [
+      {
+        id: 'pertanyaan',
+        label: 'Ekspektasi / hipotesis awal',
+        kind: 'textarea',
+        required: true,
+      },
+      {
+        id: 'informasi',
+        label: 'Perspektif yang akan dipakai',
+        kind: 'textarea',
+      },
+      {
+        id: 'analisis_lanjut',
+        label: 'Analisis mendalam yang direncanakan',
+        kind: 'multiSelect',
+        options: [
+          { value: 'deret_waktu', label: 'Analisis deret waktu' },
+          { value: 'dampak', label: 'Analisis dampak' },
+          { value: 'keterbandingan', label: 'Analisis keterbandingan' },
+          { value: 'revisi', label: 'Analisis hasil revisi' },
+          { value: 'asimetri', label: 'Analisis asimetri' },
+          { value: 'tidak', label: 'Tidak diperlukan' },
+        ],
+      },
+      {
+        id: 'catatan',
+        label: 'Catatan',
+        kind: 'textarea',
+      },
+    ],
+    evidence: [
+      { id: 'e-6.1-a', label: 'Catatan ekspektasi / pertanyaan analisis' },
+      { id: 'ev-6.3-b', label: 'Draf interpretasi dan catatan teknis' },
+    ],
+  },
+  {
+    cardId: 'gsbpm-6.4',
+    title: 'Siapkan catatan disclosure control',
+    explanation:
+      'Tentukan output mana yang berisiko mengungkap kerahasiaan dan tindakan yang diterapkan, mengikuti aturan materi Hal. 50.',
     sourceType: 'A',
     sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 50',
     disclaimer:
-      'Contoh anonimisasi, agregat n kecil, dan informasi sensitif kompilasi adalah rujukan sumber. StatPlan tidak menganonimkan data dan tidak membuat keputusan hukum.',
+      'StatPlan tidak menganonimkan data dan tidak membuat keputusan hukum.',
     exampleBody:
-      'Menurut Materi Proses Bisnis · Hal. 50: contoh pengendalian kerahasiaan mencakup anonimisasi, pertimbangan agregat dengan n kecil, dan informasi sensitif pada kompilasi. Contoh tindakan di bawah bersifat ilustratif StatPlan.',
-    exampleClass: 'A',
-    educationalNote:
-      'Sebelum output digunakan atau disebarluaskan, pertimbangkan apakah informasi yang ditampilkan dapat mengungkap informasi yang seharusnya tidak dibuka.',
-    educationalNoteClass: 'B',
-    educationalNotePage: 50,
+      'Informasi dilindungi: nama dan nomor tiket responden.\nRisiko: sel tabel < 3 responden.\nTindakan: anonimisasi mikro data; sel kecil tidak disajikan.\n(Contoh ilustratif StatPlan.)',
+    exampleClass: 'C',
     fields: [
       {
         id: 'perlu_diperhatikan',
-        label: 'Apakah disclosure perlu diperhatikan?',
+        label: 'Apakah ada output yang berisiko mengungkap kerahasiaan?',
         kind: 'select',
         required: true,
         options: [
@@ -176,7 +180,7 @@ export const GUIDED_ANALYSE_PREPARATIONS: GuidedPreparationDef[] = [
         id: 'tindakan',
         label: 'Tindakan yang direncanakan',
         kind: 'repeatableText',
-        hint: 'Contoh ilustratif: Anonimisasi, Agregasi, Pembatasan detail output — bukan daftar hukum wajib.',
+        hint: 'Materi: anonimisasi data individu; agregat yang dapat ditelusuri (mis. < 3 unit) tidak disajikan.',
         visibleWhen: { fieldId: 'perlu_diperhatikan', values: ['ya'] },
       },
       {
@@ -195,6 +199,7 @@ export const GUIDED_ANALYSE_PREPARATIONS: GuidedPreparationDef[] = [
     evidence: [
       { id: 'e-6.4-a', label: 'Catatan disclosure' },
       { id: 'e-6.4-b', label: 'Rencana perlindungan informasi' },
+      { id: 'ev-6.4-out', label: 'Mikro data final (sudah anonimisasi)', pdfPage: 46 },
     ],
     isReady: (v) => {
       const choice = typeof v.perlu_diperhatikan === 'string' ? v.perlu_diperhatikan : ''
@@ -210,21 +215,17 @@ export const GUIDED_ANALYSE_PREPARATIONS: GuidedPreparationDef[] = [
     },
   },
   {
-    cardId: 'analyse-6.5',
-    title: 'Siapkan rencana output akhir',
+    cardId: 'gsbpm-6.5',
+    title: 'Siapkan finalisasi output',
     explanation:
-      'Rencanakan output akhir setelah pemeriksaan. Ini bukan publikasi, bukan rilis, dan bukan angka hasil analisis.',
+      'Daftar output akhir, pengguna, dan bentuknya, lalu catat diskusi pra-rilis, level penyajian, dan catatan kehati-hatian.',
     sourceType: 'A',
-    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 46–51',
+    sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 51',
     disclaimer:
-      'Format kerja StatPlan. Tidak menandai output sebagai dipublikasikan dan tidak membuka Disseminate secara otomatis.',
+      'Tidak menandai output sebagai dirilis dan tidak membuka Diseminasi secara otomatis.',
     exampleBody:
-      'Contoh ilustratif: output “Ringkasan kepuasan layanan” untuk pengelola pelayanan, bentuk ringkasan singkat, catatan finalisasi: perlu tinjau disclosure.',
+      'Output: Ringkasan SKM · Pengguna: DPMPTSP · Level: kabupaten dan jenis layanan · Catatan: hanya periode survei.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
-    educationalNote:
-      'Setelah output diperiksa dan hal-hal yang perlu diperbaiki ditangani, hasil dapat disiapkan sebagai output akhir.',
-    educationalNoteClass: 'B',
-    educationalNotePage: '46–51',
     fields: [
       {
         id: 'final_outputs',
@@ -232,54 +233,34 @@ export const GUIDED_ANALYSE_PREPARATIONS: GuidedPreparationDef[] = [
         kind: 'repeatableFinalOutput',
         required: true,
       },
+      {
+        id: 'pra_rilis',
+        label: 'Diskusi pra-rilis (dengan siapa, kapan)',
+        kind: 'textarea',
+      },
+      {
+        id: 'level_penyajian',
+        label: 'Level penyajian rilis',
+        kind: 'text',
+        placeholder: 'mis. kabupaten, jenis layanan',
+      },
+      {
+        id: 'catatan_kehati',
+        label: 'Catatan kehati-hatian',
+        kind: 'textarea',
+      },
     ],
     evidence: [
       { id: 'e-6.5-a', label: 'Daftar output akhir' },
       { id: 'e-6.5-b', label: 'Catatan finalisasi' },
+      {
+        id: 'ev-6.5-out1',
+        label: 'Dokumentasi diskusi pra rilis dan persetujuan rilis',
+        pdfPage: 46,
+      },
+      { id: 'ev-6.5-out2', label: 'Metadata Statistik Indikator', pdfPage: 46 },
     ],
     isReady: (v) => hasNamedRows(v, 'final_outputs', 'nama'),
-  },
-  {
-    cardId: 'analyse-6.6',
-    title: 'Catatan finalisasi analisis',
-    explanation:
-      'Tinjau status bahan Analyse dan catat perbaikan. Ringkasan Mode Terpandu — bukan pernyataan “analisis selesai” dan bukan hasil statistik.',
-    sourceType: 'C',
-    sourceLabel: 'Format kerja StatPlan',
-    disclaimer:
-      'Ringkasan ini tidak membuka Disseminate secara otomatis dan tidak merupakan persetujuan resmi BPS.',
-    exampleBody:
-      'Contoh ilustratif: tujuan analisis bahan siap, disclosure masih draft, output akhir perlu catatan pengguna.',
-    exampleClass: 'C',
-    summaryFromCardIds: [
-      { cardId: 'analyse-6.1', label: 'Tujuan analisis' },
-      { cardId: 'analyse-6.2', label: 'Output awal' },
-      { cardId: 'analyse-6.3', label: 'Pemeriksaan output' },
-      { cardId: 'analyse-6.4', label: 'Disclosure' },
-      { cardId: 'analyse-6.5', label: 'Output akhir' },
-    ],
-    fields: [
-      {
-        id: 'catatan_analisis',
-        label: 'Catatan analisis',
-        kind: 'textarea',
-        required: true,
-      },
-      {
-        id: 'hal_diperiksa',
-        label: 'Hal yang masih perlu diperiksa',
-        kind: 'repeatableText',
-      },
-      {
-        id: 'perbaikan_list',
-        label: 'Perbaikan yang masih diperlukan',
-        kind: 'repeatableText',
-      },
-    ],
-    evidence: [
-      { id: 'e-6.6-a', label: 'Ringkasan analisis' },
-      { id: 'e-6.6-b', label: 'Daftar perbaikan' },
-    ],
   },
 ]
 

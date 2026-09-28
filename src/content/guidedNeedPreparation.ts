@@ -31,6 +31,8 @@ export type GuidedFieldKind =
   | 'repeatableAspect'
   | 'repeatableImprovement'
   | 'repeatableActionPlan'
+  /** Generic row editor — columns come from `GuidedTemplateFieldDef.columns`. */
+  | 'repeatableRows'
 
 export type GuidedFieldOption = { value: string; label: string }
 
@@ -45,11 +47,24 @@ export type GuidedTemplateFieldDef = {
   hint?: string
   /** Show field only when another field matches one of these values */
   visibleWhen?: { fieldId: string; values: string[] }
+  /** Columns for kind 'repeatableRows'. The first column is the row's primary text. */
+  columns?: GuidedRowColumnDef[]
+  /** Button label for kind 'repeatableRows' (e.g. "+ Tambah konsep") */
+  addLabel?: string
+}
+
+export type GuidedRowColumnDef = {
+  key: string
+  label: string
+  placeholder?: string
+  multiline?: boolean
 }
 
 export type GuidedEvidenceDef = {
   id: string
   label: string
+  /** Set when the item is an output document listed in the PDF (Type A). */
+  pdfPage?: number
 }
 
 export type GuidedPreparationDef = {
@@ -107,7 +122,7 @@ const SUMBER_OPTIONS: GuidedFieldOption[] = [
 
 export const GUIDED_NEED_PREPARATIONS: GuidedPreparationDef[] = [
   {
-    cardId: 'need-1.1',
+    cardId: 'gsbpm-1.1',
     title: 'Siapkan rumusan kebutuhan',
     explanation:
       'Tuliskan masalah atau kebutuhan informasi yang ingin dijawab. Format ini membantu penyusunan awal — bukan template resmi BPS.',
@@ -149,10 +164,15 @@ export const GUIDED_NEED_PREPARATIONS: GuidedPreparationDef[] = [
     evidence: [
       { id: 'e-1.1-a', label: 'Dokumen / uraian kebutuhan' },
       { id: 'e-1.1-b', label: 'Catatan rapat atau usulan awal' },
+      {
+        id: 'ev-1.1-out',
+        label: 'Daftar Kebutuhan Data (Daftar Data dan Data Prioritas)',
+        pdfPage: 10,
+      },
     ],
   },
   {
-    cardId: 'need-1.2',
+    cardId: 'gsbpm-1.2',
     title: 'Siapkan kebutuhan pengguna',
     explanation:
       'Catat siapa pengguna hasil dan informasi apa yang mereka perlukan. Format kerja sederhana StatPlan.',
@@ -194,19 +214,24 @@ export const GUIDED_NEED_PREPARATIONS: GuidedPreparationDef[] = [
     evidence: [
       { id: 'e-1.2-a', label: 'Catatan kebutuhan pengguna' },
       { id: 'e-1.2-b', label: 'Notulen konsultasi / rapat' },
+      {
+        id: 'ev-1.2-out',
+        label: 'Dokumentasi rapat pembahasan kebutuhan data',
+        pdfPage: 10,
+      },
     ],
   },
   {
-    cardId: 'need-1.3',
-    title: 'Siapkan tujuan kegiatan',
+    cardId: 'gsbpm-1.3',
+    title: 'Siapkan tujuan dan output',
     explanation:
-      'Rumuskan tujuan utama dan tujuan khusus agar arah kegiatan jelas. Format kerja sederhana StatPlan.',
+      'Rumuskan tujuan utama, tujuan khusus, dan output statistik yang harus dihasilkan. Setiap output sebaiknya menjawab kebutuhan pengguna.',
     sourceType: 'C',
     sourceLabel: 'Contoh ilustratif',
     disclaimer:
       'StatPlan menyediakan format kerja sederhana untuk membantu penyusunan awal.',
     exampleBody:
-      'Tujuan utama: Menghasilkan informasi mengenai kepuasan masyarakat terhadap pelayanan perizinan.\nTujuan khusus:\n• Mengidentifikasi aspek pelayanan yang dinilai masyarakat.\n• Menghasilkan informasi untuk evaluasi.\n• Menyediakan gambaran hasil berdasarkan karakteristik relevan.\n(Contoh ilustratif.)',
+      'Tujuan utama: Menghasilkan informasi mengenai kepuasan masyarakat terhadap pelayanan perizinan.\nTujuan khusus:\n• Mengidentifikasi aspek pelayanan yang dinilai masyarakat.\n• Menghasilkan informasi untuk evaluasi.\nOutput: tabel indeks kepuasan per aspek (bentuk: tabel).\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
     fields: [
       {
@@ -221,39 +246,64 @@ export const GUIDED_NEED_PREPARATIONS: GuidedPreparationDef[] = [
         kind: 'repeatableText',
         hint: 'Tambahkan satu atau beberapa tujuan khusus.',
       },
+      {
+        id: 'outputs',
+        label: 'Output statistik yang diperlukan',
+        kind: 'repeatableOutput',
+        required: true,
+        hint: 'Materi Hal. 13: tujuan dapat berisi output statistik yang diperlukan.',
+      },
     ],
     evidence: [
       { id: 'e-1.3-a', label: 'Dokumen tujuan kegiatan' },
       { id: 'e-1.3-b', label: 'Catatan kesepakatan tujuan dengan pengguna' },
+      { id: 'e-1.4-a', label: 'Daftar output statistik yang dibutuhkan' },
     ],
   },
   {
-    cardId: 'need-1.4',
-    title: 'Siapkan data / output yang dibutuhkan',
+    cardId: 'gsbpm-1.4',
+    title: 'Siapkan daftar konsep dan definisi',
     explanation:
-      'Daftarkan hasil statistik yang ingin dihasilkan. Ini baru daftar persiapan — bukan perancang variabel lengkap.',
-    sourceType: 'C',
-    sourceLabel: 'Contoh ilustratif',
+      'Untuk setiap indikator yang akan diukur, tuliskan konsep, definisi, dan sumber rujukannya. Materi Hal. 14 menganjurkan kondef mengikuti standar statistik.',
+    sourceType: 'B',
+    sourceLabel: 'Penjelasan sederhana · Hal. 14',
     disclaimer:
-      'StatPlan menyediakan format kerja sederhana untuk membantu penyusunan awal. Perancangan variabel detail ada di ruang kerja lengkap.',
+      'Definisi yang Anda tulis adalah draf kerja. Periksa kembali terhadap standar statistik atau pedoman yang berlaku.',
     exampleBody:
-      'Data: Penilaian masyarakat terhadap pelayanan → Output: Indikator kepuasan.\nData: Karakteristik responden → Output: Tabulasi/gambaran berdasarkan karakteristik.\n(Contoh ilustratif — tanpa angka hasil fiktif.)',
+      'Indikator: Indeks kepuasan masyarakat.\nKonsep: Kepuasan masyarakat.\nDefinisi: pendapat masyarakat setelah menerima pelayanan, dibandingkan dengan harapannya, untuk tiap aspek pelayanan.\nRujukan: pedoman SKM yang berlaku di instansi Anda.\n(Contoh ilustratif StatPlan.)',
     exampleClass: 'C',
     fields: [
       {
-        id: 'outputs',
-        label: 'Daftar data / output',
-        kind: 'repeatableOutput',
+        id: 'kondef',
+        label: 'Konsep dan definisi',
+        kind: 'repeatableRows',
         required: true,
+        addLabel: '+ Tambah konsep',
+        columns: [
+          { key: 'konsep', label: 'Konsep / istilah', placeholder: 'mis. Kepuasan masyarakat' },
+          { key: 'indikator', label: 'Untuk indikator', placeholder: 'Indikator yang diukur' },
+          { key: 'definisi', label: 'Definisi', multiline: true },
+          { key: 'rujukan', label: 'Sumber rujukan', placeholder: 'Standar / pedoman yang dipakai' },
+        ],
+      },
+      {
+        id: 'sesuai_standar',
+        label: 'Apakah kondef sudah dicek terhadap standar statistik?',
+        kind: 'select',
+        options: [
+          { value: 'sudah', label: 'Sudah dicek' },
+          { value: 'sebagian', label: 'Sebagian' },
+          { value: 'belum', label: 'Belum' },
+        ],
       },
     ],
     evidence: [
-      { id: 'e-1.4-a', label: 'Daftar data/output yang dibutuhkan' },
-      { id: 'e-1.4-b', label: 'Catatan bentuk hasil yang diharapkan' },
+      { id: 'ev-1.4-a', label: 'Daftar konsep dan definisi beserta rujukannya' },
+      { id: 'ev-1.4-b', label: 'Catatan kesepakatan istilah dengan pengguna' },
     ],
   },
   {
-    cardId: 'need-1.5',
+    cardId: 'gsbpm-1.5',
     title: 'Catat hasil pemeriksaan data',
     explanation:
       'Periksa apakah data yang dibutuhkan sudah tersedia sebelum menentukan cara memperoleh data. Catat hasil pemeriksaan Anda — StatPlan tidak memeriksa portal secara otomatis.',
@@ -308,7 +358,7 @@ export const GUIDED_NEED_PREPARATIONS: GuidedPreparationDef[] = [
     ],
   },
   {
-    cardId: 'need-1.6',
+    cardId: 'gsbpm-1.6',
     title: 'Siapkan proposal / KAK awal',
     explanation:
       'Dokumentasikan temuan tahap kebutuhan. Struktur di bawah mengikuti outline materi sumber.',
@@ -348,6 +398,7 @@ export const GUIDED_NEED_PREPARATIONS: GuidedPreparationDef[] = [
     evidence: [
       { id: 'e-1.6-a', label: 'Draft proposal / KAK' },
       { id: 'e-1.6-b', label: 'Ringkasan temuan tahap kebutuhan' },
+      { id: 'ev-1.6-out', label: 'Kerangka Acuan Kerja', pdfPage: 10 },
     ],
   },
 ]
@@ -497,6 +548,9 @@ export type GuidedActionPlanRow = {
   catatan: string
 }
 
+/** Row for kind 'repeatableRows' — keys follow the field's column spec. */
+export type GuidedGenericRow = { id: string } & Record<string, string>
+
 export type GuidedDraftValue =
   | string
   | string[]
@@ -518,6 +572,7 @@ export type GuidedDraftValue =
   | GuidedAspectRow[]
   | GuidedImprovementRow[]
   | GuidedActionPlanRow[]
+  | GuidedGenericRow[]
 
 export type GuidedDraftValues = Record<string, GuidedDraftValue>
 
@@ -525,6 +580,20 @@ export type GuidedDraftStatus = 'empty' | 'partial' | 'ready'
 
 function isNonEmptyString(v: unknown): boolean {
   return typeof v === 'string' && v.trim().length > 0
+}
+
+function genericRowsHaveContent(
+  field: GuidedTemplateFieldDef,
+  value: GuidedDraftValue | undefined,
+): boolean {
+  if (!Array.isArray(value)) return false
+  const primary = field.columns?.[0]?.key
+  return value.some((row) => {
+    if (typeof row !== 'object' || row === null) return false
+    const rec = row as Record<string, unknown>
+    if (primary) return isNonEmptyString(rec[primary])
+    return Object.entries(rec).some(([k, v]) => k !== 'id' && isNonEmptyString(v))
+  })
 }
 
 function fieldHasContent(kind: GuidedFieldKind, value: GuidedDraftValue | undefined): boolean {
@@ -783,7 +852,8 @@ export function emptyDraftFor(prep: GuidedPreparationDef): GuidedDraftValues {
       f.kind === 'repeatableFinalOutput' ||
       f.kind === 'repeatableAspect' ||
       f.kind === 'repeatableImprovement' ||
-      f.kind === 'repeatableActionPlan'
+      f.kind === 'repeatableActionPlan' ||
+      f.kind === 'repeatableRows'
     ) {
       values[f.id] = []
     } else {
@@ -801,8 +871,12 @@ export function computeDraftStatus(
   const visibleFields = prep.fields.filter((f) => isFieldVisible(f, v))
 
   let any = false
+  const has = (f: GuidedTemplateFieldDef) =>
+    f.kind === 'repeatableRows'
+      ? genericRowsHaveContent(f, v[f.id])
+      : fieldHasContent(f.kind, v[f.id])
   for (const f of visibleFields) {
-    if (fieldHasContent(f.kind, v[f.id])) any = true
+    if (has(f)) any = true
   }
   if (!any) return 'empty'
 
@@ -814,7 +888,7 @@ export function computeDraftStatus(
   const reqOk =
     required.length === 0
       ? any
-      : required.every((f) => fieldHasContent(f.kind, v[f.id]))
+      : required.every((f) => has(f))
 
   return reqOk ? 'ready' : 'partial'
 }

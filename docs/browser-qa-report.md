@@ -3,26 +3,30 @@
 ## Environment
 - browser: Google Chrome (Playwright `channel: 'chrome'`)
 - Playwright: 1.55.0 (npm package; bundled Chromium download blocked by TLS — system Chrome used)
-- app URL: http://127.0.0.1:5173
-- date/time: 2026-09-26T12:56:15.892Z
+- app URL: http://127.0.0.1:4180
+- date/time: 2026-09-28T20:40:45.931Z
 - viewport: primary 1440×1000; also 390, 430, 768, 1280, 1440
 
 ## Final Browser Status
-**PASS WITH NOTES**
+**PASS**
 
 
 ## Journey
 - Landing CTAs visible
 - Example walkthrough opened (illustrative, not workspace)
+- Example: 8 phase lessons present
+- Example: phase lesson expands
+- Example: 6/6 PDF visuals loaded with alt text
 - Example → New project (from=slug)
 - From-example banner shown
 - Intake steps 1–2 completed
 - Timeline honesty copy present
+- Timeline handoff: one next action (no Workspace branch)
 - Timeline → Guided Mode
 - Guided beginner reassurance visible
 - Phase card0: full example + learning hierarchy visible
 - Guided phase specify_need completed (learning)
-- Phase card0: materi/example block visible
+- Phase card0: full example + learning hierarchy visible
 - Guided phase design completed (learning)
 - Phase card0: full example + learning hierarchy visible
 - Guided phase build completed (learning)
@@ -34,26 +38,40 @@
 - Guided phase analyse completed (learning)
 - Phase card0: full example + learning hierarchy visible
 - Guided phase disseminate completed (learning)
-- Phase card0: materi/example block visible
+- Phase card0: full example + learning hierarchy visible
 - Guided phase evaluate completed (learning)
 - Guided completion screen visible
 - Completion honesty copy present (not official approval)
 - Workspace opened
+- Workspace tab order: Timeline → Alur kerja → Checklist → … → Ekspor
+- Deep link ?tab=checklist opens Checklist
+- Bare Workspace URL opens Timeline first
+- Deep links ?tab=workflow/variables/instruments/metadata/export open their tab
+- Keyboard: ArrowRight from Timeline selects Alur kerja
+- Workspace → Mode Terpandu works
 - Export UI visible
+- Export gate: new incomplete project is blocked (expected)
+- Validation review explains why + how to fix
 - Responsive screenshots captured
-- Presentation Mode opened
-- Presentation Mode honesty/draf copy present
-- Presentation Mode back CTA works
-- Demo SKM present before edit: Survei Kepuasan Masyarakat Pelayanan Perizinan DPMPTSP 2026
-- From-example flow reachable: /app/new?from=skm
-- Demo safety: demo-skm id still present after from-example
+- Presentation Mode opened (no project required)
+- Presentation: 8 slides navigable
+- Presentation FAQ tab works
+- Auto-seeded demo projects persist across reload
+- Demo safety: demo SKM project byte-identical after starting from example
+- Example → new project created as a separate copy
+- Export download produced: StatPlan-Survei-Kepuasan-Masyarakat-Pelayanan-Perizinan-DPMPTSP-2026.docx
 - Refresh OK: Landing
 - Refresh OK: Example
 - Refresh OK: Intake
 - Refresh OK: Presentation
 - Browser Back/Forward smoke OK
 - No unnamed buttons on landing (sample)
-- Keyboard focus works (active=BUTTON)
+- Keyboard focus works (active=A)
+- Keyboard: example phase lesson toggles with Enter/Space (reduced motion)
+- Keyboard: visible focus ring present
+- Keyboard: presentation slides move with arrow keys
+- Keyboard: presentation tabs move with arrow keys
+- Heading hierarchy checked on primary pages
 
 ## Phase Coverage
 - specify_need: understood
@@ -89,27 +107,24 @@ Failed requests (0):
 - none
 
 ## Findings
-- **info**: Starting browser QA against http://127.0.0.1:5173
-- **warning**: Example step expect text not found after click: /Jadwal/i
-- **warning**: Example step expect text not found after click: /disiapkan|Persiapan/i
-- **info**: Guided URL: http://127.0.0.1:5173/app/projects/a800cc5e-e598-4454-b75a-80392aad91fe/guided
+- **info**: Starting browser QA against http://127.0.0.1:4180
+- **info**: Guided URL: http://127.0.0.1:4180/app/projects/0814e6da-a81e-4422-a8cf-071257eeb927/guided
 - **info**: Guided cards found: 6 (expect ~6)
-- **info**: Understanding progress: Progress: 6 dari 6 materi dipahami
+- **info**: Understanding progress: 6 dari 6 subproses sudah dipahami
 - **info**: Guided cards found: 6 (expect ~6)
-- **info**: Understanding progress: Progress: 6 dari 6 materi dipahami
-- **info**: Guided cards found: 6 (expect ~6)
-- **info**: Understanding progress: Progress: 6 dari 6 materi dipahami
-- **info**: Guided cards found: 6 (expect ~6)
-- **info**: Understanding progress: Progress: 6 dari 6 materi dipahami
-- **info**: Guided cards found: 6 (expect ~6)
-- **info**: Understanding progress: Progress: 6 dari 6 materi dipahami
-- **info**: Guided cards found: 6 (expect ~6)
-- **info**: Understanding progress: Progress: 6 dari 6 materi dipahami
-- **info**: Guided cards found: 6 (expect ~6)
-- **info**: Understanding progress: Progress: 6 dari 6 materi dipahami
-- **info**: Guided cards found: 6 (expect ~6)
-- **info**: Understanding progress: Progress: 6 dari 6 materi dipahami
-- **warning**: Export click did not produce download within timeout
+- **info**: Understanding progress: 6 dari 6 subproses sudah dipahami
+- **info**: Guided cards found: 7 (expect ~7)
+- **info**: Understanding progress: 7 dari 7 subproses sudah dipahami
+- **info**: Guided cards found: 4 (expect ~4)
+- **info**: Understanding progress: 4 dari 4 subproses sudah dipahami
+- **info**: Guided cards found: 8 (expect ~8)
+- **info**: Understanding progress: 8 dari 8 subproses sudah dipahami
+- **info**: Guided cards found: 5 (expect ~5)
+- **info**: Understanding progress: 5 dari 5 subproses sudah dipahami
+- **info**: Guided cards found: 5 (expect ~5)
+- **info**: Understanding progress: 5 dari 5 subproses sudah dipahami
+- **info**: Guided cards found: 3 (expect ~3)
+- **info**: Understanding progress: 3 dari 3 subproses sudah dipahami
 
 ## Bugs Found
 - none recorded as CRITICAL from this run
@@ -118,9 +133,7 @@ Failed requests (0):
 - None applied during this browser run (observation-first). Follow-up fixes only if CRITICAL UX blockers confirmed from screenshots.
 
 ## Remaining Issues
-- Example step expect text not found after click: /Jadwal/i
-- Example step expect text not found after click: /disiapkan|Persiapan/i
-- Export click did not produce download within timeout
+- none significant from automated browser pass
 
 ## Screenshot Evidence
 - `qa/browser/01-landing-desktop.png`

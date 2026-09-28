@@ -10,16 +10,16 @@ export function Badge({
   className?: string
 }) {
   const tones = {
-    neutral: 'bg-ink-100/90 text-ink-800 ring-1 ring-ink-900/5',
-    brand: 'bg-ink-900 text-white shadow-sm',
-    success: 'bg-success-soft text-success ring-1 ring-success/10',
-    warning: 'bg-warning-soft text-warning ring-1 ring-warning/10',
-    gold: 'bg-gold-100 text-ink-900 ring-1 ring-gold-500/20',
+    neutral: 'bg-ink-100 text-ink-700',
+    brand: 'bg-brand-soft text-ink-900',
+    success: 'bg-success-soft text-success',
+    warning: 'bg-warning-soft text-warning',
+    gold: 'bg-accent-soft text-accent-700',
   }
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-wide',
+        'inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-semibold tracking-wide',
         tones[tone],
         className,
       )}
@@ -92,7 +92,7 @@ export function Card({
       className={cn(
         'surface-card p-5',
         hover &&
-          'cursor-default motion-safe:transition-all motion-safe:duration-200 hover:border-ink-600/20 hover:shadow-(--shadow-soft) motion-safe:hover:-translate-y-px',
+          'cursor-default motion-safe:transition-colors motion-safe:duration-200 hover:border-border-strong',
         className,
       )}
     >
@@ -117,8 +117,8 @@ export function StatCard({
   children?: React.ReactNode
 }) {
   const accents = {
-    ink: 'bg-ink-50 text-ink-900',
-    gold: 'bg-gold-100 text-ink-900',
+    ink: 'bg-ink-50 text-ink-700',
+    gold: 'bg-ink-50 text-ink-700',
     success: 'bg-success-soft text-success',
     warning: 'bg-warning-soft text-warning',
   }

@@ -60,10 +60,16 @@ assert(
   'Dashboard must not use operational-system eyebrow or duplicate quick-action grid',
 )
 assert(
-  dashboard.includes('Proyek yang baru diperbarui') &&
-    dashboard.includes('Rencana minggu GSBPM') &&
-    dashboard.includes('Belum ada rencana waktu pada proyek aktif.'),
-  'Dashboard must use truthful updatedAt and relative-week sections',
+  dashboard.includes('Lanjutkan pekerjaan') &&
+    dashboard.includes('Proyek Anda') &&
+    dashboard.includes('Proyek demo') &&
+    dashboard.includes('isDemoProject') &&
+    dashboard.includes('nextActionForProject') &&
+    dashboard.includes('canExport') &&
+    dashboard.includes('/contoh/') &&
+    !dashboard.includes('planningWeekLabel') &&
+    !dashboard.includes('Rencana minggu GSBPM'),
+  'Dashboard: continue-work card, user vs demo projects, real next actions, no internal week numbers',
 )
 
 const dashboardHelper = readFileSync(join(root, 'src/demo/dashboard.ts'), 'utf8')
@@ -84,17 +90,30 @@ assert(!workspace.includes('sampleSize'), 'Yamane sample must be removed')
 assert(!workspace.includes("'risks'"), 'Risks tab must be removed')
 
 const landing = readFileSync(join(root, 'src/features/landing/LandingPage.tsx'), 'utf8')
-if (/<Link[^>]*>[\s\S]*?<Button/.test(landing)) {
+if (/<Link[\s>](?:(?!<\/Link>)[\s\S])*?<(?:Button|button)[\s>]/.test(landing)) {
   failures.push('LandingPage: nested interactive elements (Link wrapping Button) — invalid HTML/a11y')
 }
 assert(
   landing.includes('Mulai perencanaan') &&
-    landing.includes('Bantu susun rencana kegiatan statistik') &&
+    landing.includes('Pelajari contoh') &&
+    landing.includes('Simulator perencanaan kegiatan statistik') &&
+    landing.includes('id="hero-heading"') &&
     landing.includes('LANDING_EXAMPLES') &&
     landing.includes('HOW_IT_WORKS_STEPS') &&
+    landing.includes('LANDING_OUTPUTS') &&
+    landing.includes('GUIDED_PHASES') &&
     landing.includes('id="contoh"') &&
+    landing.includes('id="cara-kerja"') &&
     landing.includes('/contoh/'),
-  'Landing Slice A+B: product-first hero, how-it-works, example section → walkthrough',
+  'Landing: hero (eyebrow + h1 + 2 CTAs), cara kerja, contoh → walkthrough, GSBPM phases, real outputs',
+)
+assert(
+  (landing.match(/<h1[\s>]/g) || []).length === 1 && (landing.match(/<main[\s>]/g) || []).length === 1,
+  'Landing must have exactly one <h1> and one <main> landmark',
+)
+assert(
+  !/\b\d{2,}\+?\s*(pengguna|proyek|instansi)\b/i.test(landing) && !/\bAI\b/.test(landing),
+  'Landing must not claim user/project counts or AI',
 )
 assert(
   !landing.includes('openDemoProject'),
@@ -129,18 +148,28 @@ const exampleWalkthrough = readFileSync(
   'utf8',
 )
 const exampleJourney = readFileSync(join(root, 'src/content/exampleJourney.ts'), 'utf8')
+for (const section of ['hero', 'sekilas', 'mengapa', 'roadmap', 'pelajari', 'materi', 'tiru', 'mulai']) {
+  assert(
+    exampleWalkthrough.includes(`data-section="${section}"`),
+    `Example case study must include section: ${section}`,
+  )
+}
 assert(
-  exampleWalkthrough.includes('Coba buat rencana seperti ini') &&
-    exampleWalkthrough.includes('/app/new?from=') &&
+  exampleWalkthrough.includes('/app/new?from=') &&
+    exampleWalkthrough.includes('Contoh asli tetap aman') &&
+    exampleWalkthrough.includes('GUIDED_PHASES') &&
+    exampleWalkthrough.includes('materiExamples') &&
+    exampleWalkthrough.includes('loading="lazy"') &&
+    exampleWalkthrough.includes('SourceNote kind="A"') &&
+    exampleWalkthrough.includes('SourceNote kind="C"') &&
     !exampleWalkthrough.includes('Buka ruang kerja lengkap') &&
     !exampleWalkthrough.includes('openWorkspace') &&
-    exampleWalkthrough.includes('PreparePhases') &&
-    exampleWalkthrough.includes('TryYourDates') &&
-    exampleWalkthrough.includes('Belum dibuka') &&
+    !exampleWalkthrough.includes('loadDemoData') &&
+    !exampleWalkthrough.includes('updateProject') &&
     exampleJourney.includes('preparePhases') &&
-    exampleJourney.includes('whyConducted') &&
+    exampleJourney.includes('takeaways') &&
     !exampleJourney.includes('Template resmi BPS'),
-  'Example demo: Guided handoff primary, Workspace not destination, progressive phases',
+  'Example: read-only case study, real PDF visuals from Guided content, honest A/C labels, copy-to-new-plan CTA',
 )
 
 const sourceMap = readFileSync(join(root, 'docs/content-source-map.md'), 'utf8')
@@ -166,18 +195,22 @@ assert(dupIds.length === 0, `Duplicate checklist ids: ${dupIds.join(', ')}`)
 
 const newProject = readFileSync(join(root, 'src/features/planner/NewProjectPage.tsx'), 'utf8')
 assert(
-  newProject.includes('Ceritakan kegiatan yang ingin Anda lakukan') &&
-    newProject.includes('Apa yang ingin Anda dapatkan dari kegiatan ini?') &&
-    newProject.includes('Kapan kegiatan ini akan dilaksanakan?') &&
-    newProject.includes('Rencana waktu awal') &&
-    newProject.includes('Sesuaikan jadwal') &&
+  newProject.includes('id="guided-story"') &&
+    newProject.includes('STORY_CHOICES') &&
+    newProject.includes('deriveProjectName(story, effectiveJenis)') &&
+    newProject.includes('bukan AI') &&
+    newProject.includes('id="plan-start"') &&
+    newProject.includes('id="plan-end"') &&
+    newProject.includes('PhaseBar') &&
+    newProject.includes('bukan durasi wajib BPS') &&
     newProject.includes('Lanjut ke Identifikasi Kebutuhan') &&
     newProject.includes('recommendJenisKegiatan') &&
     newProject.includes('allocatePhaseDates') &&
     newProject.includes('phasePlanToTimelineItems') &&
+    newProject.includes('createGuidedSession') &&
     !newProject.includes('W1') &&
     !newProject.includes('buildIllustrativeSchedule'),
-  'NewProjectPage must implement guided Slice 2 (Ceritakan → Hasil → Tentukan waktu → handoff)',
+  'Intake: plain-language story + examples, draft name, rule-based (not AI) suggestion, visual timeline, handoff',
 )
 assert(
   !newProject.includes('AI menganalisis') && !newProject.includes('AI menentukan'),
@@ -202,7 +235,7 @@ assert(
   'guidedJourney helpers required for Slice 1 continuity',
 )
 
-// --- Slice 3 guided phase engine ---
+/// --- Guided Mode: official GSBPM 5.2 structure (44 subprocesses) ---
 const appTsx = readFileSync(join(root, 'src/App.tsx'), 'utf8')
 assert(
   appTsx.includes('projects/:id/guided') && appTsx.includes('GuidedPhasePage'),
@@ -213,9 +246,42 @@ assert(
   'NewProject handoff must open Mode Terpandu (not force Workspace)',
 )
 assert(
-  newProject.includes('Buka ruang kerja lengkap'),
-  'Workspace must remain available as secondary action',
+  !newProject.includes('Buka ruang kerja lengkap') &&
+    (newProject.match(/Lanjut ke Identifikasi Kebutuhan/g) || []).length === 1,
+  'Timeline handoff: exactly one next action (Mode Terpandu), no competing Workspace branch',
 )
+{
+  const shell = readFileSync(join(root, 'src/components/layout/AppShell.tsx'), 'utf8')
+  const guidedPage = readFileSync(join(root, 'src/features/planner/guided/GuidedPhasePage.tsx'), 'utf8')
+  const ws = readFileSync(join(root, 'src/features/workspace/ProjectWorkspacePage.tsx'), 'utf8')
+  assert(
+    shell.includes('Proyek saya') &&
+      guidedPage.includes('navigate(`/app/projects/${id}`)') &&
+      ws.includes('Kembali ke Mode Terpandu'),
+    'Workspace stays reachable (Proyek saya, Guided handoff) and links back to Mode Terpandu',
+  )
+  const tabsBlock = ws.slice(ws.indexOf('const tabs:'), ws.indexOf('\n]', ws.indexOf('const tabs:')))
+  const order = [...tabsBlock.matchAll(/id: '(\w+)'/g)].map((m) => m[1]).join(',')
+  assert(
+    order === 'timeline,workflow,checklist,design,variables,instruments,metadata,activity,export',
+    `Workspace tab order must be Timeline → Alur kerja → Checklist → … → Ekspor (got ${order})`,
+  )
+  assert(
+    ws.includes("const DEFAULT_TAB: TabId = 'timeline'") &&
+      ws.includes('return DEFAULT_TAB') &&
+      ws.includes('if (next === DEFAULT_TAB) p.delete'),
+    'Workspace without ?tab= must open Timeline; explicit ?tab= wins',
+  )
+  assert(
+    /tab !== 'export' \? \(\s*<NextStepsCard/.test(ws),
+    'Ekspor tab must not repeat the next-steps issue list above its full review',
+  )
+  const attention = readFileSync(join(root, 'src/lib/projectAttention.ts'), 'utf8')
+  assert(
+    !attention.includes("tab === 'workflow') return"),
+    'projectHref must keep ?tab=workflow explicit now that the bare URL opens Timeline',
+  )
+}
 
 const guidedPhasePage = readFileSync(
   join(root, 'src/features/planner/guided/GuidedPhasePage.tsx'),
@@ -225,415 +291,204 @@ const guidedLearningCard = readFileSync(
   join(root, 'src/features/planner/guided/GuidedLearningCard.tsx'),
   'utf8',
 )
-const guidedPhaseNeed = readFileSync(join(root, 'src/content/guidedPhaseNeed.ts'), 'utf8')
+const materiBlock = readFileSync(
+  join(root, 'src/features/planner/guided/MateriExampleBlock.tsx'),
+  'utf8',
+)
+const guidedTemplatePanel = readFileSync(
+  join(root, 'src/features/planner/guided/GuidedTemplatePanel.tsx'),
+  'utf8',
+)
 const guidedSession = readFileSync(join(root, 'src/lib/guidedSession.ts'), 'utf8')
+const guidedMigration = readFileSync(join(root, 'src/lib/guidedMigration.ts'), 'utf8')
+
+const PHASE_FILES = [
+  ['guidedPhaseNeed.ts', 'guidedNeedPreparation.ts', '1', 6],
+  ['guidedPhaseDesign.ts', 'guidedDesignPreparation.ts', '2', 6],
+  ['guidedPhaseBuild.ts', 'guidedBuildPreparation.ts', '3', 7],
+  ['guidedPhaseCollect.ts', 'guidedCollectPreparation.ts', '4', 4],
+  ['guidedPhaseProcess.ts', 'guidedProcessPreparation.ts', '5', 8],
+  ['guidedPhaseAnalyse.ts', 'guidedAnalysePreparation.ts', '6', 5],
+  ['guidedPhaseDisseminate.ts', 'guidedDisseminatePreparation.ts', '7', 5],
+  ['guidedPhaseEvaluate.ts', 'guidedEvaluatePreparation.ts', '8', 3],
+]
+let totalCards = 0
+const allPhaseSrc = []
+const allPrepSrc = []
+for (const [cardFile, prepFile, phase, count] of PHASE_FILES) {
+  const cardSrc = readFileSync(join(root, 'src/content', cardFile), 'utf8')
+  const prepSrc = readFileSync(join(root, 'src/content', prepFile), 'utf8')
+  allPhaseSrc.push(cardSrc)
+  allPrepSrc.push(prepSrc)
+  const ids = [...cardSrc.matchAll(/\n    id: 'gsbpm-(\d)\.(\d)'/g)]
+  totalCards += ids.length
+  assert(ids.length === count, `${cardFile}: expected ${count} official cards, found ${ids.length}`)
+  assert(
+    ids.every((m, i) => m[1] === phase && Number(m[2]) === i + 1),
+    `${cardFile}: card ids must be gsbpm-${phase}.1…${phase}.${count} in order`,
+  )
+  const pages = [...cardSrc.matchAll(/\n    pdfPage: /g)].length
+  assert(pages === count, `${cardFile}: every subprocess card must cite its PDF page`)
+  const preps = [...prepSrc.matchAll(/cardId: 'gsbpm-(\d\.\d)'/g)].map((m) => m[1])
+  for (let i = 1; i <= count; i++) {
+    assert(preps.includes(`${phase}.${i}`), `${prepFile}: missing Format kerja for ${phase}.${i}`)
+  }
+  assert(!/code: 'SP-/.test(cardSrc), `${cardFile}: no invented SP-* codes`)
+  assert(!cardSrc.includes("mappingKind: 'statplan'"), `${cardFile}: all cards map to official subprocesses`)
+  assert(
+    !/'(need|design|build|collect|process|analyse|disseminate|evaluate)-\d\.\d'/.test(cardSrc + prepSrc),
+    `${cardFile}/${prepFile}: legacy positional ids must not be reused`,
+  )
+  assert(
+    !prepSrc.includes('adalah Template resmi BPS') &&
+      !prepSrc.includes('Rekomendasi BPS berhasil') &&
+      !prepSrc.includes('weighting sudah diterapkan') &&
+      !prepSrc.includes('skor evaluasi otomatis'),
+    `${prepFile}: no fake official/approval/result claims`,
+  )
+}
+assert(totalCards === 44, `Guided Mode must have exactly 44 official subprocess cards (found ${totalCards})`)
+
+const phaseSrc = allPhaseSrc.join('\n')
+assert(
+  phaseSrc.includes("officialTitle: 'Memutakhirkan Sistem Output'") &&
+    phaseSrc.includes("title: 'Memuat data dan metadata ke sistem output'"),
+  'Disseminate 7.1 must teach Memutakhirkan Sistem Output (not generic produk)',
+)
+assert(
+  phaseSrc.includes("officialTitle: 'Pengujian Sistem Produksi'") &&
+    phaseSrc.includes("officialTitle: 'Finalisasi Sistem Produksi'"),
+  'Build must include Pengujian and Finalisasi Sistem Produksi',
+)
+assert(
+  phaseSrc.includes("officialTitle: 'Review & Validasi Data'") &&
+    phaseSrc.includes("officialTitle: 'Editing & Imputasi'"),
+  'Process must include Review & Validasi and Editing & Imputasi',
+)
+assert(
+  phaseSrc.includes("officialTitle: 'Validasi output'") &&
+    phaseSrc.includes("officialTitle: 'Interpretasi dan penjelasan'"),
+  'Analyse must keep Validasi output and Interpretasi separate',
+)
+assert(
+  phaseSrc.includes("officialTitle: 'Identifikasi Konsep Definisi'") &&
+    phaseSrc.includes('Kondef sebaiknya sesuai standar statistik.'),
+  'Specify Need 1.4 must teach konsep definisi (Hal. 14)',
+)
+assert(
+  phaseSrc.includes("'Monitoring adalah bagian resmi subproses ini (Hal. 35) — bukan tambahan.'") &&
+    !phaseSrc.includes('not in materi'),
+  'Collect monitoring must be grounded in Hal. 35',
+)
+assert(
+  phaseSrc.includes("'Simple Random Sampling'") && phaseSrc.includes("'Snowball Sampling'"),
+  'Design 2.4 must list the actual Hal. 21 sampling methods',
+)
+assert(
+  phaseSrc.includes("['6', 'Analisis hasil SKM', 'November – Desember']"),
+  'Design 2.6 must carry the exact Hal. 23 schedule table',
+)
+assert(
+  !phaseSrc.includes("'Metrics'") && !phaseSrc.includes("'Staff feedback'") &&
+    phaseSrc.includes("'Umpan balik pengguna', 'Paradata', 'Metrik sistem', 'Masukan staf'"),
+  'Evaluate must use Indonesian source terminology',
+)
+assert(
+  phaseSrc.includes('tidak harus digunakan secara linear'),
+  'Guided Mode must state GSBPM is flexible / non-linear',
+)
+
+for (const img of [
+  'hal-18-contoh-rancangan-tabulasi',
+  'hal-23-contoh-sop-skm',
+  'hal-26-contoh-aturan-validasi',
+  'hal-27-contoh-aturan-tabulasi',
+  'hal-28-struktur-organisasi-hortikultura',
+  'hal-28-alur-laporan-dokumen-hortikultura',
+]) {
+  let ok = true
+  try {
+    readFileSync(join(root, 'public/materi', `${img}.png`))
+  } catch {
+    ok = false
+  }
+  assert(ok && phaseSrc.includes(`/materi/${img}.png`), `PDF visual ${img} must exist and be used`)
+}
+assert(
+  materiBlock.includes('loading="lazy"') &&
+    materiBlock.includes('tidak digambar ulang') &&
+    !materiBlock.includes('Gambar halaman tidak disematkan') &&
+    !materiBlock.includes('Preview dari Materi'),
+  'Materi block: real visuals lazy-loaded; no "preview" label without a preview',
+)
+
+assert(
+  guidedLearningCard.includes('>Apa?<') &&
+    guidedLearningCard.includes('>Contoh<') &&
+    guidedLearningCard.includes('>Yang bisa dipelajari<') &&
+    guidedLearningCard.includes('>Format kerja StatPlan<') &&
+    guidedLearningCard.includes('>Bukti dukung<') &&
+    guidedLearningCard.includes('Sudah dipahami') &&
+    guidedLearningCard.includes('aria-expanded') &&
+    guidedLearningCard.includes('Contoh ilustratif StatPlan') &&
+    !guidedLearningCard.includes('Download template'),
+  'GuidedLearningCard must present Apa/Contoh/Pelajari/Format kerja/Bukti/Sudah dipahami',
+)
+assert(
+  guidedSession.includes('GUIDED_SCHEMA_VERSION') &&
+    guidedSession.includes('migrateGuidedMapsV1toV2') &&
+    guidedSession.includes("unlockedPhases: ['specify_need']") &&
+    guidedSession.includes('upsertTemplateDraft'),
+  'Guided session must migrate legacy card ids and keep drafts/unlock',
+)
+const legacyIds = [...guidedMigration.matchAll(/from: '([a-z]+-\d\.\d)'/g)].map((m) => m[1])
+assert(legacyIds.length === 48, `Migration must map all 48 legacy card ids (found ${legacyIds.length})`)
+assert(guidedMigration.includes('legacy'), 'Migration must archive v1 data')
 
 assert(
   guidedPhasePage.includes('Mode Terpandu') &&
     guidedPhasePage.includes('Selesai memahami tahap ini') &&
     guidedPhasePage.includes('Lanjut ke Perancangan') &&
-    guidedPhasePage.includes('materi dipahami'),
-  'GuidedPhasePage must implement Phase 1 learning + unlock handoff',
+    guidedPhasePage.includes('subproses sudah dipahami') &&
+    guidedPhasePage.includes('PhaseChapter'),
+  'GuidedPhasePage must implement phase learning + unlock handoff',
 )
+for (const n of ['2', '3', '4', '5', '6', '7', '8']) {
+  assert(
+    guidedPhasePage.includes(`completePhase${n}Learning`),
+    `GuidedPhasePage must complete phase ${n}`,
+  )
+}
 assert(
-  guidedLearningCard.includes('Sudah dipahami') &&
-    guidedLearningCard.includes('aria-expanded') &&
-    guidedLearningCard.includes('Siapkan bahan') &&
-    !guidedLearningCard.includes('Download template'),
-  'GuidedLearningCard must use Apa/Contoh/Siapkan bahan/Bukti + understood semantics',
-)
-assert(
-  guidedPhaseNeed.includes("pdfPage: 15") &&
-    guidedPhaseNeed.includes("pdfPage: 16") &&
-    guidedPhaseNeed.includes("contohClass: 'A'"),
-  'Guided need content must ground 1.5/1.6 to PDF pages',
-)
-assert(
-  guidedSession.includes("unlockedPhases: ['specify_need']") &&
-    guidedSession.includes('completePhase1AndUnlockDesign') &&
-    guidedSession.includes('templateDrafts') &&
-    guidedSession.includes('upsertTemplateDraft'),
-  'Guided session must support Phase 1 unlock + Slice 4 drafts',
-)
-assert(
-  !guidedPhasePage.includes('Dokumen wajib BPS') &&
-    !guidedPhaseNeed.includes('Durasi wajib BPS') &&
-    !guidedPhaseNeed.includes('Rekomendasi resmi BPS'),
-  'Guided Mode must not claim fake BPS mandates',
+  guidedPhasePage.includes('Mode Terpandu selesai') &&
+    guidedPhasePage.includes('Periksa di Workspace') &&
+    guidedPhasePage.includes('penyelesaian Mode Terpandu StatPlan') &&
+    guidedPhasePage.includes('Review StatPlan') &&
+    guidedPhasePage.includes('bukan persetujuan resmi BPS') &&
+    !guidedPhasePage.includes('Phase 9') &&
+    !guidedPhasePage.includes('phase9'),
+  'Guided completion is honest (no Phase 9, not BPS approval)',
 )
 assert(
   !guidedPhasePage.includes('computeProjectProgress') &&
-    !guidedLearningCard.includes('checklistState'),
-  'Guided Mode must not drive Workspace checklist/progress',
-)
-
-// --- Slice 4 template & evidence ---
-const guidedPrep = readFileSync(join(root, 'src/content/guidedNeedPreparation.ts'), 'utf8')
-const guidedTemplatePanel = readFileSync(
-  join(root, 'src/features/planner/guided/GuidedTemplatePanel.tsx'),
-  'utf8',
-)
-assert(
-  guidedPrep.includes("sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 15'") &&
-    guidedPrep.includes("sourceLabel: 'Menurut Materi Proses Bisnis · Hal. 16'") &&
-    guidedPrep.includes('bukan template resmi BPS'),
-  'Slice 4 prep must ground 1.5/1.6 and disclaim official templates',
-)
-assert(
-  guidedPrep.includes("sourceType: 'C'") &&
-    !guidedPrep.includes('Template resmi BPS'),
-  'Type C working templates must not claim official BPS forms',
+    !guidedLearningCard.includes('checklistState') &&
+    !guidedPhasePage.includes('Dokumen wajib BPS'),
+  'Guided Mode must not drive Workspace checklist/progress or claim BPS mandates',
 )
 assert(
   guidedTemplatePanel.includes('Isian Anda') &&
     guidedTemplatePanel.includes('Disimpan secara lokal') &&
     guidedTemplatePanel.includes('Reset draft') &&
-    guidedTemplatePanel.includes('Bahan Anda') &&
-    guidedPhasePage.includes('Bahan kerja dapat disiapkan bertahap') &&
-    guidedPhasePage.includes('semua bahan harus lengkap'),
-  'Slice 4 UI must support draft input, local save, materials summary, learning gate',
-)
-assert(
-  !guidedTemplatePanel.includes('Tersimpan di server') &&
+    guidedTemplatePanel.includes("kind === 'repeatableRows'") &&
+    !guidedTemplatePanel.includes('Tersimpan di server') &&
     !guidedTemplatePanel.includes('StatPlan menemukan'),
-  'No fake server save or portal query claims',
+  'Format kerja panel: local drafts, generic rows, no fake server/portal claims',
 )
 
-// --- Slice 5 Design phase ---
-const guidedDesignPrep = readFileSync(
-  join(root, 'src/content/guidedDesignPreparation.ts'),
-  'utf8',
-)
-const guidedPhaseDesign = readFileSync(join(root, 'src/content/guidedPhaseDesign.ts'), 'utf8')
+const inventory = readFileSync(join(root, 'docs/claude-source-inventory.md'), 'utf8')
 assert(
-  guidedPhasePage.includes('2 · Perancangan') &&
-    guidedPhasePage.includes('Bahan perancangan Anda') &&
-    guidedPhasePage.includes('completePhase2Learning') &&
-    guidedPhasePage.includes('GUIDED_DESIGN_CARDS'),
-  'GuidedPhasePage must implement Design phase learning + summary',
-)
-assert(
-  guidedDesignPrep.includes('Hal. 18') &&
-    guidedDesignPrep.includes('Hal. 19') &&
-    guidedDesignPrep.includes('Hal. 20') &&
-    guidedDesignPrep.includes('Hal. 21') &&
-    guidedDesignPrep.includes('Hal. 23') &&
-    guidedDesignPrep.includes('tidak menentukan metode yang paling tepat secara otomatis') &&
-    guidedDesignPrep.includes('tidak merekomendasikan') &&
-    !guidedDesignPrep.includes('Rekomendasi BPS berhasil') &&
-    !guidedDesignPrep.includes('Template resmi BPS'),
-  'Design prep must ground p18–23 and avoid official/auto claims',
-)
-assert(
-  guidedPhaseDesign.includes("pdfPage: 18") &&
-    guidedPhaseDesign.includes("pdfPage: 19") &&
-    guidedPhaseDesign.includes("pdfPage: 21") &&
-    guidedPhaseDesign.includes("pdfPage: 23"),
-  'Design learning cards must cite PDF pages',
-)
-assert(
-  guidedSession.includes('completePhase2Learning') &&
-    guidedSession.includes("unlocked.add('build')"),
-  'Phase 2 completion must unlock Build',
-)
-assert(
-  guidedSession.includes('completePhase3Learning') &&
-    guidedSession.includes("unlocked.add('collect')"),
-  'Phase 3 completion must unlock Collect',
-)
-assert(
-  guidedSession.includes('completePhase4Learning') &&
-    guidedSession.includes("unlocked.add('process')"),
-  'Phase 4 completion must unlock Process',
-)
-assert(
-  guidedSession.includes('completePhase5Learning') &&
-    guidedSession.includes("unlocked.add('analyse')"),
-  'Phase 5 completion must unlock Analyse',
-)
-assert(
-  guidedSession.includes('completePhase6Learning') &&
-    guidedSession.includes("unlocked.add('disseminate')"),
-  'Phase 6 completion must unlock Disseminate',
-)
-assert(
-  guidedSession.includes('completePhase7Learning') &&
-    guidedSession.includes("unlocked.add('evaluate')") &&
-    guidedSession.includes('completePhase8Learning') &&
-    guidedSession.includes('There is NO Phase 9'),
-  'Phase 7 completion must unlock Evaluate; Phase 8 is final (no Phase 9)',
-)
-
-// --- Slice 6 Build phase ---
-const guidedBuildPrep = readFileSync(join(root, 'src/content/guidedBuildPreparation.ts'), 'utf8')
-const guidedPhaseBuild = readFileSync(join(root, 'src/content/guidedPhaseBuild.ts'), 'utf8')
-assert(
-  guidedPhasePage.includes('3 · Build') &&
-    guidedPhasePage.includes('Bahan Build Anda') &&
-    guidedPhasePage.includes('completePhase3Learning') &&
-    guidedPhasePage.includes('GUIDED_BUILD_CARDS'),
-  'GuidedPhasePage must implement Build phase learning + summary',
-)
-assert(
-  guidedBuildPrep.includes('Hal. 25') &&
-    guidedBuildPrep.includes('Hal. 26') &&
-    guidedBuildPrep.includes('Hal. 27') &&
-    guidedBuildPrep.includes('Hal. 28') &&
-    guidedBuildPrep.includes('Hal. 30') &&
-    guidedBuildPrep.includes('Format kerja StatPlan') &&
-    !guidedBuildPrep.includes('Build selesai secara resmi') &&
-    !guidedBuildPrep.includes('adalah Template resmi BPS'),
-  'Build prep must ground p25–30 and avoid official completion claims',
-)
-assert(
-  guidedPhaseBuild.includes('pdfPage: 25') &&
-    guidedPhaseBuild.includes('pdfPage: 26') &&
-    guidedPhaseBuild.includes('pdfPage: 27') &&
-    guidedPhaseBuild.includes('pdfPage: 28') &&
-    guidedPhaseBuild.includes('pdfPage: 30'),
-  'Build learning cards must cite PDF pages',
-)
-assert(
-  !guidedPhaseBuild.includes("pdfPage:") ||
-    !/build-3\.6[\s\S]{0,200}pdfPage/.test(guidedPhaseBuild),
-  '3.6 must not falsely claim a PDF page',
-)
-
-// --- Slice 7 Collect phase ---
-const guidedCollectPrep = readFileSync(join(root, 'src/content/guidedCollectPreparation.ts'), 'utf8')
-const guidedPhaseCollect = readFileSync(join(root, 'src/content/guidedPhaseCollect.ts'), 'utf8')
-const collectSourceMap = readFileSync(join(root, 'docs/content-source-map.md'), 'utf8')
-assert(
-  guidedPhasePage.includes('4 · Collect') &&
-    guidedPhasePage.includes('Bahan Collect Anda') &&
-    guidedPhasePage.includes('completePhase4Learning') &&
-    guidedPhasePage.includes('GUIDED_COLLECT_CARDS'),
-  'GuidedPhasePage must implement Collect phase learning + summary',
-)
-assert(
-  guidedCollectPrep.includes('Hal. 33') &&
-    guidedCollectPrep.includes('Hal. 32–36') &&
-    guidedCollectPrep.includes('Penjelasan sederhana') &&
-    guidedCollectPrep.includes('Format kerja StatPlan') &&
-    guidedCollectPrep.includes('PKS-LADU') &&
-    !guidedCollectPrep.includes('Persetujuan Collect') &&
-    !guidedCollectPrep.includes('Collect selesai.') &&
-    !/kepanjangan\s+PKS|PKS\s*=|LADU\s*=/i.test(guidedCollectPrep),
-  'Collect prep must ground verified pages and avoid approval/execution claims',
-)
-assert(
-  guidedPhaseCollect.includes('pdfPage: 33') &&
-    guidedPhaseCollect.includes("pdfPage: '32–36'") &&
-    !/collect-4\.4[\s\S]{0,250}pdfPage/.test(guidedPhaseCollect) &&
-    !/collect-4\.6[\s\S]{0,250}pdfPage/.test(guidedPhaseCollect),
-  'Collect cards must cite verified pages; 4.4/4.6 must not claim PDF pages',
-)
-assert(
-  collectSourceMap.includes('Guided Planning Slice 7') &&
-    collectSourceMap.includes('| **33** |') &&
-    collectSourceMap.includes('PKS-LADU'),
-  'Source map must document Collect Slice 7',
-)
-
-// --- Slice 8 Process phase ---
-const guidedProcessPrep = readFileSync(join(root, 'src/content/guidedProcessPreparation.ts'), 'utf8')
-const guidedPhaseProcess = readFileSync(join(root, 'src/content/guidedPhaseProcess.ts'), 'utf8')
-assert(
-  guidedPhasePage.includes('5 · Process') &&
-    guidedPhasePage.includes('Bahan Process Anda') &&
-    guidedPhasePage.includes('completePhase5Learning') &&
-    guidedPhasePage.includes('GUIDED_PROCESS_CARDS'),
-  'GuidedPhasePage must implement Process phase learning + summary',
-)
-assert(
-  guidedProcessPrep.includes('Hal. 37–45') &&
-    guidedProcessPrep.includes('Hal. 44') &&
-    guidedProcessPrep.includes('Hal. 39') &&
-    guidedProcessPrep.includes('Hal. 42') &&
-    guidedProcessPrep.includes('Hal. 43') &&
-    guidedProcessPrep.includes('Format kerja StatPlan') &&
-    guidedProcessPrep.includes('Catatan perencanaan') &&
-    !guidedProcessPrep.includes('Proses selesai.') &&
-    !guidedProcessPrep.includes('weighting sudah diterapkan') &&
-    !guidedProcessPrep.includes('adalah Template resmi BPS'),
-  'Process prep must ground verified pages and avoid processing/approval claims',
-)
-assert(
-  guidedPhaseProcess.includes("pdfPage: '37–45'") &&
-    guidedPhaseProcess.includes('pdfPage: 44') &&
-    guidedPhaseProcess.includes('pdfPage: 39') &&
-    guidedPhaseProcess.includes('pdfPage: 42') &&
-    guidedPhaseProcess.includes('pdfPage: 43') &&
-    !/process-5\.6[\s\S]{0,250}pdfPage/.test(guidedPhaseProcess),
-  'Process cards must cite verified pages; 5.6 must not claim a PDF page',
-)
-assert(
-  collectSourceMap.includes('Guided Planning Slice 8') &&
-    collectSourceMap.includes('| **39** |') &&
-    collectSourceMap.includes('| **42** |') &&
-    collectSourceMap.includes('| **43** |') &&
-    collectSourceMap.includes('| **44** |'),
-  'Source map must document Process Slice 8',
-)
-
-// --- Slice 9 Analyse phase ---
-const guidedAnalysePrep = readFileSync(join(root, 'src/content/guidedAnalysePreparation.ts'), 'utf8')
-const guidedPhaseAnalyse = readFileSync(join(root, 'src/content/guidedPhaseAnalyse.ts'), 'utf8')
-assert(
-  guidedPhasePage.includes('6 · Analyse') &&
-    guidedPhasePage.includes('Bahan Analyse Anda') &&
-    guidedPhasePage.includes('completePhase6Learning') &&
-    guidedPhasePage.includes('GUIDED_ANALYSE_CARDS'),
-  'GuidedPhasePage must implement Analyse phase learning + summary',
-)
-assert(
-  guidedAnalysePrep.includes('Hal. 46–51') &&
-    guidedAnalysePrep.includes('Hal. 50') &&
-    guidedAnalysePrep.includes('Penjelasan sederhana') &&
-    guidedAnalysePrep.includes('Format kerja StatPlan') &&
-    guidedAnalysePrep.toLowerCase().includes('pilihan kerja statplan') &&
-    !guidedAnalysePrep.includes('Analisis selesai.') &&
-    !guidedAnalysePrep.includes('adalah Template resmi BPS') &&
-    !guidedAnalysePrep.includes('n < 3 is always illegal'),
-  'Analyse prep must ground verified pages and avoid fake results/approval claims',
-)
-assert(
-  guidedPhaseAnalyse.includes("pdfPage: '46–51'") &&
-    guidedPhaseAnalyse.includes('pdfPage: 50') &&
-    !/analyse-6\.1[\s\S]{0,250}pdfPage/.test(guidedPhaseAnalyse) &&
-    !/analyse-6\.3[\s\S]{0,250}pdfPage/.test(guidedPhaseAnalyse) &&
-    !/analyse-6\.6[\s\S]{0,250}pdfPage/.test(guidedPhaseAnalyse),
-  'Analyse cards must cite verified pages; 6.1/6.3/6.6 must not claim PDF pages',
-)
-assert(
-  collectSourceMap.includes('Guided Planning Slice 9') &&
-    collectSourceMap.includes('| **50** |') &&
-    collectSourceMap.includes('**46–51**'),
-  'Source map must document Analyse Slice 9',
-)
-
-// --- Slice 10 Disseminate phase ---
-const guidedDisseminatePrep = readFileSync(
-  join(root, 'src/content/guidedDisseminatePreparation.ts'),
-  'utf8',
-)
-const guidedPhaseDisseminate = readFileSync(
-  join(root, 'src/content/guidedPhaseDisseminate.ts'),
-  'utf8',
-)
-assert(
-  guidedPhasePage.includes('7 · Disseminate') &&
-    guidedPhasePage.includes('Bahan Disseminate Anda') &&
-    guidedPhasePage.includes('completePhase7Learning') &&
-    guidedPhasePage.includes('GUIDED_DISSEMINATE_CARDS') &&
-    guidedPhasePage.includes('Persiapan Disseminate selesai dipelajari'),
-  'GuidedPhasePage must implement Disseminate phase learning + summary',
-)
-assert(
-  guidedDisseminatePrep.includes('Hal. 52–57') &&
-    guidedDisseminatePrep.includes('Format kerja StatPlan') &&
-    guidedDisseminatePrep.includes('Target waktu rilis (rencana)') &&
-    guidedDisseminatePrep.includes('Bukan jadwal resmi') &&
-    guidedDisseminatePrep.includes('bukan tanggal publikasi aktual') &&
-    guidedDisseminatePrep.includes('bukan Disseminate selesai dilaksanakan') &&
-    guidedDisseminatePrep.includes('Persiapan Disseminate selesai dipelajari') &&
-    !guidedDisseminatePrep.includes('adalah Template resmi BPS') &&
-    guidedPhaseDisseminate.includes('not a claim of official GSBPM'),
-  'Disseminate prep must ground Hal. 52–57 and avoid publication/approval claims',
-)
-assert(
-  guidedPhaseDisseminate.includes("pdfPage: '52–57'") &&
-    !/disseminate-7\.6[\s\S]{0,250}pdfPage/.test(guidedPhaseDisseminate),
-  'Disseminate cards must use Hal. 52–57; 7.6 must not claim a PDF page',
-)
-assert(
-  collectSourceMap.includes('Guided Planning Slice 10') &&
-    collectSourceMap.includes('**52–57**') &&
-    collectSourceMap.includes('Persiapan Disseminate selesai dipelajari'),
-  'Source map must document Disseminate Slice 10',
-)
-
-// --- Slice 11 Evaluate phase ---
-const guidedEvaluatePrep = readFileSync(
-  join(root, 'src/content/guidedEvaluatePreparation.ts'),
-  'utf8',
-)
-const guidedPhaseEvaluate = readFileSync(
-  join(root, 'src/content/guidedPhaseEvaluate.ts'),
-  'utf8',
-)
-assert(
-  guidedPhasePage.includes('8 · Evaluate') &&
-    guidedPhasePage.includes('Bahan Evaluate Anda') &&
-    guidedPhasePage.includes('completePhase8Learning') &&
-    guidedPhasePage.includes('GUIDED_EVALUATE_CARDS') &&
-    guidedPhasePage.includes('Persiapan Evaluate selesai dipelajari') &&
-    guidedPhasePage.includes('Mode Terpandu selesai') &&
-    guidedPhasePage.includes('Periksa di Workspace') &&
-    guidedPhasePage.includes('penyelesaian Mode Terpandu StatPlan') &&
-    !guidedPhasePage.includes('Phase 9') &&
-    !guidedPhasePage.includes('phase9'),
-  'GuidedPhasePage must implement Evaluate + Guided Mode completion (no Phase 9)',
-)
-assert(
-  guidedEvaluatePrep.includes('Hal. 60–63') &&
-    guidedEvaluatePrep.includes('Format kerja StatPlan') &&
-    guidedEvaluatePrep.includes('Penjelasan sederhana') &&
-    guidedEvaluatePrep.includes('Persiapan Evaluate selesai dipelajari') &&
-    guidedEvaluatePrep.includes('bukan evaluasi kegiatan selesai') &&
-    guidedEvaluatePrep.includes('bukan kegiatan dinyatakan berhasil') &&
-    guidedEvaluatePrep.includes('Target waktu = tanggal rencana') &&
-    guidedEvaluatePrep.includes('Status rencana ≠ tindakan sudah selesai') &&
-    guidedEvaluatePrep.includes('Prioritas diisi pengguna') &&
-    !guidedEvaluatePrep.includes('skor evaluasi otomatis') &&
-    !guidedEvaluatePrep.includes('adalah Template resmi BPS') &&
-    guidedPhaseEvaluate.includes('not a claim of official GSBPM'),
-  'Evaluate prep must ground Hal. 60–63 and avoid scores/success/approval claims',
-)
-assert(
-  guidedPhaseEvaluate.includes("pdfPage: '60–63'") &&
-    !/evaluate-8\.3[\s\S]{0,250}pdfPage/.test(guidedPhaseEvaluate) &&
-    !/evaluate-8\.6[\s\S]{0,250}pdfPage/.test(guidedPhaseEvaluate),
-  'Evaluate cards must use Hal. 60–63 where applicable; 8.3/8.6 must not claim PDF pages',
-)
-assert(
-  !guidedEvaluatePrep.includes('evaluation score') &&
-    !guidedEvaluatePrep.includes('KPI') &&
-    !guidedPhaseEvaluate.includes('lulus evaluasi') &&
-    !guidedPhasePage.includes('sudah dilaksanakan secara resmi') &&
-    guidedPhasePage.includes('bukan bahwa kegiatan statistik'),
-  'No fake evaluation scores or action-completion claims; Guided completion wording is honest',
-)
-assert(
-  collectSourceMap.includes('Guided Planning Slice 11') &&
-    collectSourceMap.includes('**60–63**') &&
-    collectSourceMap.includes('Persiapan Evaluate selesai dipelajari') &&
-    collectSourceMap.includes('No Phase 9'),
-  'Source map must document Evaluate Slice 11',
-)
-
-assert(
-  guidedPhasePage.includes('Review StatPlan') &&
-    guidedPhasePage.includes('bukan persetujuan resmi BPS'),
-  'Guided completion includes Review StatPlan (not BPS approval)',
-)
-
-const guidedNeedCards = readFileSync(join(root, 'src/content/guidedPhaseNeed.ts'), 'utf8')
-assert(
-  guidedNeedCards.includes("mappingKind: 'gsbpm'") &&
-    guidedNeedCards.includes('Identifikasi Kebutuhan') &&
-    guidedNeedCards.includes('Konsultasi & Konfirmasi Kebutuhan'),
-  'Need cards use official GSBPM titles + mappingKind',
-)
-assert(
-  readFileSync(join(root, 'src/features/planner/guided/GuidedLearningCard.tsx'), 'utf8').includes(
-    'Panduan StatPlan',
-  ) &&
-    readFileSync(join(root, 'src/content/guidedPhaseEvaluate.ts'), 'utf8').includes(
-      "mappingKind: 'statplan'",
-    ) &&
-    readFileSync(join(root, 'src/content/guidedPhaseEvaluate.ts'), 'utf8').includes('SP-E'),
-  'StatPlan-only cards labeled Panduan StatPlan / SP-* (not invented official codes)',
+  (inventory.match(/^\| \d\.\d /gm) ?? []).length === 44,
+  'Source inventory must list all 44 subprocesses',
 )
 
 console.log('QA static checks:', failures.length === 0 ? 'PASS' : 'FAIL')

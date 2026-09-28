@@ -5,6 +5,12 @@ import { Card, Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { HelpTip } from '@/components/ui/HelpTip'
 import { cn } from '@/lib/utils'
+import { VALIDATION_GUIDANCE } from '@/content/validationGuidance'
+
+/** Prefer the specific review title over generic “Wajib dilengkapi”. */
+function stepTitle(s: { id: string; title: string }) {
+  return VALIDATION_GUIDANCE[s.id]?.title ?? s.title
+}
 
 const tabLabel: Record<WorkspaceTabId, string> = {
   workflow: 'Alur kerja',
@@ -28,9 +34,9 @@ function focusForStep(id: string, tab: WorkspaceTabId): string | undefined {
 }
 
 function priorityLabel(priority: 'wajib' | 'disarankan' | 'selesai') {
-  if (priority === 'wajib') return 'Wajib'
+  if (priority === 'wajib') return 'Perlu dilengkapi'
   if (priority === 'selesai') return 'Siap'
-  return 'Disarankan'
+  return 'Perlu ditinjau'
 }
 
 export function NextStepsCard({
@@ -55,7 +61,7 @@ export function NextStepsCard({
       )}
     >
       <div className="mb-1 flex flex-wrap items-center gap-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-600">
+        <p className="t-label">
           {ready ? 'Siap ekspor' : 'Langkah berikutnya'}
         </p>
         <HelpTip topic="how_to" />
@@ -72,7 +78,7 @@ export function NextStepsCard({
         </Badge>
       </div>
       <h2 className="text-base font-semibold tracking-tight text-ink-950 sm:text-lg">
-        {primary.title}
+        {stepTitle(primary)}
       </h2>
       <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-ink-700">{primary.detail}</p>
       <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -85,7 +91,7 @@ export function NextStepsCard({
           Buka {tabLabel[primary.tab]}
         </Button>
         <Button size="sm" variant="ghost" onClick={() => onGoTab('export')}>
-          Semua persyaratan
+          Lihat tinjauan lengkap
         </Button>
       </div>
       {rest.length > 0 ? (
@@ -97,7 +103,7 @@ export function NextStepsCard({
             >
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-sm text-ink-900">{s.title}</span>
+                  <span className="text-sm font-medium text-ink-900">{stepTitle(s)}</span>
                   <Badge
                     tone={
                       s.priority === 'wajib'

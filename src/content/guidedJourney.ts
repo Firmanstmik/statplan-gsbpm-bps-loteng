@@ -68,10 +68,36 @@ export function pickOutcomeExample(story: string): OutcomeExamplePack {
   return OUTCOME_EXAMPLE_PACKS.find((p) => p.match(story)) ?? OUTCOME_EXAMPLE_PACKS[OUTCOME_EXAMPLE_PACKS.length - 1]!
 }
 
-export function deriveProjectName(story: string): string {
+const ACTIVITY_PREFIX: Record<string, string> = {
+  survei: 'Survei',
+  sensus: 'Pendataan',
+  kompromin: 'Kompilasi',
+}
+
+/**
+ * Deterministic activity title from the intake story, e.g.
+ * "Saya ingin mengetahui kepuasan masyarakat terhadap pelayanan perizinan." (survei)
+ * → "Survei kepuasan masyarakat terhadap pelayanan perizinan".
+ * Falls back to the capitalised story when it does not follow the "Saya ingin …" shape.
+ */
+export function deriveProjectName(story: string, jenis?: string | null): string {
   const clean = story.trim().replace(/\s+/g, ' ')
   if (!clean) return 'Kegiatan statistik baru'
-  const capped = clean.charAt(0).toUpperCase() + clean.slice(1)
+  const match = clean.match(
+    /^saya\s+(?:ingin|mau|akan|perlu)\s+(?:mengetahui|memahami|melihat|mengukur|menilai|mendata|menyusun|mengumpulkan|menghitung|memetakan)\s+(.+)$/i,
+  )
+  let title: string
+  if (match) {
+    const object = match[1]!
+      .replace(/[.!?]+$/, '')
+      .replace(/\s+(untuk|agar|supaya|yang sudah|guna)\s+.*$/i, '')
+      .trim()
+    const prefix = (jenis && ACTIVITY_PREFIX[jenis]) || 'Kegiatan statistik'
+    title = `${prefix} ${object}`
+  } else {
+    title = clean.replace(/[.!?]+$/, '')
+  }
+  const capped = title.charAt(0).toUpperCase() + title.slice(1)
   if (capped.length <= 72) return capped
   return `${capped.slice(0, 69).trim()}…`
 }

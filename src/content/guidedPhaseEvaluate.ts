@@ -1,229 +1,128 @@
 /**
- * Mode Terpandu — Evaluate learning cards (Slice 11).
+ * Mode Terpandu — Evaluasi (Evaluate) learning cards.
+ * Three official subprocesses, Materi Proses Bisnis Hal. 60–63.
  * Educational + preparation only. Does NOT score, judge, or certify activities.
- *
- * Card numbering (8.1–8.6) is StatPlan learning organization of Evaluate concepts,
- * not a claim of official GSBPM Evaluate sub-process codes.
  */
-import type { GuidedLearningCard } from '@/content/guidedPhaseNeed'
+import type { GuidedLearningCard, GuidedPhaseIntro } from '@/content/guidedPhaseNeed'
+import { GSBPM_FLEXIBLE_NOTE } from '@/content/guidedPhaseNeed'
 
-export const EVALUATE_INTRO = {
-  phaseId: 'evaluate' as const,
-  title: 'Evaluate',
-  question:
-    'Apa yang perlu dikumpulkan untuk mengevaluasi kegiatan, apa yang perlu diperbaiki, dan apa yang perlu direncanakan berikutnya?',
+export const EVALUATE_INTRO: GuidedPhaseIntro = {
+  phaseId: 'evaluate',
+  title: 'Evaluasi',
+  officialTitle: 'Evaluate (Evaluasi)',
+  question: 'Apa yang dipelajari dari kegiatan ini, dan apa yang diperbaiki pada siklus berikutnya?',
   explanation:
-    'Pada tahap ini, Anda menyiapkan cara mengumpulkan masukan, meninjau pelaksanaan, dan merencanakan perbaikan — tanpa menilai skor atau menyatakan kegiatan berhasil/gagal.',
-  gsbpmNote:
-    'Ini adalah mode panduan StatPlan. GSBPM bersifat fleksibel; Anda dapat kembali dan menyesuaikan langkah sebelumnya. Mode Terpandu bukan urutan wajib GSBPM.',
+    'Pada tahap ini bahan evaluasi dari seluruh fase dihimpun, dianalisis menjadi laporan evaluasi, lalu disepakati rencana tindak lanjutnya.',
+  gsbpmNote: GSBPM_FLEXIBLE_NOTE,
+  pdfRange: 'Hal. 60–63',
+  outputs: [
+    'Dokumentasi Rapat/Diskusi Penyusunan Rencana Tindak Lanjut dan aksi perbaikan siklus berikutnya',
+    'Tingkat kepuasan pengguna data',
+  ],
+  outputsPage: 60,
 }
 
 export const GUIDED_EVALUATE_CARDS: GuidedLearningCard[] = [
   {
-    id: 'evaluate-8.1',
+    id: 'gsbpm-8.1',
     code: '8.1',
     mappingKind: 'gsbpm',
     officialTitle: 'Menghimpun Bahan Evaluasi',
-    title: 'Mengumpulkan masukan',
-    apa: 'Evaluasi dimulai dengan merencanakan masukan apa yang perlu dikumpulkan. Mode Terpandu membantu merencanakan pengumpulan — bukan menjalankan survei umpan balik.',
-    contoh:
-      'Bahan evaluasi: feedback, paradata, metrics, staff feedback — sebagai rencana, bukan data yang sudah terkumpul di StatPlan.',
+    title: 'Mengumpulkan bahan evaluasi',
+    apa: 'Bahan evaluasi dikumpulkan dan disusun agar siap diproses tim evaluasi. Pengumpulannya bisa manual atau otomatis, dan sebaiknya berkelanjutan di setiap tahapan — bukan hanya di akhir.',
+    materiPoints: [
+      'Mengumpulkan dan menyusun bahan evaluasi agar siap untuk diproses oleh tim evaluasi.',
+      'Pengumpulan bahan-bahan evaluasi dapat dilakukan secara manual atau otomatis serta dilakukan secara berkelanjutan pada setiap tahapan.',
+      'Mengumpulkan masukan evaluasi dari seluruh fase (Hal. 60).',
+    ],
+    pdfPage: 61,
+    contoh: 'Materi Hal. 60 menyebut empat sumber masukan evaluasi (di bawah).',
     contohClass: 'A',
-    pdfPage: '60–63',
     materiExamples: [
-      { title: 'Feedback pengguna', kind: 'other', note: 'Masukan dari pengguna hasil.' },
-      { title: 'Paradata', kind: 'other', note: 'Catatan proses pelaksanaan (bila relevan).' },
-      { title: 'Metrics', kind: 'other', note: 'Ukuran proses/hasil yang sudah disepakati.' },
-      { title: 'Staff feedback', kind: 'other', note: 'Catatan dari pelaksana/staf.' },
-    ],
-    materiLesson:
-      'Rencanakan sumber masukan sebelum menilai. StatPlan tidak mengumpulkan umpan balik otomatis.',
-    lessonPoints: [
-      'Siapkan beragam sumber masukan — bukan hanya satu jenis.',
-      'Ini rencana menghimpun bahan, bukan hasil evaluasi jadi.',
-      'Jangan mengisi angka evaluasi fiktif.',
-    ],
-    templateTitle: 'Rencana pengumpulan masukan',
-    templateFields: [
-      { label: 'Sumber masukan' },
-      { label: 'Hal yang ingin dikumpulkan' },
-      { label: 'Cara memperoleh masukan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Catatan sumber masukan', 'Rencana cara memperoleh masukan'],
-    buktiClass: 'C',
-  },
-  {
-    id: 'evaluate-8.2',
-    code: 'SP-E2',
-    mappingKind: 'statplan',
-    title: 'Menentukan hal yang dievaluasi',
-    apa: 'Tentukan aspek kegiatan yang ingin ditinjau. Ini daftar fokus evaluasi — bukan skor otomatis dan bukan penilaian resmi.',
-    contoh:
-      'Bandingkan hasil dengan target — struktur evaluasi, bukan skor palsu.',
-    contohClass: 'A',
-    pdfPage: '60–63',
-    contohDetail: [
-      { label: 'Aspek yang dievaluasi', value: 'Ketepatan waktu · Kelengkapan output · Kejelasan produk' },
-      { label: 'Alasan', value: 'Aspek ini memengaruhi apakah hasil dapat dipakai pengguna.' },
       {
-        label: 'Informasi yang diperlukan',
-        value: 'Catatan jadwal vs realisasi · Daftar output · Masukan pengguna',
+        title: 'Sumber masukan evaluasi',
+        kind: 'other',
+        pdfPage: 60,
+        items: ['Umpan balik pengguna', 'Paradata', 'Metrik sistem', 'Masukan staf'],
       },
     ],
+    contohDetail: [
+      { label: 'Umpan balik pengguna', value: 'Tanggapan DPMPTSP atas laporan ringkas SKM' },
+      { label: 'Paradata', value: 'Durasi wawancara dan jumlah kunjungan ulang (4.4)' },
+      { label: 'Metrik sistem', value: 'Jumlah Error validasi per putaran (5.3)' },
+      { label: 'Masukan staf', value: 'Catatan petugas tentang kendala di loket' },
+      { label: 'Cara menghimpun', value: 'Dicatat berkelanjutan sejak tahap 1, dirangkum di akhir' },
+    ],
     lessonPoints: [
-      'Tentukan aspek sebelum menulis temuan.',
-      'Evaluasi membandingkan hasil dengan target/rencana.',
-      'StatPlan tidak memberi skor otomatis.',
+      'Bahan evaluasi dihimpun dari seluruh fase — bukan hanya dari hasil akhir.',
+      'Empat sumber materi: umpan balik pengguna, paradata, metrik sistem, masukan staf.',
+      'Mulai mencatat sejak awal agar bahan tidak hilang.',
     ],
-    templateTitle: 'Aspek yang dievaluasi',
-    templateFields: [
-      { label: 'Aspek yang dievaluasi' },
-      { label: 'Alasan' },
-      { label: 'Informasi yang diperlukan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Daftar aspek evaluasi', 'Catatan informasi yang diperlukan'],
-    buktiClass: 'C',
+    buktiClass: 'A',
+    buktiPdfPage: 60,
   },
   {
-    id: 'evaluate-8.3',
+    id: 'gsbpm-8.2',
     code: '8.2',
     mappingKind: 'gsbpm',
     officialTitle: 'Melakukan Evaluasi',
-    title: 'Menilai pelaksanaan dan hasil',
-    apa: 'Siapkan catatan observasi untuk meninjau pelaksanaan dan hasil. Ini persiapan evaluasi — bukan penilaian otomatis dan bukan kesimpulan berhasil/gagal.',
+    title: 'Menganalisis dan menyusun laporan evaluasi',
+    apa: 'Bahan evaluasi dianalisis dan dibandingkan dengan target, lalu disusun menjadi laporan evaluasi yang memuat setiap permasalahan, ketidaksesuaian kinerja dengan harapan, dan — bila perlu — rekomendasi perubahan.',
+    materiPoints: [
+      'Setelah bahan evaluasi dikumpulkan, bahan tersebut dianalisis dan disusun menjadi laporan evaluasi.',
+      'Laporan evaluasi yang disusun harus memuat setiap permasalahan yang terjadi pada iterasi tahapan penyelenggaraan kegiatan statistik dan ketidaksesuaian antara kinerja dan harapan.',
+      'Selain itu, jika diperlukan, laporan evaluasi juga memuat rekomendasi perubahan.',
+      'Menganalisis hasil evaluasi dan membandingkan dengan target (Hal. 60).',
+    ],
+    pdfPage: 62,
     contoh:
-      'Struktur observasi: berjalan baik · kendala · temuan — diisi sendiri, tanpa hasil evaluasi palsu.',
+      'SKM: laporan evaluasi mencatat target vs realisasi per tahap, masalah yang terjadi, dan rekomendasi perubahan.',
     contohClass: 'C',
     contohDetail: [
-      {
-        label: 'Hal yang berjalan baik (struktur)',
-        value: 'Tuliskan sendiri apa yang sesuai rencana — jangan mengarang angka keberhasilan.',
-      },
-      {
-        label: 'Kendala (struktur)',
-        value: 'Catat hambatan pelaksanaan atau kualitas bahan.',
-      },
-      {
-        label: 'Temuan vs target',
-        value: 'Bandingkan realisasi dengan target yang sudah disepakati.',
-      },
-      {
-        label: 'Dampak terhadap kegiatan',
-        value: 'Jelaskan dampak singkat terhadap output/pengguna.',
-      },
+      { label: 'Target vs realisasi', value: 'Pengumpulan: target September, selesai pertengahan Oktober' },
+      { label: 'Permasalahan', value: 'Antrean panjang membuat responden menolak wawancara' },
+      { label: 'Ketidaksesuaian', value: 'Tingkat respon lebih rendah dari rencana' },
+      { label: 'Rekomendasi perubahan', value: 'Wawancara dipindah ke area tunggu setelah layanan selesai' },
     ],
     lessonPoints: [
-      'Gunakan struktur observasi, bukan skor otomatis.',
-      'Bandingkan dengan target — jangan mengarang hasil statistik.',
-      'StatPlan tidak menilai berhasil/gagal untuk Anda.',
+      'Evaluasi selalu membandingkan kinerja dengan target yang sudah ditetapkan.',
+      'Laporan memuat setiap masalah — bukan hanya keberhasilan.',
+      'StatPlan tidak memberi skor berhasil/gagal; isi berdasarkan bahan Anda.',
     ],
-    templateTitle: 'Persiapan evaluasi (observasi)',
-    templateFields: [
-      { label: 'Hal yang berjalan baik' },
-      { label: 'Kendala' },
-      { label: 'Temuan' },
-      { label: 'Dampak terhadap kegiatan' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Catatan observasi pelaksanaan', 'Catatan temuan (input Anda)'],
     buktiClass: 'C',
   },
   {
-    id: 'evaluate-8.4',
-    code: 'SP-E4',
-    mappingKind: 'statplan',
-    title: 'Mengidentifikasi perbaikan',
-    apa: 'Ubah observasi menjadi usulan perbaikan. Prioritas diisi oleh Anda — StatPlan tidak menentukan prioritas yang “benar”.',
-    contoh:
-      'Dari temuan ke usulan perbaikan — struktur, bukan rekomendasi resmi.',
-    contohClass: 'A',
-    pdfPage: '60–63',
-    contohDetail: [
-      { label: 'Masalah / temuan', value: 'Keterlambatan jadwal pada satu tahap' },
-      { label: 'Usulan perbaikan', value: 'Perjelas alur komunikasi dan titik peninjauan mingguan' },
-      { label: 'Prioritas', value: 'Diisi sendiri (tinggi / sedang / rendah)' },
-      { label: 'Penanggung jawab', value: 'Unit/orang yang Anda tetapkan' },
-    ],
-    lessonPoints: [
-      'Setiap temuan idealnya punya usulan perbaikan.',
-      'Prioritas diisi pengguna — bukan oleh StatPlan.',
-      'Ini usulan kerja, bukan approval.',
-    ],
-    templateTitle: 'Usulan perbaikan',
-    templateFields: [
-      { label: 'Masalah / temuan' },
-      { label: 'Usulan perbaikan' },
-      { label: 'Prioritas' },
-      { label: 'Penanggung jawab' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Daftar usulan perbaikan', 'Catatan prioritas (rencana Anda)'],
-    buktiClass: 'C',
-  },
-  {
-    id: 'evaluate-8.5',
+    id: 'gsbpm-8.3',
     code: '8.3',
     mappingKind: 'gsbpm',
     officialTitle: 'Menyepakati Rencana Tindak Lanjut',
-    title: 'Rencana tindak lanjut',
-    apa: 'Susun rencana aksi dari usulan perbaikan. Target waktu adalah tanggal rencana — bukan bukti bahwa tindakan sudah selesai.',
+    title: 'Menyepakati rencana tindak lanjut',
+    apa: 'Menyusun dan mendokumentasikan rencana aksi dari hasil evaluasi, menyepakati prioritas dan penanggung jawab, lalu mendapatkan persetujuan — sebagai masukan siklus berikutnya.',
+    materiPoints: [
+      'Menyusun dan mendokumentasikan rencana aksi.',
+      'Mendapatkan persetujuan terhadap rencana aksi yang telah disusun.',
+      'Menyepakati prioritas dan penanggung jawab (Hal. 60).',
+      'Menentukan mekanisme pemantauan dampak perbaikan sebagai masukan siklus berikutnya (Hal. 60).',
+    ],
+    pdfPage: 63,
     contoh:
-      'Struktur tindak lanjut: tindakan · prioritas · penanggung jawab · monitoring.',
-    contohClass: 'A',
-    pdfPage: '60–63',
-    contohDetail: [
-      { label: 'Tindakan', value: 'Perbarui daftar peran dan titik peninjauan jadwal' },
-      { label: 'Tujuan', value: 'Mengurangi keterlambatan koordinasi' },
-      { label: 'Penanggung jawab', value: 'Koordinator kegiatan (rencana Anda)' },
-      { label: 'Target waktu', value: 'Tanggal rencana — bukan bukti selesai' },
-      { label: 'Monitoring', value: 'Cek status di tinjauan berikutnya (Direncanakan)' },
-    ],
-    lessonPoints: [
-      'Tindak lanjut memuat tindakan, penanggung jawab, dan monitoring.',
-      'Status “Direncanakan” ≠ sudah dilaksanakan.',
-      'Jangan membuat hasil evaluasi palsu sebagai bukti.',
-    ],
-    templateTitle: 'Rencana tindak lanjut',
-    templateFields: [
-      { label: 'Tindakan' },
-      { label: 'Tujuan' },
-      { label: 'Penanggung jawab' },
-      { label: 'Target waktu' },
-      { label: 'Status rencana' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Daftar tindakan rencana', 'Catatan target waktu (rencana)'],
-    buktiClass: 'C',
-  },
-  {
-    id: 'evaluate-8.6',
-    code: 'SP-E6',
-    mappingKind: 'statplan',
-    title: 'Catatan finalisasi Evaluate',
-    apa: 'Tinjau bahan Evaluate sebagai draf perencanaan evaluasi dan tindak lanjut. Persiapan Evaluate selesai dipelajari — bukan evaluasi kegiatan selesai, dan bukan kegiatan dinyatakan berhasil.',
-    contoh: 'Ringkasan persiapan Evaluate — dibuat StatPlan.',
+      'SKM: rencana aksi dibahas dalam rapat, disepakati prioritas dan penanggung jawabnya, lalu disetujui pimpinan.',
     contohClass: 'C',
     contohDetail: [
-      { label: 'Masukan', value: 'Sumber masukan sudah direncanakan' },
-      { label: 'Aspek', value: 'Fokus evaluasi sudah ditentukan' },
-      { label: 'Observasi', value: 'Struktur catatan siap diisi' },
-      { label: 'Perbaikan', value: 'Usulan perbaikan sudah disusun' },
-      { label: 'Tindak lanjut', value: 'Rencana aksi & monitoring ada' },
+      { label: 'Tindakan', value: 'Pindahkan wawancara ke area tunggu setelah layanan' },
+      { label: 'Prioritas', value: 'Tinggi — memengaruhi tingkat respon' },
+      { label: 'Penanggung jawab', value: 'Koordinator SKM' },
+      { label: 'Target waktu', value: 'Sebelum SKM periode berikutnya (rencana)' },
+      { label: 'Pemantauan dampak', value: 'Bandingkan tingkat respon periode berikutnya' },
+      { label: 'Persetujuan', value: 'Notulen rapat RTL ditandatangani pimpinan' },
     ],
     lessonPoints: [
-      'Ini ringkasan pembelajaran — bukan sertifikasi berhasil.',
-      'Catat hal yang masih terbuka untuk siklus berikutnya.',
+      'Rencana aksi harus disepakati dan disetujui — bukan sekadar daftar ide.',
+      'Setiap aksi punya prioritas, penanggung jawab, dan cara memantau dampaknya.',
+      'Hasilnya menjadi masukan tahap Identifikasi Kebutuhan pada siklus berikutnya.',
     ],
-    templateTitle: 'Ringkasan finalisasi Evaluate',
-    templateFields: [
-      { label: 'Catatan finalisasi' },
-      { label: 'Hal yang masih terbuka' },
-    ],
-    buktiIntro: 'Yang dapat disiapkan',
-    buktiItems: ['Ringkasan persiapan evaluasi', 'Daftar catatan terbuka'],
-    buktiClass: 'C',
+    buktiClass: 'A',
+    buktiPdfPage: 60,
   },
 ]
 

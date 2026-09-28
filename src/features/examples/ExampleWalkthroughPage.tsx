@@ -1,931 +1,665 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft2, ArrowRight2, Lock, TickCircle } from 'iconsax-react'
+import { useId, useMemo, useRef, useState, type ReactNode } from 'react'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { ArrowDown2, ArrowLeft2, ArrowRight2, ArrowUp2, ShieldTick } from 'iconsax-react'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
+import { InfoGrid, SectionHeader, SourceNote } from '@/components/ui/Editorial'
 import {
-  EXAMPLE_WALKTHROUGH_STEPS,
+  EXAMPLE_JOURNEYS,
   getExampleBySlug,
-  sourceBadgeLabel,
+  type ExampleJourney,
   type ExamplePreparePhase,
-  type PrepareItem,
-  type TemplateCard,
 } from '@/content/exampleJourney'
-import {
-  allocatePhaseDates,
-  formatDateID,
-  validateProjectDateRange,
-} from '@/content/planningTimeline'
+import { GUIDED_PHASES } from '@/content/guidedCards'
+import { MATERI_JADWAL_HAL_23 } from '@/content/guidedPhaseDesign'
 import { cn, jenisLabel } from '@/lib/utils'
 
-type Step = 1 | 2 | 3 | 4
+/**
+ * Contoh kegiatan — editorial case study.
+ * Read-only learning surface: never mutates demo projects, checklist, or export.
+ * “Mulai dari contoh ini” opens the intake with a copy of the example (/app/new?from=slug).
+ */
 
-function Progress({ current }: { current: Step }) {
-  return (
-    <nav aria-label="Tahap contoh" className="space-y-3">
-      <p className="text-sm text-ink-700 sm:hidden">
-        Langkah {current} dari 4
-        <span className="font-semibold text-ink-950">
-          {' '}
-          · {EXAMPLE_WALKTHROUGH_STEPS[current - 1]?.label}
-        </span>
-      </p>
-      <div className="flex gap-1.5 sm:hidden" aria-hidden>
-        {EXAMPLE_WALKTHROUGH_STEPS.map((s) => (
-          <div
-            key={s.id}
-            className={cn(
-              'h-2 flex-1 rounded-full',
-              s.id <= current ? 'bg-ink-900' : 'bg-ink-200',
-            )}
-          />
-        ))}
-      </div>
-      <ol className="hidden list-none gap-2 sm:grid sm:grid-cols-4">
-        {EXAMPLE_WALKTHROUGH_STEPS.map((s) => {
-          const active = s.id === current
-          const done = s.id < current
-          return (
-            <li key={s.id} aria-current={active ? 'step' : undefined}>
-              <div
-                className={cn(
-                  'rounded-xl px-3 py-2.5 text-center text-sm ring-1',
-                  active
-                    ? 'bg-ink-900 font-semibold text-white ring-ink-900'
-                    : done
-                      ? 'bg-ink-100 font-medium text-ink-800 ring-ink-900/10'
-                      : 'bg-white text-ink-500 ring-border',
-                )}
-              >
-                <span className="block text-[10px] uppercase tracking-wide opacity-70">
-                  {String(s.id).padStart(2, '0')}
-                </span>
-                {s.label}
-              </div>
-            </li>
-          )
-        })}
-      </ol>
-    </nav>
-  )
+type MateriVisual = {
+  key: string
+  title: string
+  page: number | string
+  src: string
+  width?: number
+  height?: number
+  alt: string
+  lesson?: string
+  usedIn: string
+  phaseIndex: number
 }
 
-function SourceBadge({
-  sourceType,
-  pdfPage,
-}: {
-  sourceType: 'pdf' | 'illustrative'
-  pdfPage?: number | string
-}) {
+function collectMateriVisuals(): MateriVisual[] {
+  const out: MateriVisual[] = []
+  GUIDED_PHASES.forEach((phase, phaseIndex) => {
+    for (const card of phase.cards) {
+      for (const ex of card.materiExamples ?? []) {
+        if (!ex.imageSrc) continue
+        out.push({
+          key: ex.imageSrc,
+          title: ex.title,
+          page: ex.pdfPage ?? card.pdfPage ?? '',
+          src: ex.imageSrc,
+          width: ex.imageWidth,
+          height: ex.imageHeight,
+          alt: ex.imageAlt ?? ex.title,
+          lesson: card.materiLesson,
+          usedIn: `${card.code} ${card.officialTitle ?? card.title}`,
+          phaseIndex,
+        })
+      }
+    }
+  })
+  return out
+}
+
+/** Pull “Masalah / Mengapa / Pengguna / Informasi” from the example’s own 1.1 rows (Type C). */
+function caseFacts(example: ExampleJourney) {
+  const rows = example.prepareItems[0]?.contohDetail ?? []
+  const find = (re: RegExp) => rows.find((r) => re.test(r.label))?.value
+  return {
+    fullTitle: find(/^Kegiatan/) ?? example.title,
+    masalah: find(/^Masalah/) ?? example.whatToKnow,
+    mengapa: find(/^Mengapa/) ?? example.whyConducted,
+    pengguna: find(/^Pengguna/) ?? '—',
+    informasi: find(/^Informasi/) ?? example.plannedResult,
+  }
+}
+
+function SourcePill({ children }: { children: string }) {
   return (
-    <span
-      className={cn(
-        'inline-flex max-w-full rounded-lg px-2 py-1 text-[11px] font-medium ring-1',
-        sourceType === 'pdf'
-          ? 'bg-bps-blue/10 text-bps-blue ring-bps-blue/25'
-          : 'bg-ink-100 text-ink-700 ring-ink-900/10',
-      )}
-    >
-      {sourceBadgeLabel({ sourceType, pdfPage })}
+    <span className="inline-flex items-center rounded-md border border-border bg-surface px-2 py-1 text-[11px] font-medium text-ink-700">
+      {children}
     </span>
   )
 }
 
-function TemplatePreview({ template }: { template: TemplateCard }) {
-  const hasFields = Boolean(template.fields && template.fields.length > 0)
+function ZoomFigure({ visual }: { visual: MateriVisual }) {
+  const [zoomed, setZoomed] = useState(false)
   return (
-    <div className="rounded-xl border border-dashed border-ink-900/15 bg-white px-3.5 py-3">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-500">
-        {template.sourceType === 'illustrative' || hasFields
-          ? 'Format kerja StatPlan'
-          : 'Template'}
-      </p>
-      <p className="mt-1 text-sm font-semibold text-ink-950">{template.title}</p>
-      <p className="mt-1 text-sm leading-relaxed text-ink-700">{template.description}</p>
-      <div className="mt-2 flex flex-wrap items-center gap-2">
-        <SourceBadge sourceType={template.sourceType} pdfPage={template.pdfPage} />
-        {hasFields ? (
-          <span className="text-[11px] text-ink-500">Preview format kerja</span>
-        ) : template.status === 'coming_soon' ? (
-          <span className="text-[11px] text-ink-500">
-            Struktur format sedang disusun — bukan unduhan template resmi
+    <figure className="m-0 flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface">
+      <div className="space-y-1.5 border-b border-border px-4 py-3.5">
+        <figcaption className="t-card-title">{visual.title}</figcaption>
+        <SourceNote kind="A" page={visual.page} />
+        <p className="text-xs text-ink-500">Dipakai pada subproses {visual.usedIn}</p>
+      </div>
+      <div className={cn('bg-surface-muted p-3', zoomed ? 'overflow-x-auto' : 'overflow-hidden')}>
+        <img
+          src={visual.src}
+          alt={visual.alt}
+          width={visual.width}
+          height={visual.height}
+          loading="lazy"
+          decoding="async"
+          className={cn(
+            'mx-auto block h-auto rounded-md bg-white',
+            zoomed ? 'w-[min(1100px,260%)] max-w-none' : 'max-h-72 w-full object-contain',
+          )}
+        />
+      </div>
+      <div className="flex flex-1 flex-col gap-3 px-4 py-3.5">
+        {visual.lesson ? (
+          <p className="t-support">
+            <span className="font-semibold text-ink-900">Contoh ini menunjukkan: </span>
+            {visual.lesson}
+          </p>
+        ) : null}
+        <div className="mt-auto flex items-center justify-between gap-2 text-[11px] text-ink-500">
+          <span>Gambar asli — tidak digambar ulang</span>
+          <button
+            type="button"
+            className="focus-ring rounded px-1 font-semibold text-ink-800 underline-offset-2 hover:underline"
+            aria-pressed={zoomed}
+            onClick={() => setZoomed((z) => !z)}
+          >
+            {zoomed ? 'Perkecil' : 'Perbesar'}
+          </button>
+        </div>
+      </div>
+    </figure>
+  )
+}
+
+function PhaseLesson({
+  phase,
+  index,
+  open,
+  onToggle,
+  hasVisuals,
+  schedule,
+}: {
+  phase: ExamplePreparePhase
+  index: number
+  open: boolean
+  onToggle: () => void
+  hasVisuals: boolean
+  schedule?: ReactNode
+}) {
+  const reduce = useReducedMotion()
+  const panelId = useId()
+  const [showDetail, setShowDetail] = useState(false)
+  const official = GUIDED_PHASES[index]
+  const items = phase.items
+  const overview = items.length === 1 ? items[0] : undefined
+  const lessons = Array.from(new Set(items.flatMap((it) => it.lessonPoints ?? []))).slice(0, 4)
+  const num = String(index + 1).padStart(2, '0')
+
+  return (
+    <li data-phase-lesson={phase.phaseId} id={`fase-${index + 1}`} className="scroll-mt-24 border-t border-border first:border-t-0">
+      <h3>
+        <button
+          type="button"
+          className="focus-ring group flex w-full items-start gap-4 rounded-xl py-5 text-left sm:gap-6"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={onToggle}
+        >
+          <span className="font-display text-lg tabular-nums text-ink-400 sm:text-xl" aria-hidden>
+            {num}
           </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-500">
+              {official?.intro.officialTitle.split(' (')[0]} · {official?.cards.length} subproses
+            </span>
+            <span className="mt-1 block font-display text-lg font-semibold leading-snug text-ink-950 sm:text-xl">
+              {phase.titleId}
+            </span>
+            <span className="t-support mt-1 block">{phase.intro}</span>
+          </span>
+          <span
+            className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-ink-600 transition-colors group-hover:border-ink-400"
+            aria-hidden
+          >
+            {open ? (
+              <ArrowUp2 size={14} variant="Bold" color="currentColor" />
+            ) : (
+              <ArrowDown2 size={14} variant="Bold" color="currentColor" />
+            )}
+          </span>
+        </button>
+      </h3>
+      <AnimatePresence initial={false}>
+        {open ? (
+          <motion.div
+            id={panelId}
+            role="region"
+            aria-label={`Pelajari ${phase.titleId}`}
+            initial={reduce ? false : { height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={reduce ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="grid gap-8 pb-8 pl-0 sm:pl-12 lg:grid-cols-[minmax(0,1fr)_17rem]">
+              <div className="min-w-0 space-y-7">
+                <section>
+                  <p className="t-label">Mengapa penting</p>
+                  <p className="t-body mt-1.5">{phase.why}</p>
+                </section>
+
+                <section>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <p className="t-label">Contoh</p>
+                    <SourceNote kind="C" />
+                  </div>
+                  {overview ? (
+                    <>
+                      <p className="mt-2 text-[15px] leading-relaxed text-ink-900">{overview.contoh}</p>
+                      {overview.contohDetail?.length ? (
+                        <>
+                          <button
+                            type="button"
+                            className="focus-ring mt-2 rounded text-sm font-semibold text-ink-900 underline decoration-ink-300 underline-offset-4 hover:decoration-ink-900"
+                            aria-expanded={showDetail}
+                            onClick={() => setShowDetail((v) => !v)}
+                          >
+                            {showDetail ? 'Sembunyikan rincian contoh' : 'Lihat rincian contoh'}
+                          </button>
+                          {showDetail ? (
+                            <dl className="mt-3 divide-y divide-border rounded-xl border border-border bg-surface">
+                              {overview.contohDetail.map((row) => (
+                                <div
+                                  key={row.label}
+                                  className="grid gap-1 px-4 py-2.5 sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-4"
+                                >
+                                  <dt className="text-xs font-semibold text-ink-600">{row.label}</dt>
+                                  <dd className="whitespace-pre-line text-sm text-ink-900">{row.value}</dd>
+                                </div>
+                              ))}
+                            </dl>
+                          ) : null}
+                        </>
+                      ) : null}
+                    </>
+                  ) : (
+                    <ol className="mt-3 space-y-3">
+                      {items.map((it) => (
+                        <li key={it.id} className="rounded-xl border border-border bg-surface px-4 py-3">
+                          <p className="text-sm font-semibold text-ink-950">
+                            <span className="mr-1.5 tabular-nums text-ink-500">{it.subprocess}</span>
+                            {it.title}
+                          </p>
+                          <p className="t-support mt-1">{it.contoh}</p>
+                        </li>
+                      ))}
+                    </ol>
+                  )}
+                </section>
+
+                {lessons.length ? (
+                  <section>
+                    <p className="t-label">Yang bisa dipelajari</p>
+                    <ul className="mt-2 space-y-1.5">
+                      {lessons.map((l) => (
+                        <li key={l} className="flex gap-2.5 text-[15px] leading-relaxed text-ink-800">
+                          <span aria-hidden className="mt-2.5 h-1 w-3 shrink-0 rounded-full bg-accent" />
+                          <span>{l}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                ) : null}
+
+                {schedule ? <section>{schedule}</section> : null}
+              </div>
+
+              <aside className="space-y-5 lg:border-l lg:border-border lg:pl-6">
+                <div>
+                  <p className="t-label">Subproses resmi</p>
+                  <ol className="mt-2 space-y-1">
+                    {official?.cards.map((c) => (
+                      <li key={c.id} className="flex gap-2 text-sm leading-snug text-ink-800">
+                        <span className="w-7 shrink-0 tabular-nums text-ink-500">{c.code}</span>
+                        <span>{c.officialTitle}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <SourceNote kind="A" page={official?.intro.pdfRange.replace('Hal. ', '')} className="mt-3" />
+                </div>
+                <div>
+                  <p className="t-label">Bukti dukung</p>
+                  <p className="t-support mt-1.5">
+                    {overview
+                      ? overview.buktiDukung.replace(/^Yang biasanya disiapkan:\s*/i, '')
+                      : official?.intro.outputs.join(' · ')}
+                  </p>
+                </div>
+                {hasVisuals ? (
+                  <a
+                    href="#materi"
+                    className="focus-ring inline-flex items-center gap-1 rounded text-sm font-semibold text-ink-900 underline decoration-ink-300 underline-offset-4 hover:decoration-ink-900"
+                  >
+                    Lihat contoh asli dari materi
+                    <ArrowDown2 size={12} variant="Bold" color="currentColor" aria-hidden />
+                  </a>
+                ) : null}
+              </aside>
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </li>
+  )
+}
+
+
+function ScheduleBlock({ example }: { example: ExampleJourney }) {
+  const fromPdf = example.schedule.sourceType === 'pdf'
+  return (
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="t-label">Contoh jadwal</p>
+        {fromPdf ? (
+          <SourceNote kind="A" page={example.schedule.pdfPage} />
         ) : (
-          <span className="text-[11px] text-ink-500">Preview format</span>
+          <SourceNote kind="C" />
         )}
       </div>
-      {hasFields ? (
-        <dl className="mt-3 space-y-2 border-t border-ink-900/10 pt-3">
-          {template.fields!.map((f) => (
-            <div key={f.label}>
-              <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-600">
-                {f.label}
-              </dt>
-              <dd className="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-ink-900">
-                {f.example?.trim() ? f.example : '…'}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      ) : null}
-      {template.note ? (
-        <p className="mt-2 text-[11px] leading-relaxed text-ink-600">{template.note}</p>
-      ) : null}
-      <p className="mt-2 text-[11px] leading-relaxed text-ink-500">
-        Bukan template resmi BPS kecuali dilabeli sumber materi secara eksplisit. StatPlan
-        menampilkan format kerja di sini — tidak menyediakan unduhan template resmi.
-      </p>
-    </div>
-  )
-}
-
-function ContohBlock({ item }: { item: PrepareItem }) {
-  const [open, setOpen] = useState(false)
-  const hasDetail = Boolean(item.contohDetail && item.contohDetail.length > 0)
-  const hasLessons = Boolean(item.lessonPoints && item.lessonPoints.length > 0)
-  return (
-    <div className="space-y-2">
-      <div className="flex flex-wrap items-center gap-2">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-500">Contoh</p>
-        <SourceBadge sourceType={item.sourceType} pdfPage={item.pdfPage} />
-      </div>
-      <div className="rounded-xl bg-white px-3 py-2.5 ring-1 ring-ink-900/5">
-        <p className="text-sm font-medium leading-relaxed text-ink-950">{item.contoh}</p>
-        {hasDetail ? (
-          <div className="mt-2">
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              className="h-9 px-2 text-xs font-semibold text-ink-800"
-              aria-expanded={open}
-              onClick={() => setOpen((v) => !v)}
-            >
-              {open ? 'Sembunyikan contoh lengkap' : 'Lihat contoh lengkap'}
-            </Button>
-            {open ? (
-              <dl className="mt-2 space-y-2.5 border-t border-ink-900/10 pt-2.5">
-                {item.contohDetail!.map((row) => (
-                  <div key={row.label}>
-                    <dt className="text-[11px] font-semibold uppercase tracking-wide text-ink-600">
-                      {row.label}
-                    </dt>
-                    <dd className="mt-0.5 whitespace-pre-line text-sm leading-relaxed text-ink-900">
-                      {row.value}
-                    </dd>
-                  </div>
+      <div className="mt-2 overflow-x-auto rounded-xl border border-border bg-surface">
+        <table className="w-full min-w-[18rem] text-left text-sm">
+          <thead>
+            <tr className="border-b border-border text-[11px] uppercase tracking-wide text-ink-500">
+              <th scope="col" className="px-4 py-2 font-semibold">
+                {fromPdf ? 'Kegiatan' : 'Waktu'}
+              </th>
+              <th scope="col" className="px-4 py-2 font-semibold">
+                {fromPdf ? 'Waktu' : 'Kegiatan'}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {fromPdf
+              ? MATERI_JADWAL_HAL_23.rows.map((r) => (
+                  <tr key={r[0]} className="border-b border-border last:border-0">
+                    <td className="px-4 py-2 text-ink-900">{r[1]}</td>
+                    <td className="px-4 py-2 text-ink-700">{r[2]}</td>
+                  </tr>
+                ))
+              : example.schedule.months.map((m) => (
+                  <tr key={m.month} className="border-b border-border last:border-0">
+                    <td className="whitespace-nowrap px-4 py-2 text-ink-700">{m.month}</td>
+                    <td className="px-4 py-2 text-ink-900">{m.activities.join(' · ')}</td>
+                  </tr>
                 ))}
-              </dl>
-            ) : null}
-          </div>
-        ) : null}
+          </tbody>
+        </table>
       </div>
-      {hasLessons ? (
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-500">
-            Yang bisa dipelajari
-          </p>
-          <ul className="mt-1 list-disc space-y-1 pl-4 text-sm leading-relaxed text-ink-800">
-            {item.lessonPoints!.map((p) => (
-              <li key={p}>{p}</li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
+      <p className="t-support mt-2">{example.schedule.note}</p>
     </div>
-  )
-}
-
-function PrepareLearn({
-  items,
-  onPhaseComplete,
-}: {
-  items: PrepareItem[]
-  onPhaseComplete?: (complete: boolean) => void
-}) {
-  const [understood, setUnderstood] = useState<Set<string>>(() => new Set())
-  const [openId, setOpenId] = useState<string | null>(null)
-  const baseId = useId()
-  const panelRef = useRef<HTMLDivElement | null>(null)
-
-  const unlockedIndex = Math.min(understood.size, items.length - 1)
-  const allDone = items.length > 0 && items.every((i) => understood.has(i.id))
-
-  useEffect(() => {
-    onPhaseComplete?.(allDone)
-  }, [allDone, onPhaseComplete])
-
-  useEffect(() => {
-    setUnderstood(new Set())
-    setOpenId(null)
-  }, [items])
-
-  function canOpen(index: number) {
-    return index <= unlockedIndex || understood.has(items[index]!.id)
-  }
-
-  function toggle(id: string, index: number) {
-    if (!canOpen(index)) return
-    setOpenId((cur) => (cur === id ? null : id))
-  }
-
-  function markUnderstood(id: string) {
-    setUnderstood((prev) => new Set(prev).add(id))
-    setOpenId(null)
-  }
-
-  useEffect(() => {
-    if (openId && panelRef.current) panelRef.current.focus()
-  }, [openId])
-
-  return (
-    <div className="space-y-4">
-      <p className="rounded-xl bg-ink-100/80 px-3.5 py-3 text-sm leading-relaxed text-ink-800">
-        Urutan belajar: <strong>Apa?</strong> → <strong>Contoh</strong> →{' '}
-        <strong>Template</strong> → <strong>Bukti dukung</strong>. Tandai sudah memahami
-        setelah meninjau — bukan berarti kegiatan selesai atau disetujui BPS.
-      </p>
-      <ul className="space-y-2.5">
-        {items.map((item, index) => {
-          const open = openId === item.id
-          const done = understood.has(item.id)
-          const locked = !canOpen(index)
-          const regionId = `${baseId}-${item.id}`
-          return (
-            <li key={item.id}>
-              <button
-                type="button"
-                disabled={locked}
-                aria-expanded={open}
-                aria-controls={regionId}
-                aria-disabled={locked || undefined}
-                title={locked ? 'Buka item sebelumnya terlebih dahulu' : undefined}
-                onClick={() => toggle(item.id, index)}
-                className={cn(
-                  'focus-ring flex w-full min-h-12 items-center gap-3 rounded-2xl border px-4 py-3.5 text-left transition',
-                  locked
-                    ? 'cursor-not-allowed border-border/60 bg-ink-50/50 opacity-55'
-                    : open
-                      ? 'border-ink-900/20 bg-white shadow-sm'
-                      : 'border-border bg-white hover:border-ink-900/15 hover:bg-ink-50/70',
-                )}
-              >
-                <span
-                  className={cn(
-                    'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold',
-                    done
-                      ? 'bg-ink-900 text-white'
-                      : locked
-                        ? 'bg-ink-200 text-ink-400'
-                        : 'bg-ink-100 text-ink-500 ring-1 ring-ink-900/10',
-                  )}
-                  aria-hidden
-                >
-                  {done ? '✓' : locked ? '·' : '○'}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-semibold text-ink-950">{item.title}</span>
-                  <span className="mt-0.5 block text-xs text-ink-500">
-                    {item.subprocess}
-                    {locked
-                      ? ' · buka item sebelumnya dulu'
-                      : done
-                        ? open
-                          ? ' · dibuka'
-                          : ' · sudah dipahami'
-                        : ' · klik untuk melihat'}
-                  </span>
-                </span>
-                {!locked ? (
-                  <span className="text-ink-400" aria-hidden>
-                    →
-                  </span>
-                ) : null}
-              </button>
-              {open ? (
-                <div
-                  id={regionId}
-                  ref={panelRef}
-                  tabIndex={-1}
-                  role="region"
-                  aria-label={`Persiapan ${item.title}`}
-                  className="mt-2 space-y-3 rounded-2xl border border-border/80 bg-ink-50 px-4 py-4 outline-none"
-                >
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-500">
-                      Apa?
-                    </p>
-                    <p className="mt-1 text-sm leading-relaxed text-ink-900">{item.apa}</p>
-                  </div>
-                  <ContohBlock item={item} />
-                  <TemplatePreview template={item.template} />
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-500">
-                      Bukti dukung
-                    </p>
-                    <p className="mt-1 text-sm leading-relaxed text-ink-800">{item.buktiDukung}</p>
-                    <p className="mt-1 text-[11px] text-ink-500">
-                      Ilustrasi / daftar yang biasanya disiapkan — bukan dokumen resmi lembaga.
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2 pt-1">
-                    {!done ? (
-                      <Button type="button" size="sm" onClick={() => markUnderstood(item.id)}>
-                        Tandai sudah memahami
-                      </Button>
-                    ) : (
-                      <span className="text-xs font-medium text-ink-600">Sudah dipahami</span>
-                    )}
-                  </div>
-                </div>
-              ) : null}
-            </li>
-          )
-        })}
-      </ul>
-      {allDone ? (
-        <p className="rounded-xl border border-ink-900/10 bg-white px-3.5 py-3 text-sm text-ink-800">
-          Materi tahap ini selesai dipelajari. Ini bukan klaim bahwa dokumen resmi sudah lengkap.
-        </p>
-      ) : null}
-    </div>
-  )
-}
-
-function PreparePhases({ phases }: { phases: ExamplePreparePhase[] }) {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [completed, setCompleted] = useState<Set<string>>(() => new Set())
-  const [phaseItemsDone, setPhaseItemsDone] = useState(false)
-
-  const active = phases[activeIndex]!
-  const maxUnlocked = completed.size
-
-  function isUnlocked(index: number) {
-    return index <= maxUnlocked
-  }
-
-  function markPhaseDone() {
-    if (!phaseItemsDone) return
-    setCompleted((prev) => {
-      const next = new Set(prev)
-      next.add(active.phaseId)
-      return next
-    })
-    if (activeIndex < phases.length - 1) {
-      setActiveIndex(activeIndex + 1)
-      setPhaseItemsDone(false)
-    }
-  }
-
-  const phaseDone = completed.has(active.phaseId)
-  const nextPhase = phases[activeIndex + 1]
-  const allPhasesDone = phases.every((p) => completed.has(p.phaseId))
-
-  return (
-    <div className="space-y-5">
-      <ol className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {phases.map((phase, index) => {
-          const unlocked = isUnlocked(index)
-          const done = completed.has(phase.phaseId)
-          const current = index === activeIndex
-          return (
-            <li key={phase.phaseId}>
-              <button
-                type="button"
-                disabled={!unlocked}
-                title={
-                  unlocked
-                    ? undefined
-                    : `Belum dibuka. Selesaikan tahap sebelumnya terlebih dahulu.`
-                }
-                aria-label={`${phase.titleId}. ${
-                  done ? 'Selesai dipelajari' : unlocked ? (current ? 'Sedang dipelajari' : 'Tersedia') : 'Belum dibuka'
-                }`}
-                onClick={() => {
-                  if (!unlocked) return
-                  setActiveIndex(index)
-                  setPhaseItemsDone(done)
-                }}
-                className={cn(
-                  'focus-ring flex w-full min-h-11 flex-col items-start rounded-xl px-2.5 py-2 text-left text-xs ring-1',
-                  current
-                    ? 'bg-ink-900 text-white ring-ink-900'
-                    : done
-                      ? 'bg-ink-100 text-ink-800 ring-ink-900/10'
-                      : unlocked
-                        ? 'bg-white text-ink-700 ring-border'
-                        : 'cursor-not-allowed bg-ink-50 text-ink-400 opacity-60 ring-border/60',
-                )}
-              >
-                <span className="flex items-center gap-1 text-[10px] uppercase tracking-wide opacity-80">
-                  {done ? (
-                    <TickCircle size={12} variant="Bold" color="currentColor" aria-hidden />
-                  ) : !unlocked ? (
-                    <Lock size={11} variant="Bold" color="currentColor" aria-hidden />
-                  ) : null}
-                  {phase.code}
-                </span>
-                <span className="mt-0.5 font-medium leading-snug">{phase.titleId}</span>
-              </button>
-            </li>
-          )
-        })}
-      </ol>
-
-      <div className="rounded-2xl border border-ink-900/8 bg-white p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-          {active.code} · {active.titleId}
-        </p>
-        <h3 className="mt-1 font-display text-xl font-semibold tracking-tight text-ink-950">
-          {active.titleId}
-        </h3>
-        <div className="mt-4 space-y-3">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-500">
-              Apa ini?
-            </p>
-            <p className="mt-1 text-sm leading-relaxed text-ink-800">{active.intro}</p>
-          </div>
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-500">
-              Kenapa diperlukan?
-            </p>
-            <p className="mt-1 text-sm leading-relaxed text-ink-800">{active.why}</p>
-          </div>
-        </div>
-      </div>
-
-      {phaseDone ? (
-        <p className="rounded-xl border border-ink-900/10 bg-ink-50 px-3.5 py-3 text-sm text-ink-800">
-          Tahap ini selesai dipelajari. Buka tahap berikutnya yang sudah tersedia, atau tinjau
-          tahap lain yang terbuka.
-        </p>
-      ) : (
-        <PrepareLearn
-          key={active.phaseId}
-          items={active.items}
-          onPhaseComplete={setPhaseItemsDone}
-        />
-      )}
-
-      <div className="space-y-2">
-        {!phaseDone && phaseItemsDone ? (
-          <Button className="w-full sm:w-auto" onClick={markPhaseDone}>
-            {nextPhase
-              ? `Selesai mempelajari · lanjut ke ${nextPhase.titleId}`
-              : 'Selesai mempelajari tahap terakhir'}
-          </Button>
-        ) : null}
-        {phaseDone && nextPhase ? (
-          <p className="text-sm text-ink-700">
-            Berikutnya: <span className="font-semibold">{nextPhase.titleId}</span> — sekarang
-            tersedia.
-          </p>
-        ) : null}
-        {allPhasesDone ? (
-          <p className="rounded-xl bg-ink-50 px-3.5 py-3 text-sm leading-relaxed text-ink-800">
-            Semua tahap contoh selesai dipelajari. Ini pembelajaran contoh StatPlan — bukan
-            penyelesaian kegiatan statistik resmi.
-          </p>
-        ) : null}
-      </div>
-    </div>
-  )
-}
-
-function StepNav({
-  onBack,
-  onNext,
-  nextLabel,
-  showBack = true,
-}: {
-  onBack?: () => void
-  onNext: () => void
-  nextLabel: string
-  showBack?: boolean
-}) {
-  return (
-    <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:items-center sm:justify-between">
-      {showBack && onBack ? (
-        <Button type="button" variant="ghost" onClick={onBack} className="justify-start">
-          Kembali
-        </Button>
-      ) : (
-        <span />
-      )}
-      <Button
-        className="w-full sm:w-auto"
-        rightIcon={<ArrowRight2 size={16} variant="Bold" color="currentColor" aria-hidden />}
-        onClick={onNext}
-      >
-        {nextLabel}
-      </Button>
-    </div>
-  )
-}
-
-function TryYourDates() {
-  const today = useMemo(() => {
-    const d = new Date()
-    const y = d.getFullYear()
-    const m = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return `${y}-${m}-${day}`
-  }, [])
-  const defaultEnd = useMemo(() => {
-    const d = new Date()
-    d.setMonth(d.getMonth() + 3)
-    d.setDate(d.getDate() - 1)
-    const y = d.getFullYear()
-    const m = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return `${y}-${m}-${day}`
-  }, [])
-
-  const [startISO, setStartISO] = useState(today)
-  const [endISO, setEndISO] = useState(defaultEnd)
-  const validation = validateProjectDateRange(startISO, endISO)
-  const plan = validation.ok ? allocatePhaseDates(startISO, endISO) : []
-
-  return (
-    <section className="space-y-3 rounded-2xl border border-ink-900/8 bg-white p-5 sm:p-6">
-      <h3 className="text-base font-semibold text-ink-950">Coba tentukan rentang waktu Anda</h3>
-      <p className="text-sm leading-relaxed text-ink-700">
-        Kalau Anda membuat versi sendiri, Anda bisa menentukan rentang waktunya. Ini hanya
-        latihan perencanaan di halaman contoh — tidak mengubah data demo.
-      </p>
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="block text-sm">
-          <span className="mb-1 block text-xs font-medium text-ink-600">Tanggal mulai</span>
-          <input
-            type="date"
-            value={startISO}
-            onChange={(e) => setStartISO(e.target.value)}
-            className="focus-ring h-11 w-full rounded-xl border border-border px-3 text-sm"
-          />
-        </label>
-        <label className="block text-sm">
-          <span className="mb-1 block text-xs font-medium text-ink-600">Tanggal selesai</span>
-          <input
-            type="date"
-            value={endISO}
-            onChange={(e) => setEndISO(e.target.value)}
-            className="focus-ring h-11 w-full rounded-xl border border-border px-3 text-sm"
-          />
-        </label>
-      </div>
-      {!validation.ok ? (
-        <p className="text-sm text-danger">{validation.message}</p>
-      ) : (
-        <>
-          <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-            Contoh pembagian waktu · rencana yang Anda susun
-          </p>
-          <ol className="space-y-1.5">
-            {plan.map((p) => (
-              <li
-                key={p.phaseId}
-                className="flex flex-col gap-0.5 rounded-xl bg-ink-50 px-3 py-2 text-sm text-ink-800 sm:flex-row sm:justify-between"
-              >
-                <span className="font-medium">{p.title}</span>
-                <span className="text-xs text-ink-500">
-                  {formatDateID(p.startISO)} – {formatDateID(p.endISO)}
-                </span>
-              </li>
-            ))}
-          </ol>
-          <p className="text-[11px] leading-relaxed text-ink-500">
-            Bukan jadwal resmi BPS dan bukan durasi wajib. Hanya contoh pembagian waktu dari
-            tanggal yang Anda pilih.
-          </p>
-        </>
-      )}
-    </section>
   )
 }
 
 export function ExampleWalkthroughPage() {
-  const { slug = '' } = useParams()
+  const { slug } = useParams<{ slug: string }>()
   const navigate = useNavigate()
-  const example = getExampleBySlug(slug)
-  const [step, setStep] = useState<Step>(1)
+  const example = slug ? getExampleBySlug(slug) : undefined
+  const [openPhase, setOpenPhase] = useState<number | null>(0)
+  const [showAllVisuals, setShowAllVisuals] = useState(false)
+  const lessonsRef = useRef<HTMLDivElement>(null)
+  const visuals = useMemo(() => collectMateriVisuals(), [])
 
-  useEffect(() => {
-    setStep(1)
-    window.scrollTo(0, 0)
-  }, [slug])
+  if (!example) return <Navigate to="/" replace />
 
-  useEffect(() => {
-    document.getElementById('walkthrough-heading')?.focus()
-  }, [step])
+  const facts = caseFacts(example)
+  const startHref = `/app/new?from=${example.slug}`
+  const others = EXAMPLE_JOURNEYS.filter((e) => e.slug !== example.slug)
+  const shownVisuals = showAllVisuals ? visuals : visuals.slice(0, 3)
+  const visualPhases = new Set(visuals.map((v) => v.phaseIndex))
 
-  if (!example) {
-    return <Navigate to="/" replace />
+  function openFromRoadmap(i: number) {
+    setOpenPhase(i)
+    window.setTimeout(() => {
+      document.getElementById(`fase-${i + 1}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 40)
   }
 
   return (
-    <div className="min-h-dvh bg-[#f7f6f3] text-ink-950">
-      <header className="border-b border-ink-900/8 bg-white/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-[720px] items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-xl px-2 text-sm font-medium text-ink-700 hover:bg-ink-100/80"
+    <div className="min-h-dvh bg-surface-muted pb-24 text-ink-950 sm:pb-0">
+      {/* Top bar */}
+      <header className="sticky top-0 z-30 border-b border-border bg-surface-muted/90 backdrop-blur">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+          <Link
+            to="/#contoh"
+            className="focus-ring inline-flex items-center gap-1.5 rounded-lg px-1 py-1 text-sm font-medium text-ink-700 hover:text-ink-950"
           >
             <ArrowLeft2 size={16} variant="Bold" color="currentColor" aria-hidden />
-            Kembali
-          </button>
-          <span className="text-sm font-semibold tracking-tight text-ink-900">StatPlan</span>
+            Semua contoh
+          </Link>
+          <Link to="/" className="focus-ring rounded font-semibold tracking-tight text-ink-950">
+            StatPlan
+          </Link>
+          <div className="hidden sm:block">
+            <Button
+              size="sm"
+              onClick={() => navigate(startHref)}
+              rightIcon={<ArrowRight2 size={14} variant="Bold" color="currentColor" aria-hidden />}
+            >
+              Mulai dari contoh ini
+            </Button>
+          </div>
+          <span className="w-16 sm:hidden" aria-hidden />
         </div>
       </header>
 
-      <main className="mx-auto max-w-[720px] px-4 pb-32 pt-8 sm:px-6 sm:pb-20 sm:pt-10">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge className="bg-ink-100 font-medium text-ink-800 ring-1 ring-ink-900/10">
-            Contoh ilustratif
-          </Badge>
-          <Badge tone="brand">{jenisLabel(example.jenis)}</Badge>
-        </div>
-
-        <h1 className="mt-4 font-display text-[1.85rem] font-semibold leading-tight tracking-tight sm:text-4xl">
-          {example.title}
-        </h1>
-        <p className="mt-2 text-base leading-relaxed text-ink-700">
-          Belajar dari contoh singkat — lalu buat rencana versi Anda sendiri.
-        </p>
-        <p className="mt-2 text-xs leading-relaxed text-ink-500">
-          Ini bukan ruang kerja proyek. Materi Proses Bisnis ditandai dengan halaman sumber; contoh
-          StatPlan dilabeli “Contoh ilustratif”.
-        </p>
-
-        <div className="mt-8">
-          <Progress current={step} />
-        </div>
-
-        <section className="mt-8 space-y-6" aria-labelledby="walkthrough-heading">
-          {step === 1 ? (
-            <>
-              <h2
-                id="walkthrough-heading"
-                tabIndex={-1}
-                className="font-display text-2xl font-semibold tracking-tight outline-none"
+      <main className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* HERO */}
+        <section data-section="hero" aria-labelledby="contoh-title" className="pb-12 pt-10 sm:pb-16 sm:pt-16">
+          <div className="max-w-3xl">
+            <p className="t-eyebrow">Contoh kegiatan</p>
+            <h1 id="contoh-title" className="t-page-title mt-3 text-balance sm:text-[2.75rem]">
+              {facts.fullTitle}
+            </h1>
+            <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-700 sm:text-lg">
+              Pelajari bagaimana sebuah kebutuhan statistik dapat diterjemahkan menjadi rencana
+              kegiatan secara bertahap — sebelum Anda membuat rencana sendiri.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <SourcePill>Contoh ilustratif StatPlan</SourcePill>
+              <SourcePill>Berbasis konsep GSBPM 5.2</SourcePill>
+              <SourcePill>{jenisLabel(example.jenis)}</SourcePill>
+            </div>
+            <div className="mt-8 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+              <Button
+                size="lg"
+                className="h-auto py-3 text-left"
+                onClick={() => navigate(startHref)}
+                rightIcon={<ArrowRight2 size={16} variant="Bold" color="currentColor" aria-hidden />}
               >
-                Apa kegiatan ini?
-              </h2>
-              <div className="space-y-5 rounded-2xl border border-ink-900/8 bg-white p-5 sm:p-6">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                    Nama kegiatan
-                  </p>
-                  <p className="mt-1.5 text-base font-medium leading-relaxed text-ink-900">
-                    {example.title}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                    Jenis kegiatan
-                  </p>
-                  <p className="mt-1.5 text-base leading-relaxed text-ink-900">
-                    {jenisLabel(example.jenis)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                    Apa yang ingin diketahui?
-                  </p>
-                  <p className="mt-1.5 text-base leading-relaxed text-ink-900">
-                    {example.whatToKnow}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                    Mengapa dilakukan?
-                  </p>
-                  <p className="mt-1.5 text-base leading-relaxed text-ink-900">
-                    {example.whyConducted}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                    Hasil yang direncanakan
-                  </p>
-                  <p className="mt-1.5 text-base leading-relaxed text-ink-900">
-                    {example.plannedResult}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                    Bagaimana datanya diperoleh?
-                  </p>
-                  <p className="mt-1.5 text-base leading-relaxed text-ink-900">
-                    {example.howDataObtained}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                    Setelah data terkumpul
-                  </p>
-                  <p className="mt-1.5 text-base leading-relaxed text-ink-900">
-                    {example.afterData}
-                  </p>
-                </div>
-                <p className="text-[11px] text-ink-500">Contoh ilustratif · bukan dokumen resmi.</p>
-              </div>
-
-              <ol className="flex list-none flex-col items-stretch">
-                {example.flowLabels.map((label, i) => (
-                  <li key={label} className="flex flex-col items-center">
-                    <div className="w-full rounded-xl border border-ink-900/10 bg-white px-4 py-3 text-center text-sm font-medium text-ink-900">
-                      {label}
-                    </div>
-                    {i < example.flowLabels.length - 1 ? (
-                      <span className="py-1 text-ink-400" aria-hidden>
-                        ↓
-                      </span>
-                    ) : null}
-                  </li>
-                ))}
-              </ol>
-
-              <StepNav showBack={false} onNext={() => setStep(2)} nextLabel="Berikutnya: lihat jadwal" />
-            </>
-          ) : null}
-
-          {step === 2 ? (
-            <>
-              <h2
-                id="walkthrough-heading"
-                tabIndex={-1}
-                className="font-display text-2xl font-semibold tracking-tight outline-none"
-              >
-                Jadwal contoh
-              </h2>
-              <p className="text-sm text-ink-700">
-                Lihat dulu contoh jadwal kegiatan ini. Setelah itu, coba tentukan rentang waktu
-                Anda sendiri.
-              </p>
-              <SourceBadge
-                sourceType={example.schedule.sourceType}
-                pdfPage={example.schedule.pdfPage}
-              />
-
-              <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-                Contoh jadwal
-              </p>
-              <ol className="space-y-3">
-                {example.schedule.months.map((block) => (
-                  <li
-                    key={block.month}
-                    className="rounded-2xl border border-ink-900/8 bg-white px-4 py-3.5"
-                  >
-                    <p className="text-xs font-semibold uppercase tracking-wide text-bps-blue">
-                      {block.month}
-                    </p>
-                    <ul className="mt-2 space-y-1.5">
-                      {block.activities.map((a) => (
-                        <li key={a} className="flex gap-2 text-sm text-ink-900">
-                          <span className="text-ink-400" aria-hidden>
-                            ●
-                          </span>
-                          <span>{a}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                ))}
-              </ol>
-
-              {example.schedule.sourceRows ? (
-                <details className="rounded-xl border border-border/70 bg-white px-4 py-3 text-sm">
-                  <summary className="cursor-pointer font-medium text-ink-800">
-                    Lihat baris kegiatan seperti di materi
-                  </summary>
-                  <ul className="mt-3 space-y-2 text-ink-700">
-                    {example.schedule.sourceRows.map((row) => (
-                      <li
-                        key={row.activity}
-                        className="flex flex-col gap-0.5 sm:flex-row sm:justify-between"
-                      >
-                        <span>{row.activity}</span>
-                        <span className="text-xs text-ink-500">{row.period}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </details>
-              ) : null}
-
-              <p className="text-xs leading-relaxed text-ink-500">{example.schedule.note}</p>
-
-              <TryYourDates />
-
-              <StepNav
-                onBack={() => setStep(1)}
-                onNext={() => setStep(3)}
-                nextLabel="Berikutnya: apa yang disiapkan"
-              />
-            </>
-          ) : null}
-
-          {step === 3 ? (
-            <>
-              <h2
-                id="walkthrough-heading"
-                tabIndex={-1}
-                className="font-display text-2xl font-semibold tracking-tight outline-none"
-              >
-                Apa yang disiapkan?
-              </h2>
-              <p className="text-sm text-ink-600">
-                Pelajari satu tahap proses dulu. Tahap berikutnya terbuka setelah tahap saat ini
-                selesai dipelajari — bukan checklist raksasa sekaligus.
-              </p>
-              <PreparePhases phases={example.preparePhases} />
-              <StepNav
-                onBack={() => setStep(2)}
-                onNext={() => setStep(4)}
-                nextLabel="Berikutnya: ringkasan"
-              />
-            </>
-          ) : null}
-
-          {step === 4 ? (
-            <>
-              <h2
-                id="walkthrough-heading"
-                tabIndex={-1}
-                className="font-display text-2xl font-semibold tracking-tight outline-none"
-              >
-                Beginilah bentuk rencananya
-              </h2>
-
-              <div className="space-y-4 rounded-2xl border border-ink-900/8 bg-white p-5 sm:p-6">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                    Yang dipelajari
-                  </p>
-                  <dl className="mt-3 space-y-3">
-                    {(
-                      [
-                        ['Konteks', example.summary.need],
-                        ['Hasil', example.summary.result],
-                        ['Jadwal', example.summary.schedule],
-                        ['Persiapan', example.summary.prepare],
-                      ] as const
-                    ).map(([k, v]) => (
-                      <div key={k}>
-                        <dt className="text-xs font-medium text-ink-500">{k}</dt>
-                        <dd className="mt-0.5 text-sm leading-relaxed text-ink-900">{v}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                    Yang tersedia di contoh ini
-                  </p>
-                  <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-ink-800">
-                    <li>Contoh konteks kegiatan (ilustratif)</li>
-                    <li>Contoh jadwal + latihan rentang waktu Anda</li>
-                    <li>Contoh & format kerja persiapan per tahap</li>
-                    <li>Daftar bukti dukung ilustratif</li>
-                  </ul>
-                </div>
-              </div>
-
-              <p className="text-sm leading-relaxed text-ink-700">
-                Anda tidak harus memahami semua istilah GSBPM untuk mulai. Berikutnya, buat
-                versi Anda sendiri dengan Mode Terpandu.
-              </p>
-
-              <div className="space-y-3 rounded-2xl border border-ink-900/10 bg-white p-5">
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-500">
-                  Langkah berikutnya
-                </p>
-                <p className="text-sm leading-relaxed text-ink-700">
-                  Siap mencoba? Mulai perencanaan dengan konteks contoh ini — Anda tetap bisa
-                  mengubah semua isian.
-                </p>
-                <Button
-                  className="w-full"
-                  rightIcon={
-                    <ArrowRight2 size={16} variant="Bold" color="currentColor" aria-hidden />
-                  }
-                  onClick={() => navigate(`/app/new?from=${example.slug}`)}
-                >
-                  Coba buat rencana seperti ini
-                </Button>
-                <p className="text-center text-xs leading-relaxed text-ink-500">
-                  Membuka penyusunan baru. Tidak menimpa rencana yang sudah Anda miliki. Ruang
-                  kerja lengkap bersifat opsional.
-                </p>
-              </div>
-              <Button type="button" variant="ghost" onClick={() => setStep(3)}>
-                Kembali
+                Gunakan contoh ini untuk membuat rencana
               </Button>
-            </>
+              <Button
+                size="lg"
+                variant="ghost"
+                onClick={() => lessonsRef.current?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                Pelajari langkahnya dulu
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* AT A GLANCE */}
+        <section data-section="sekilas" aria-labelledby="sekilas" className="pb-14 sm:pb-20">
+          <h2 id="sekilas" className="t-label mb-3">
+            Sekilas
+          </h2>
+          <InfoGrid
+            items={[
+              { label: 'Jenis kegiatan', value: jenisLabel(example.jenis) },
+              { label: 'Topik', value: example.title },
+              { label: 'Tujuan', value: example.whatToKnow },
+              { label: 'Pengguna informasi', value: facts.pengguna },
+              { label: 'Output yang direncanakan', value: example.plannedResult },
+              { label: 'Periode contoh', value: example.summary.schedule },
+            ]}
+          />
+          <p className="t-support mt-3">
+            Semua isian adalah contoh ilustratif — tidak ada angka hasil atau data responden.
+          </p>
+        </section>
+
+        {/* WHY */}
+        <section
+          data-section="mengapa"
+          aria-labelledby="mengapa"
+          className="grid gap-8 border-t border-border py-14 sm:py-20 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-16"
+        >
+          <SectionHeader
+            id="mengapa"
+            eyebrow="Latar belakang"
+            title="Mengapa kegiatan ini dibutuhkan?"
+          />
+          <div className="space-y-8">
+            <blockquote className="border-l-2 border-accent pl-5 font-display text-xl leading-relaxed text-ink-950 sm:text-2xl">
+              {facts.masalah}
+            </blockquote>
+            <dl className="grid gap-6 sm:grid-cols-2">
+              <div>
+                <dt className="t-label">Mengapa informasi dibutuhkan</dt>
+                <dd className="t-body mt-1.5">{facts.mengapa}</dd>
+              </div>
+              <div>
+                <dt className="t-label">Siapa yang membutuhkan</dt>
+                <dd className="t-body mt-1.5">{facts.pengguna}</dd>
+              </div>
+              <div className="sm:col-span-2">
+                <dt className="t-label">Informasi yang diharapkan</dt>
+                <dd className="t-body mt-1.5">{facts.informasi}</dd>
+              </div>
+            </dl>
+            <SourceNote kind="C" />
+          </div>
+        </section>
+
+        {/* ROADMAP */}
+        <section data-section="roadmap" aria-labelledby="disiapkan" className="border-t border-border py-14 sm:py-20">
+          <SectionHeader
+            id="disiapkan"
+            eyebrow="Gambaran besar"
+            title="Apa yang perlu disiapkan?"
+            lead="Kegiatan statistik melewati delapan fase GSBPM 5.2. Pilih satu fase untuk melihat apa yang dikerjakan di sana."
+          />
+          <ol className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-4">
+            {example.preparePhases.map((p, i) => (
+              <li key={p.phaseId} className="bg-surface">
+                <button
+                  type="button"
+                  onClick={() => openFromRoadmap(i)}
+                  className={cn(
+                    'focus-ring flex h-full w-full flex-col items-start gap-1 px-4 py-4 text-left transition-colors hover:bg-surface-muted sm:px-5 sm:py-5',
+                    openPhase === i && 'bg-surface-muted',
+                  )}
+                >
+                  <span className="font-display text-sm tabular-nums text-ink-500">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="text-sm font-semibold leading-snug text-ink-950 sm:text-[15px]">
+                    {p.titleId}
+                  </span>
+                  <span className="text-xs text-ink-500">
+                    {GUIDED_PHASES[i]?.cards.length} subproses
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ol>
+          <p className="t-support mt-3">
+            Urutan ini membantu belajar bertahap. GSBPM sendiri bersifat fleksibel dan tidak harus
+            dijalankan secara linear.
+          </p>
+        </section>
+
+        {/* PHASE LESSONS */}
+        <section
+          data-section="pelajari"
+          ref={lessonsRef}
+          aria-labelledby="pelajari"
+          className="scroll-mt-20 border-t border-border py-14 sm:py-20"
+        >
+          <SectionHeader
+            id="pelajari"
+            eyebrow="Pelajari langkahnya"
+            title="Satu fase, satu langkah"
+            lead="Setiap fase menjelaskan apa yang dilakukan, contohnya pada kegiatan ini, dan bukti yang biasanya disiapkan."
+          />
+          <ol className="mt-6 rounded-2xl border border-border bg-surface px-4 sm:px-6">
+            {example.preparePhases.map((p, i) => (
+              <PhaseLesson
+                key={p.phaseId}
+                phase={p}
+                index={i}
+                open={openPhase === i}
+                onToggle={() => setOpenPhase((cur) => (cur === i ? null : i))}
+                hasVisuals={visualPhases.has(i)}
+                schedule={p.phaseId === 'design' ? <ScheduleBlock example={example} /> : undefined}
+              />
+            ))}
+          </ol>
+        </section>
+
+        {/* MATERI VISUALS */}
+        <section data-section="materi" id="materi" aria-labelledby="materi-title" className="scroll-mt-20 border-t border-border py-14 sm:py-20">
+          <SectionHeader
+            id="materi-title"
+            eyebrow="Sumber"
+            title="Contoh asli dari materi"
+            lead="Gambar berikut diambil langsung dari Materi Proses Bisnis — bukan buatan StatPlan. Pelajari bentuknya, lalu susun versi kegiatan Anda."
+          />
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {shownVisuals.map((v) => (
+              <ZoomFigure key={v.key} visual={v} />
+            ))}
+          </div>
+          {visuals.length > 3 ? (
+            <div className="mt-5">
+              <Button variant="secondary" onClick={() => setShowAllVisuals((s) => !s)}>
+                {showAllVisuals
+                  ? 'Tampilkan lebih sedikit'
+                  : `Tampilkan ${visuals.length - 3} contoh lainnya`}
+              </Button>
+            </div>
           ) : null}
         </section>
+
+        {/* TAKEAWAYS */}
+        <section data-section="tiru" aria-labelledby="tiru" className="border-t border-border py-14 sm:py-20">
+          <div className="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-16">
+            <SectionHeader id="tiru" eyebrow="Untuk rencana Anda" title="Apa yang bisa saya tiru?" />
+            <div>
+              <ol className="space-y-5">
+                {example.takeaways.map((t, i) => (
+                  <li key={t} className="flex gap-4">
+                    <span className="font-display text-lg tabular-nums text-accent-700" aria-hidden>
+                      {i + 1}
+                    </span>
+                    <p className="text-[15px] leading-relaxed text-ink-900 sm:text-base">{t}</p>
+                  </li>
+                ))}
+              </ol>
+              <SourceNote kind="C" className="mt-6" />
+            </div>
+          </div>
+        </section>
       </main>
+
+      {/* START */}
+      <section data-section="mulai" aria-labelledby="mulai" className="bg-ink-900 text-white">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <div className="max-w-2xl">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">
+              Buat versi saya
+            </p>
+            <h2 id="mulai" className="mt-3 font-display text-2xl font-semibold leading-snug sm:text-3xl">
+              Siap menyusun rencana Anda sendiri?
+            </h2>
+            <p className="mt-3 text-[15px] leading-relaxed text-white/75">
+              StatPlan mengisi awal rencana dari contoh ini. Anda bebas mengubah semuanya, lalu Mode
+              Terpandu membimbing Anda melewati 44 subproses GSBPM satu per satu.
+            </p>
+            <p className="mt-4 inline-flex items-start gap-2 text-sm text-white/80">
+              <ShieldTick size={18} variant="Bold" color="currentColor" className="mt-0.5 shrink-0 text-accent" aria-hidden />
+              Contoh asli tetap aman. Anda akan membuat salinan untuk rencana Anda sendiri.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row lg:flex-col lg:items-stretch">
+            <Button
+              size="lg"
+              variant="gold"
+              onClick={() => navigate(startHref)}
+              rightIcon={<ArrowRight2 size={16} variant="Bold" color="currentColor" aria-hidden />}
+            >
+              Mulai dari contoh ini
+            </Button>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-white/70">
+              <span>Contoh lain:</span>
+              {others.map((o) => (
+                <Link
+                  key={o.slug}
+                  to={`/contoh/${o.slug}`}
+                  className="focus-ring rounded font-medium text-white underline decoration-white/30 underline-offset-4 hover:decoration-white"
+                >
+                  {o.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mobile sticky CTA */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface/95 px-4 py-3 backdrop-blur sm:hidden">
+        <Button
+          className="w-full"
+          onClick={() => navigate(startHref)}
+          rightIcon={<ArrowRight2 size={16} variant="Bold" color="currentColor" aria-hidden />}
+        >
+          Mulai dari contoh ini
+        </Button>
+      </div>
     </div>
   )
 }

@@ -6,9 +6,7 @@ export function GuidedProgress({ current }: { current: 1 | 2 | 3 }) {
   return (
     <div className="space-y-3">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-ink-600">
-          Langkah {current} dari 6
-        </p>
+        <p className="t-eyebrow">Langkah {current} dari 6</p>
         <p className="mt-0.5 text-sm font-medium text-ink-900 sm:hidden">
           {currentStep?.label}
         </p>
