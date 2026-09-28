@@ -23,3 +23,6 @@ npm-debug.log*
 # Local Playwright browser QA artifacts
 
 qa/
+
+.vercel
+.env*
