@@ -272,7 +272,7 @@ export function buildDemoProjects(): Project[] {
       penyelenggara: 'Dinas Pertanian Kabupaten Lombok Tengah',
       tujuan: 'Estimasi produksi dan produktivitas padi untuk ketahanan pangan daerah.',
       periode: 'Februari–September 2026',
-      catatan: 'Rekomendasi telah diajukan dan diterima BPS.',
+      catatan: 'Bahan pengajuan rekomendasi sudah disiapkan; status pengajuan ke BPS belum diverifikasi.',
     },
     metadata: metaPadi(),
     checklistState: buildChecklistAtPct('survei', 'sektoral', 100),

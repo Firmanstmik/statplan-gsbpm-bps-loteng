@@ -717,3 +717,48 @@ Final release pass: verification, documentation and publishing. No product chang
 | `npm run qa:browser:guided` | PASS: 44/44 × 7 widths, 0 critical/major. The first attempt aborted on a screenshot timeout with ~2 GB free RAM; the single rerun passed. |
 | `npm run qa:faq:browser` / `qa:landing` | PASS at 7 widths |
 | `npm run docs:inventory` / `docs:faq` | OK; FAQ map unchanged |
+
+## Professional draft document output (DOCX)
+
+Only the generated document changed; the app UI and data model are unchanged. `src/lib/generateDocument.ts` was rewritten.
+
+1. **Structure.**
+   - Front matter: a StatPlan cover (no government/BPS letterhead) with "DRAFT — BUKAN DOKUMEN RESMI BPS", then Informasi Dokumen and Daftar Isi.
+   - Numbered sections:
+     1. Ringkasan Perencanaan, with the Status Perencanaan box: "Kelengkapan checklist StatPlan: N%" and the note that this is not proof of completion or approval.
+     2. Informasi Kegiatan, with Dasar Perencanaan.
+     3. Kebutuhan dan Tujuan (A–E).
+     4. Saran Awal StatPlan (no percentages).
+     5. Perancangan Pengumpulan, with the draft recommendation information, status "Belum diverifikasi".
+     6. Variabel.
+     7. Indikator.
+     8. Instrumen.
+     9. Timeline, with a simplified Gantt chart and "Contoh jadwal perencanaan — bukan durasi wajib BPS."
+     10. Pemeriksaan Sumber / Portal Rujukan.
+     11. Ringkasan GSBPM.
+     12. Ringkasan Validasi (Status / Temuan / Dampak / Tindakan).
+     13. Draft Metadata.
+     14. Catatan dan Batasan.
+   - Lampiran A: the 44-subprocess checklist.
+   - Lampiran B: the instrument, when one exists.
+2. **Data honesty.**
+   - Every value comes from the project or its guided session (1.1–1.3, 2.4, evidence notes, intake dates). Missing values say "Belum diisi/diuraikan di StatPlan".
+   - Demo projects are labelled "Contoh ilustratif" on the cover, in the portal check, in the recommendation note and in the limitations.
+   - The Padi demo note "Rekomendasi telah diajukan dan diterima BPS" was replaced in `src/demo/projects.ts`. The seed version is unchanged, so previously seeded browsers still show it labelled as demo status.
+3. **Layout.**
+   - A4 page with a navy / light-blue / gray palette and Calibri.
+   - Real Heading 1/2 styles, repeating table header rows, and rows that never split.
+   - Headings keep with the next block, and the Gantt chart stays on one page.
+   - Running header plus footer: "StatPlan · Draft Perencanaan Kegiatan Statistik / Bukan dokumen resmi BPS / Halaman X dari Y".
+4. **Verification.**
+   - Real downloads were rendered page by page in Word → PDF: SKM (16 pages), Padi (15), Pendidikan/Kompromin (14), plus SKM with an injected guided session (17).
+   - An automated layout check found no text outside margins, no headings at a page bottom, and body text ≥ 9 pt. The only low-fill pages sit just before a deliberate section break.
+   - `qa-test` guards the new structure and wording.
+5. **Documentation.**
+   - Practical deck step 36: new 3-page preview (16-page file) and updated narration.
+   - Presenter script regenerated.
+   - Modul table 12.3 updated to the new structure.
+6. **Asisten consistency.**
+   - The "% keyakinan" badge on the Asisten page is replaced with "Saran awal", followed by: "Saran awal berdasarkan aturan sederhana StatPlan, bukan keputusan metodologis atau rekomendasi resmi BPS."
+   - The mode label is now "Saran awal jenis" and the button is now "Lihat alasan saran".
+   - The `confidence` field stays in the data model but is no longer displayed anywhere. `qa-test` guards this.

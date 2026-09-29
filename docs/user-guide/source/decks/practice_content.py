@@ -289,9 +289,9 @@ step(35, "Unduh draft DOCX",
 step(36, "Pahami dokumen yang diunduh",
      [],
      "Draft perencanaan kegiatan statistik telah dihasilkan.", "Tinjau bersama tim atau ahli metodologi sebelum proses resmi.",
-     "Memahami arti dokumen hasil ekspor.", ["Buka berkas .docx yang terunduh.", "Tunjuk sampul StatPlan, status DRAFT, dan daftar isi."],
-     "Ini dokumen yang baru saja diunduh. Sampulnya beridentitas StatPlan: draft perencanaan kegiatan statistik, dengan status draft dan bukan dokumen resmi BPS. Isinya mengikuti kerangka GSBPM 5.2: informasi proyek, ringkasan pemeriksaan kelengkapan, portal rujukan, saran awal jenis kegiatan, tujuan, perancangan, variabel, indikator, instrumen, bahan pengajuan rekomendasi, timeline, checklist, dan metadata. Dokumen ini bahan kerja untuk ditinjau oleh pihak yang berwenang atau ahli metodologi.",
-     "Sampul menyatakan “DRAFT — BUKAN DOKUMEN RESMI BPS”; jenis kegiatan ditulis sebagai saran awal dari aturan sederhana, bukan rekomendasi resmi.", "FAQ “Apakah dokumen Word yang dihasilkan sudah merupakan dokumen resmi?”.",
+     "Memahami arti dokumen hasil ekspor.", ["Buka berkas .docx yang terunduh.", "Tunjuk sampul StatPlan dan status DRAFT.", "Tunjuk Informasi Dokumen, Daftar Isi, dan kotak Status Perencanaan."],
+     "Ini dokumen yang baru saja diunduh. Sampulnya beridentitas StatPlan: draft perencanaan kegiatan statistik, dengan status draft dan bukan dokumen resmi BPS. Halaman berikutnya berisi informasi dokumen dan daftar isi. Isinya dimulai dengan ringkasan perencanaan dan kotak status perencanaan: persentase checklist StatPlan, yang bukan bukti bahwa kegiatan sudah selesai atau disetujui. Setelah itu ada informasi kegiatan, kebutuhan dan tujuan, saran awal StatPlan, perancangan pengumpulan, variabel, indikator, instrumen, timeline, pemeriksaan portal rujukan, ringkasan GSBPM, ringkasan validasi, draft metadata, serta catatan dan batasan. Checklist 44 subproses ada di Lampiran A dan daftar pertanyaan di Lampiran B. Dokumen ini bahan kerja untuk ditinjau oleh pihak yang berwenang atau ahli metodologi.",
+     "Sampul menyatakan “DRAFT — BUKAN DOKUMEN RESMI BPS”; jenis kegiatan ditulis sebagai saran awal StatPlan dari aturan sederhana, tanpa persentase; status pengajuan rekomendasi tertulis “Belum diverifikasi”.", "FAQ “Apakah dokumen Word yang dihasilkan sudah merupakan dokumen resmi?”.",
      "Demikian praktik penggunaan StatPlan.", durasi="1–2 menit")
 
 FINAL = dict(

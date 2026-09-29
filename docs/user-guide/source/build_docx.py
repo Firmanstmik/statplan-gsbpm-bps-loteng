@@ -544,15 +544,19 @@ h2("12.2 Mengapa Ekspor Bisa Terhalang")
 p("Jika masih ada kekurangan, StatPlan menampilkan jumlahnya dan daftar yang perlu dilengkapi. Tombol unduh tetap nonaktif sampai kekurangan tersebut diperbaiki.")
 h2("12.3 Isi Dokumen DOCX")
 table(["Bagian dokumen", "Sumber isian"], [
-    ["Identitas kegiatan", "Nama dan ringkasan proyek"],
-    ["Pemeriksaan portal rujukan", "Catatan di Alur kerja"],
-    ["Perancangan (cara, metode, moda, sampel)", "Tab Perancangan"],
-    ["Variabel & indikator", "Tab Variabel"],
-    ["Instrumen", "Tab Instrumen"],
-    ["Draf rekomendasi BPS", "Alur kerja (kegiatan sektoral)"],
-    ["Timeline", "Rencana waktu 8 fase"],
-    ["Checklist GSBPM 5.2", "Tab Checklist"],
-    ["Metadata MS-Keg / MS-Var / MS-Ind", "Tab Metadata"],
+    ["Sampul dan Informasi Dokumen", "Identitas proyek; status “DRAFT — BUKAN DOKUMEN RESMI BPS”"],
+    ["1. Ringkasan Perencanaan + Status Perencanaan", "Isian proyek; persentase checklist StatPlan (bukan bukti persetujuan)"],
+    ["2. Informasi Kegiatan + Dasar Perencanaan", "Isian proyek dan metadata; GSBPM 5.2 dan Materi Proses Bisnis"],
+    ["3. Kebutuhan dan Tujuan", "Mode Terpandu 1.1–1.3 dan tujuan proyek"],
+    ["4. Saran Awal StatPlan", "Aturan sederhana StatPlan, tanpa persentase"],
+    ["5. Perancangan Pengumpulan", "Tab Perancangan; draf informasi pengajuan rekomendasi (sektoral)"],
+    ["6–8. Variabel, Indikator, Instrumen", "Tab Variabel dan Instrumen"],
+    ["9. Timeline", "Rencana waktu 8 fase (contoh jadwal, bukan durasi wajib BPS)"],
+    ["10. Pemeriksaan Portal Rujukan", "Catatan di Alur kerja (1.5)"],
+    ["11–12. Ringkasan GSBPM dan Ringkasan Validasi", "Tab Checklist; pemeriksaan kelengkapan StatPlan"],
+    ["13. Draft Metadata", "Tab Metadata (MS-Keg / MS-Var / MS-Ind)"],
+    ["14. Catatan dan Batasan", "Batasan draft StatPlan"],
+    ["Lampiran A dan B", "Checklist 44 subproses; daftar pertanyaan instrumen"],
 ], "Isi draf dokumen Word", widths=[7, 9.2])
 figure(img("14-ekspor-demo.png"), "Tab Ekspor pada proyek demo yang sudah lengkap")
 h2("12.4 Mengunduh")

@@ -494,16 +494,54 @@ assert(
 // --- Exported DOCX is a StatPlan draft, never an official-looking BPS/government document ---
 {
   const gen = readFileSync(join(root, 'src/lib/generateDocument.ts'), 'utf8')
-  for (const banned of ['PEMERINTAH KABUPATEN', "p('Badan Pusat Statistik", 'keyakinan', 'memerlukan validasi BPS', 'BPS Kabupaten Lombok Tengah · DRAF', 'aiRecommendation.confidence']) {
+  for (const banned of [
+    'PEMERINTAH KABUPATEN',
+    "p('Badan Pusat Statistik",
+    'keyakinan',
+    'memerlukan validasi BPS',
+    'BPS Kabupaten Lombok Tengah · DRAF',
+    'aiRecommendation.confidence',
+    'Rekomendasi Jenis Kegiatan',
+    'diajukan dan diterima',
+  ]) {
     assert(!gen.includes(banned), `generateDocument.ts must not contain “${banned}”`)
   }
   assert(
     gen.includes('DRAFT — BUKAN DOKUMEN RESMI BPS') &&
-      gen.includes('Saran awal metode:') &&
-      gen.includes('bukan keputusan atau rekomendasi resmi BPS') &&
+      gen.includes('Saran awal metode: ') &&
+      gen.includes('bukan merupakan keputusan atau rekomendasi resmi BPS') &&
       gen.includes('jenisLabel(project.jenisKegiatan)'),
     'Export cover states draft status; method is a rule-based “Saran awal” taken from the project',
   )
+  // Professional draft structure: status box never equals approval; honest statuses; appendix checklist.
+  for (const needed of [
+    'Informasi Dokumen',
+    'Ringkasan Perencanaan',
+    'Dasar Perencanaan',
+    'bukan bukti bahwa kegiatan statistik telah selesai atau memperoleh persetujuan resmi',
+    'Saran Awal StatPlan',
+    'Contoh jadwal perencanaan — bukan durasi wajib BPS.',
+    'Pemeriksaan Sumber / Portal Rujukan',
+    'Ringkasan GSBPM',
+    'Ringkasan Validasi',
+    'Belum diverifikasi',
+    'Draf informasi untuk proses pengajuan rekomendasi',
+    'DRAFT METADATA',
+    'perlu disesuaikan dan diverifikasi sesuai ketentuan yang berlaku',
+    'Catatan dan Batasan',
+    'Lampiran A — Checklist GSBPM 5.2',
+    'Bukan dokumen resmi BPS',
+  ]) {
+    assert(gen.includes(needed), `generateDocument.ts must contain “${needed}”`)
+  }
+  const asisten = readFileSync(join(root, 'src/features/settings/AssistantPage.tsx'), 'utf8')
+  assert(
+    !/keyakinan|\.confidence/.test(asisten) &&
+      asisten.includes('Saran awal berdasarkan aturan sederhana StatPlan, bukan keputusan metodologis atau'),
+    'Asisten shows a rule-based “Saran awal”, never a confidence percentage',
+  )
+  const demoSrc = readFileSync(join(root, 'src/demo/projects.ts'), 'utf8')
+  assert(!/diajukan dan diterima|telah diterima BPS/.test(demoSrc), 'Demo data must not claim BPS accepted a recommendation')
   const att = readFileSync(join(root, 'src/lib/projectAttention.ts'), 'utf8')
   assert(
     /portal_sdi: 'portal'/.test(att) && /jenis_undocumented: 'portal'/.test(att) && /rekomendasi_required: 'rekomendasi'/.test(att),

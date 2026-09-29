@@ -62,15 +62,15 @@ export function AssistantPage() {
           Asisten kebutuhan statistik
         </h1>
         <p className="mt-2 text-ink-700">
-          Aturan deterministik dari modul BPS — bukan AI generatif bebas. Pilih mode rekomendasi
-          jenis kegiatan, atau cek cepat kesesuaian GSBPM tanpa membuat dokumen.
+          Aturan sederhana StatPlan yang merujuk materi BPS — bukan AI generatif bebas. Pilih mode
+          saran awal jenis kegiatan, atau cek cepat kesesuaian GSBPM tanpa membuat dokumen.
         </p>
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
         {(
           [
-            { id: 'recommend' as const, label: 'Rekomendasi jenis', icon: MagicStar },
+            { id: 'recommend' as const, label: 'Saran awal jenis', icon: MagicStar },
             { id: 'brainstorm' as const, label: 'Cek cepat GSBPM', icon: Hierarchy },
           ] as const
         ).map((m) => (
@@ -174,8 +174,12 @@ export function AssistantPage() {
           <Card className="border-gold-500/20 bg-gradient-to-br from-gold-100/30 via-white to-white">
             <div className="mb-3 flex gap-2">
               <Badge tone="brand">{jenisLabel(result.jenis)}</Badge>
-              <Badge tone="gold">{Math.round(result.confidence * 100)}% keyakinan</Badge>
+              <Badge tone="gold">Saran awal</Badge>
             </div>
+            <p className="mb-3 text-xs text-ink-600">
+              Saran awal berdasarkan aturan sederhana StatPlan, bukan keputusan metodologis atau
+              rekomendasi resmi BPS.
+            </p>
             <ul className="space-y-2.5 text-sm text-ink-800">
               {result.rationale.map((r) => (
                 <li key={r} className="flex gap-2">
@@ -268,7 +272,7 @@ export function AssistantPage() {
                 size="sm"
                 onClick={() => setMode('recommend')}
               >
-                Lihat alasan rekomendasi
+                Lihat alasan saran
               </Button>
               <Button
                 variant="gold"
