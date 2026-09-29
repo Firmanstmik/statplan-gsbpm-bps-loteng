@@ -491,6 +491,26 @@ assert(
   'Source inventory must list all 44 subprocesses',
 )
 
+// --- Exported DOCX is a StatPlan draft, never an official-looking BPS/government document ---
+{
+  const gen = readFileSync(join(root, 'src/lib/generateDocument.ts'), 'utf8')
+  for (const banned of ['PEMERINTAH KABUPATEN', "p('Badan Pusat Statistik", 'keyakinan', 'memerlukan validasi BPS', 'BPS Kabupaten Lombok Tengah · DRAF', 'aiRecommendation.confidence']) {
+    assert(!gen.includes(banned), `generateDocument.ts must not contain “${banned}”`)
+  }
+  assert(
+    gen.includes('DRAFT — BUKAN DOKUMEN RESMI BPS') &&
+      gen.includes('Saran awal metode:') &&
+      gen.includes('bukan keputusan atau rekomendasi resmi BPS') &&
+      gen.includes('jenisLabel(project.jenisKegiatan)'),
+    'Export cover states draft status; method is a rule-based “Saran awal” taken from the project',
+  )
+  const att = readFileSync(join(root, 'src/lib/projectAttention.ts'), 'utf8')
+  assert(
+    /portal_sdi: 'portal'/.test(att) && /jenis_undocumented: 'portal'/.test(att) && /rekomendasi_required: 'rekomendasi'/.test(att),
+    'Fix links carry their exact location (portal → Specify Need 1.5, rekomendasi → Design)',
+  )
+}
+
 console.log('QA static checks:', failures.length === 0 ? 'PASS' : 'FAIL')
 failures.forEach((f) => console.log('  ✗', f))
 process.exit(failures.length === 0 ? 0 : 1)

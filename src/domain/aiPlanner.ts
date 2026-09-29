@@ -87,7 +87,7 @@ export function recommendJenisKegiatan(input: {
       'Subproses kerangka sampel tidak dilakukan pada sensus lengkap (modul Design 2.4 & Collect 4.1, hal. 21 & 33).',
     )
     rationale.push(
-      'Penyelenggara statistik sektoral wajib mengajukan rekomendasi kegiatan statistik ke BPS (Design 2.6, hal. 17 & 23).',
+      'Materi Proses Bisnis menyebut penyelenggara statistik sektoral mengajukan permintaan rekomendasi kegiatan statistik ke BPS (Design 2.6, hal. 17 & 23).',
     )
   } else {
     jenis = 'survei'

@@ -122,7 +122,7 @@ for i, (kind, val) in enumerate(plan):
             im = _I.open(pic_path); w_ = 8.0; h_ = w_ * im.height / im.width
             frame = d.rect(s, 4.93, 1.1, w_ + 0.14, h_ + 0.14, fill=RGBColor(0xE4, 0xE8, 0xEE), radius=0.02)
             s.shapes.add_picture(pic_path, Inches(5.0), Inches(1.17), Inches(w_), Inches(h_))
-            d.text(s, 4.95, 1.25 + h_ + 0.1, 8.0, 0.5, f"Halaman 1–3 dari berkas yang benar-benar terunduh: {cap.get('filename', '')} (9 halaman).", size=12, color=GRAY, italic=True)
+            d.text(s, 4.95, 1.25 + h_ + 0.1, 8.0, 0.5, f"Halaman 1–3 dari berkas yang benar-benar terunduh: {cap.get('filename', '')} ({cap.get('pages', '?')} halaman).", size=12, color=GRAY, italic=True)
             fin = d.rect(s, 4.95, 5.8, 8.0, 0.75, fill=NAVY, radius=0.08)
             d.label(fin, ["Draft perencanaan kegiatan statistik telah dihasilkan."], size=18, color=WHITE)
             d.name(fin, "seq", s)

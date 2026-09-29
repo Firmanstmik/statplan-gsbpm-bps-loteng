@@ -1,6 +1,6 @@
 # Browser QA — Mode Terpandu (44 subproses)
 
-- Run: 2026-09-29T03:38:28.022Z
+- Run: 2026-09-29T05:00:33.554Z
 - Target: http://127.0.0.1:4180 (system Chrome, headless)
 - Widths: 375, 390, 430, 768, 1000, 1280, 1440
 - Status: **PASS**
@@ -29,7 +29,6 @@ completion screen, back-navigation, reload persistence. Plus v1 → v2 migration
 - **minor** (375) 1.1: card re-rendered during scroll (retried)
 - **minor** (390) 1.1: card re-rendered during scroll (retried)
 - **minor** (430) 1.1: card re-rendered during scroll (retried)
-- **minor** (1280) 1.1: card re-rendered during scroll (retried)
 - **minor** (1440) 1.1: card re-rendered during scroll (retried)
 
 ## Console errors

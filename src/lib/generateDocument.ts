@@ -45,7 +45,10 @@ export async function exportProjectDocument(project: Project) {
     project.metadata.kegiatan.penyelenggara ||
     'OPD penyelenggara'
 
-  function p(text: string, opts?: { bold?: boolean; size?: number; before?: number; center?: boolean }) {
+  function p(
+    text: string,
+    opts?: { bold?: boolean; size?: number; before?: number; center?: boolean; color?: string },
+  ) {
     return new Paragraph({
       alignment: opts?.center ? AlignmentType.CENTER : AlignmentType.LEFT,
       spacing: { after: 120, before: opts?.before ?? 0 },
@@ -55,6 +58,7 @@ export async function exportProjectDocument(project: Project) {
           bold: opts?.bold,
           size: opts?.size ?? 22,
           font: 'Calibri',
+          color: opts?.color,
         }),
       ],
     })
@@ -119,37 +123,38 @@ export async function exportProjectDocument(project: Project) {
     return [h(title, HeadingLevel.HEADING_3), new Table({ width: { size: 9360, type: WidthType.DXA }, rows })]
   }
 
+  // StatPlan identity only — the draft must not resemble an official government/BPS document.
   const cover: FileChild[] = [
-    p('PEMERINTAH KABUPATEN LOMBOK TENGAH', { bold: true, size: 24, center: true, before: 200 }),
-    p('Badan Pusat Statistik · StatPlan', { size: 20, center: true }),
+    p('STATPLAN', { bold: true, size: 32, center: true, before: 400, color: '15324B' }),
+    p('Draft Perencanaan Kegiatan Statistik', { bold: true, size: 36, center: true, before: 300 }),
+    p('Dokumen hasil perencanaan menggunakan StatPlan', { size: 22, center: true, color: '475569' }),
     p('────────────────────────────────────────', { size: 18, center: true, before: 200 }),
-    p('DRAF DOKUMEN PERENCANAAN', { bold: true, size: 36, center: true, before: 600 }),
-    p('KEGIATAN STATISTIK', { bold: true, size: 36, center: true }),
     p(project.name, { bold: true, size: 28, center: true, before: 400 }),
     p(`Penyelenggara: ${opd}`, { size: 22, center: true, before: 200 }),
     p(`Jenis: ${jenisLabel(project.jenisKegiatan)} · Klasifikasi: ${project.klasifikasi}`, {
       size: 20,
       center: true,
     }),
-    p(`Tanggal generate: ${generatedAt.toLocaleString('id-ID')}`, { size: 18, center: true, before: 400 }),
-    p('Status: DRAF — memerlukan validasi BPS', { bold: true, size: 20, center: true, before: 200 }),
+    p(`Tanggal dibuat: ${generatedAt.toLocaleString('id-ID')}`, { size: 18, center: true, before: 400 }),
+    p('DRAFT — BUKAN DOKUMEN RESMI BPS', { bold: true, size: 22, center: true, before: 300, color: '15324B' }),
     p(
-      'Dokumen ini dihasilkan oleh StatPlan berdasarkan GSBPM 5.2 (Materi Proses Bisnis Statistik BPS). Bukan dokumen resmi hingga disahkan melalui prosedur yang berlaku.',
-      { size: 18, center: true, before: 300 },
+      'Dokumen ini merupakan draft hasil perencanaan dan pembelajaran menggunakan StatPlan. Isi dokumen perlu ditinjau dan disesuaikan oleh pihak yang berwenang/ahli metodologi sesuai kebutuhan kegiatan.',
+      { size: 18, center: true, before: 120, color: '475569' },
     ),
+    p('Kerangka: GSBPM 5.2, merujuk Materi Proses Bisnis BPS.', { size: 18, center: true, color: '475569' }),
   ]
 
   const tocItems = [
     '1. Informasi Proyek',
-    '2. Ringkasan Validasi',
+    '2. Ringkasan Pemeriksaan Kelengkapan',
     '3. Pemeriksaan Portal Rujukan Statistik',
-    '4. Rekomendasi Jenis Kegiatan',
+    '4. Saran Awal Jenis Kegiatan',
     '5. Tujuan Kegiatan',
     '6. Perancangan Pengumpulan',
     '7. Variabel',
     '8. Indikator',
     '9. Instrumen / Pemetaan',
-    '10. Rekomendasi ke BPS (sektoral)',
+    '10. Bahan Pengajuan Rekomendasi ke BPS (sektoral)',
     '11. Timeline',
     '12. Ringkasan Checklist GSBPM',
     '13. Metadata Statistik',
@@ -189,11 +194,11 @@ export async function exportProjectDocument(project: Project) {
       ],
     }),
 
-    h('2. Ringkasan Validasi', HeadingLevel.HEADING_2),
+    h('2. Ringkasan Pemeriksaan Kelengkapan', HeadingLevel.HEADING_2),
     p(
       issues.length === 0
-        ? 'Tidak ada temuan validasi. Proyek memenuhi syarat minimum ekspor draf.'
-        : `Terdapat ${issues.length} temuan validasi pada saat generate:`,
+        ? 'Tidak ada temuan pada pemeriksaan kelengkapan StatPlan. Proyek memenuhi syarat minimum ekspor draf.'
+        : `Terdapat ${issues.length} temuan pemeriksaan kelengkapan StatPlan saat dokumen dibuat:`,
     ),
     ...issues.map((i) =>
       p(`• [${i.severity.toUpperCase()}] ${i.code}: ${i.message}`, { size: 18 }),
@@ -212,25 +217,34 @@ export async function exportProjectDocument(project: Project) {
     ),
     ...(project.portalSdi.notes ? [p(`Catatan: ${project.portalSdi.notes}`)] : []),
 
-    h('4. Rekomendasi Jenis Kegiatan', HeadingLevel.HEADING_2),
+    h('4. Saran Awal Jenis Kegiatan', HeadingLevel.HEADING_2),
   ]
 
+  // Rule-based suggestion only — never a confidence score or an official recommendation.
+  const chosen = jenisLabel(project.jenisKegiatan)
   if (project.aiRecommendation) {
-    children.push(
-      p(
-        `Rekomendasi: ${jenisLabel(project.aiRecommendation.jenis)} (keyakinan ${Math.round(project.aiRecommendation.confidence * 100)}%)`,
-      ),
-    )
+    const suggested = jenisLabel(project.aiRecommendation.jenis)
+    children.push(p(`Saran awal metode: ${suggested}`, { bold: true }))
+    if (project.aiRecommendation.jenis !== project.jenisKegiatan) {
+      children.push(p(`Jenis kegiatan yang dipilih pada proyek: ${chosen}`))
+    }
+    children.push(p('Alasan saran:', { bold: true, size: 18 }))
     for (const r of project.aiRecommendation.rationale) {
       children.push(p(`• ${r}`))
     }
-    children.push(p('Rujukan modul:', { bold: true, size: 18 }))
+    children.push(p('Rujukan materi:', { bold: true, size: 18 }))
     for (const ref of project.aiRecommendation.groundedRefs) {
       children.push(p(`— ${ref}`, { size: 18 }))
     }
   } else {
-    children.push(p('Tidak ada catatan rekomendasi otomatis tersimpan.'))
+    children.push(p(`Jenis kegiatan yang dipilih pada proyek: ${chosen}`, { bold: true }))
   }
+  children.push(
+    p(
+      'Saran ini dihasilkan berdasarkan aturan sederhana dalam StatPlan dan bukan keputusan atau rekomendasi resmi BPS.',
+      { size: 18 },
+    ),
+  )
 
   children.push(h('5. Tujuan Kegiatan', HeadingLevel.HEADING_2))
   for (const o of project.objectives) children.push(p(`• ${o}`))
@@ -297,7 +311,7 @@ export async function exportProjectDocument(project: Project) {
   }
 
   if (project.klasifikasi === 'sektoral') {
-    children.push(h('10. Draf Rekomendasi Kegiatan Statistik ke BPS', HeadingLevel.HEADING_2))
+    children.push(h('10. Bahan Pengajuan Rekomendasi Kegiatan Statistik ke BPS (draft)', HeadingLevel.HEADING_2))
     children.push(p(`Nama kegiatan: ${project.rekomendasiBps.namaKegiatan}`))
     children.push(p(`Penyelenggara: ${project.rekomendasiBps.penyelenggara || '—'}`))
     children.push(p(`Tujuan: ${project.rekomendasiBps.tujuan || '—'}`))
@@ -352,10 +366,13 @@ export async function exportProjectDocument(project: Project) {
   children.push(
     h('Catatan Penutup', HeadingLevel.HEADING_2),
     p(
-      'Penyelenggara statistik sektoral wajib mengajukan rekomendasi kegiatan statistik ke BPS sesuai ketentuan yang berlaku (Design 2.6, Materi Proses Bisnis).',
+      'Materi Proses Bisnis BPS menyebut penyelenggara statistik sektoral mengajukan permintaan rekomendasi kegiatan statistik ke BPS pada fase Perancangan (Hal. 17). Bagian 10 hanya bahan pengajuan; pengajuan dilakukan melalui prosedur yang berlaku.',
     ),
     p(
-      'Metadata resmi mengikuti Peraturan BPS Nomor 5 Tahun 2020. Field pada dokumen ini mengacu pada definisi MS-Keg, MS-Var, dan MS-Ind pada Materi Proses Bisnis.',
+      'Struktur metadata baku ditetapkan BPS melalui Peraturan BPS Nomor 5 Tahun 2020 (Materi Proses Bisnis BPS, Hal. 58). Isian MS-Keg, MS-Var, dan MS-Ind pada dokumen ini adalah draft.',
+    ),
+    p(
+      'Dokumen ini merupakan draft perencanaan dari StatPlan dan bukan dokumen resmi BPS. Isinya perlu ditinjau oleh pihak yang berwenang/ahli metodologi sesuai kebutuhan kegiatan.',
     ),
     p(`Dokumen digenerate oleh StatPlan 1.0.0 pada ${generatedAt.toLocaleString('id-ID')}.`),
   )
@@ -377,7 +394,7 @@ export async function exportProjectDocument(project: Project) {
               new Paragraph({
                 children: [
                   new TextRun({
-                    text: 'StatPlan · BPS Kabupaten Lombok Tengah · DRAF',
+                    text: 'StatPlan · Draft perencanaan kegiatan statistik · bukan dokumen resmi BPS',
                     size: 16,
                     font: 'Calibri',
                     color: '64748B',

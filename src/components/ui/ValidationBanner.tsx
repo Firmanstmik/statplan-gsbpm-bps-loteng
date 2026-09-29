@@ -18,7 +18,7 @@ export function ValidationBanner({
   issues: ValidationIssue[]
   className?: string
   /** Jump to the workspace tab named in issue.tab */
-  onNavigate?: (tab: string) => void
+  onNavigate?: (tab: string, issueCode?: string) => void
   /** Collapse explanations by default */
   compact?: boolean
 }) {
@@ -80,7 +80,7 @@ function IssueGroup({
   hint: string
   tone: 'error' | 'warning'
   issues: ValidationIssue[]
-  onNavigate?: (tab: string) => void
+  onNavigate?: (tab: string, issueCode?: string) => void
   compact?: boolean
 }) {
   return (
@@ -115,7 +115,7 @@ function IssueRow({
   initiallyOpen,
 }: {
   issue: ValidationIssue
-  onNavigate?: (tab: string) => void
+  onNavigate?: (tab: string, issueCode?: string) => void
   initiallyOpen?: boolean
 }) {
   const g = guidanceFor(issue.code, issue.message)
@@ -166,7 +166,7 @@ function IssueRow({
           <button
             type="button"
             className="focus-ring inline-flex shrink-0 items-center gap-1 self-start rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-ink-900 hover:border-ink-400"
-            onClick={() => onNavigate(issue.tab!)}
+            onClick={() => onNavigate(issue.tab!, issue.code)}
           >
             {g.cta}
             <ArrowRight2 size={12} variant="Bold" color="currentColor" aria-hidden />

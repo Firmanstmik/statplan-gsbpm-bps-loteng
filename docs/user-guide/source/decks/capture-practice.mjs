@@ -149,31 +149,17 @@ await go(`/app/projects/${newId}?tab=export`)
 await bring(p.getByText('Tinjauan sebelum ekspor', { exact: false }), 120)
 await shot(22, [[1, p.getByText('Tinjauan sebelum ekspor', { exact: false }).first()], [2, p.getByRole('button', { name: /Buka pemeriksaan portal/ })]])
 await p.getByRole('button', { name: /Buka pemeriksaan portal/ }).click()
-await settle(900)
-// The portal controls live under subprocess 1.5 of the Specify Need panel: select that tab first.
-const sub15 = p.getByRole('tablist', { name: 'Subproses Specify Need' }).getByRole('tab', { name: /1\.5/ })
-await settle(800)
-for (let i = 0; i < 4 && (await sub15.getAttribute('aria-selected')) !== 'true'; i++) {
-  await sub15.click()
-  await settle(700)
-}
+await settle(1000)
+// The fix link opens Alur kerja on Specify Need 1.5 with the portal check in view — no extra click.
+const portalCard = p.locator('#focus-portal')
 const sirusa = p.getByText('Sudah mengecek sirusa.web.bps.go.id').first()
-await bring(sirusa, 330)
+const romantik = p.getByText('Sudah mengecek romantik.bps.go.id').first()
+await shot(23, [[1, portalCard.getByText('Pemeriksaan portal rujukan statistik').first()], [2, sirusa], [3, romantik]])
 const notes = p.getByLabel('Catatan hasil pengecekan')
 if (await notes.count()) await notes.first().fill('Belum ditemukan kegiatan SKM sejenis untuk DPMPTSP pada portal rujukan (contoh ilustratif).')
 await sirusa.click()
-await p.getByText('Sudah mengecek romantik.bps.go.id').first().click()
-await settle(700)
-// Both boxes ticked → the card collapses into the confirmed summary (expected behaviour).
-const portalCard = p.locator('#focus-portal')
-if (await portalCard.getByText('Sudah dikonfirmasi', { exact: true }).count()) {
-  await bring(portalCard, 160)
-  await shot(23, [[1, portalCard]])
-} else {
-  // Opened via the fix link the card stays in edit mode: both boxes ticked, with a “Selesai” button.
-  await bring(sirusa, 330)
-  await shot(23, [[1, sub15], [2, sirusa], [3, p.getByText('Sudah mengecek romantik.bps.go.id').first()], [4, p.getByRole('button', { name: 'Selesai', exact: true }).first()]])
-}
+await romantik.click()
+await settle(600)
 await go(`/app/projects/${newId}`)
 await shot(24, [[1, p.getByText('FASE SAAT INI', { exact: false }).locator('xpath=../..')], [2, p.getByText('Langkah berikutnya', { exact: false }).first()]])
 const tabs = p.getByRole('tablist', { name: 'Bagian workspace' })

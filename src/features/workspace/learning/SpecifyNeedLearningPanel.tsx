@@ -18,6 +18,8 @@ type Props = {
   onChecklistToggle: (itemId: string) => void
   /** Portal / rekomendasi blocks rendered by parent when relevant */
   contextualSlotForCode?: (code: string) => ReactNode
+  /** Deep link: show this subprocess (e.g. 1.5 for the portal check). `n` makes repeat requests re-apply. */
+  focusRequest?: { code: string; n: number } | null
 }
 
 export function SpecifyNeedLearningPanel({
@@ -27,6 +29,7 @@ export function SpecifyNeedLearningPanel({
   checklistState,
   onChecklistToggle,
   contextualSlotForCode,
+  focusRequest,
 }: Props) {
   const visibleSubs = useMemo(
     () => phase.subProcesses.filter((sp) => isSubProcessVisible(sp.skipWhen, jenisKegiatan)),
@@ -41,6 +44,12 @@ export function SpecifyNeedLearningPanel({
       setFocusedCode(defaultCode)
     }
   }, [visibleSubs, focusedCode, defaultCode])
+
+  useEffect(() => {
+    if (focusRequest && visibleSubs.some((sp) => sp.code === focusRequest.code)) {
+      setFocusedCode(focusRequest.code)
+    }
+  }, [focusRequest, visibleSubs])
 
   const focused: SubProcess | undefined =
     visibleSubs.find((sp) => sp.code === focusedCode) ?? visibleSubs[0]

@@ -79,10 +79,22 @@ function pickPrimaryIssue(issues: ValidationIssue[]): ValidationIssue | null {
   return sorted[0] ?? null
 }
 
-export function projectHref(projectId: string, tab?: string): string {
+/**
+ * Where an issue is fixed inside Alur kerja. The portal check lives under Specify Need 1.5 and the
+ * sectoral rekomendasi draft under Design 2.6, so links must reveal that spot, not just open the tab.
+ */
+export const ISSUE_FOCUS: Partial<Record<string, WorkspaceFocus>> = {
+  portal_sdi: 'portal',
+  jenis_undocumented: 'portal',
+  rekomendasi_required: 'rekomendasi',
+  rekomendasi_form: 'rekomendasi',
+}
+export type WorkspaceFocus = 'portal' | 'rekomendasi'
+
+export function projectHref(projectId: string, tab?: string, focus?: WorkspaceFocus): string {
   // A bare workspace URL opens the default tab (Timeline), so every named tab is explicit.
   if (!tab) return `/app/projects/${projectId}`
-  return `/app/projects/${projectId}?tab=${tab}`
+  return `/app/projects/${projectId}?tab=${tab}${focus ? `&focus=${focus}` : ''}`
 }
 
 export function nextActionForProject(project: Project): ProjectNextAction {
@@ -91,7 +103,7 @@ export function nextActionForProject(project: Project): ProjectNextAction {
   if (primary) {
     return {
       label: ISSUE_ACTION[primary.code] ?? 'Periksa validasi',
-      href: projectHref(project.id, primary.tab),
+      href: projectHref(project.id, primary.tab, ISSUE_FOCUS[primary.code]),
     }
   }
   if (canExport(project)) {
@@ -137,7 +149,7 @@ export function buildAttentionItems(
       description: primary.message,
       severity: primary.severity,
       extraCount: issues.length - 1,
-      href: projectHref(project.id, primary.tab),
+      href: projectHref(project.id, primary.tab, ISSUE_FOCUS[primary.code]),
       updatedAt: project.updatedAt,
     })
   }

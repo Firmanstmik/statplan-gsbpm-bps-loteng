@@ -292,8 +292,8 @@ test(
 )
 // Portal issues are fixed in Alur kerja; the bare URL now opens Timeline, so the link must name the tab.
 test(
-  'Attention portal link opens the project on Alur kerja',
-  portalAttention[0]?.href === `/app/projects/${portalBlocked.id}?tab=workflow`,
+  'Attention portal link opens Alur kerja at the portal check (Specify Need 1.5)',
+  portalAttention[0]?.href === `/app/projects/${portalBlocked.id}?tab=workflow&focus=portal`,
 )
 test(
   'Attention next action matches primary issue',

@@ -218,8 +218,7 @@ else:
                "Gunakan browser baru atau jendela privat agar kondisi awal sama dengan tangkapan layar (belum ada proyek, onboarding dapat dilewati).",
                "Pastikan proyek demo tersedia: di Proyek saya pilih “Muat demo” bila belum ada (dipakai pada langkah 35–36).",
                "Langkah 1–34 memakai rencana baru yang dibuat dari contoh; langkah 35–36 memakai proyek demo SKM yang sudah lengkap — sampaikan ini kepada audiens.",
-               "Angka bulat pada tangkapan layar sama dengan nomor pada “Lakukan ini” di slide; ikuti urutannya.",
-               "Catatan: tombol perbaikan “Buka pemeriksaan portal” membuka Alur kerja pada subproses 1.1; pilih tab 1.5 secara manual (langkah 23)."]:
+               "Angka bulat pada tangkapan layar sama dengan nomor pada “Lakukan ini” di slide; ikuti urutannya."]:
         p = doc.add_paragraph(style="List Bullet"); p.add_run(t_)
     guide_table([["Bagian", "Langkah", "Slide"]] + [[f"{c}. {n}", f"{a}–{b}", f"{plan.index(('step', a)) + 1}–{plan.index(('step', b)) + 1}"] for c, n, d_, a, b in P.SECTIONS],
                 "Tabel 1. Struktur praktik")

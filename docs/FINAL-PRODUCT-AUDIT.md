@@ -680,13 +680,32 @@ Final release pass: verification, documentation and publishing. No product chang
   - Thumbnail count equals slide count.
   - Every link target was checked.
 
-### Findings recorded, not changed
-You asked for no product changes in this pass, so these two findings are recorded here rather than fixed.
-
-1. **The exported DOCX cover can read as official.** The generated draft (`src/lib/generateDocument.ts`) is headed "PEMERINTAH KABUPATEN LOMBOK TENGAH / Badan Pusat Statistik · StatPlan" and states "Status: DRAF — memerlukan validasi BPS". Section 4 shows "Rekomendasi: Survei (keyakinan 91%)".
-   - This is letterhead-like and implies false precision, which conflicts with the "draft, not an official BPS document" positioning used everywhere else.
-   - Recommended follow-up: neutral header, "Status: DRAF — bahan kerja", and "Saran awal jenis kegiatan (aturan sederhana)" without a confidence figure.
-2. **The portal fix link lands on the wrong subprocess.** "Buka pemeriksaan portal" opens Alur kerja with subprocess 1.1 focused, so the portal controls (under 1.5) are not visible until the user selects tab 1.5. The practical deck teaches this click (step 23).
+### Findings — resolved in the final correction pass
+1. **The exported DOCX no longer looks official** (`src/lib/generateDocument.ts`).
+   - **Cover:** now reads STATPLAN · "Draft Perencanaan Kegiatan Statistik" · "Dokumen hasil perencanaan menggunakan StatPlan", then the project, then **"DRAFT — BUKAN DOKUMEN RESMI BPS"** with a short review note.
+   - **Header:** every page reads "StatPlan · Draft perencanaan kegiatan statistik · bukan dokumen resmi BPS".
+   - **Section 4:** now "Saran Awal Jenis Kegiatan", with "Saran awal metode: {jenis}" taken from the project's own rule-based suggestion and the chosen type if it differs. The confidence score is gone, and the section ends with "Saran ini dihasilkan berdasarkan aturan sederhana dalam StatPlan dan bukan keputusan atau rekomendasi resmi BPS".
+   - **Renamed sections:** "Ringkasan Validasi" became "Ringkasan Pemeriksaan Kelengkapan", and "Rekomendasi ke BPS" became "Bahan Pengajuan Rekomendasi ke BPS (draft)".
+   - **Closing notes:** they cite Materi Proses Bisnis Hal. 17 and 58 instead of "wajib".
+   - **Rule-engine and demo reasons:** softened in the same way (no "wajib").
+   - **Kept:** legitimate source references (Materi Proses Bisnis BPS, GSBPM 5.2, Peraturan BPS No. 5/2020 as the metadata standard, page numbers) and the survey's sampling confidence level (a real statistical parameter).
+   - **Verified** on real exports of three demo projects:
+     - Survei (SKM, Padi) and Kompromin (Pendidikan) each show their own method.
+     - No letterhead or confidence score remains.
+     - All 9 SKM pages were rendered and reviewed.
+   - `qa-test` now guards these strings.
+2. **Fix links open the exact place.**
+   - "Buka pemeriksaan portal" (and the "keputusan jenis kegiatan" item) opens Alur kerja directly on Specify Need **1.5**, with the portal check in view.
+   - "Buka rekomendasi" switches Alur kerja to the Design phase, where the rekomendasi draft lives. Previously nothing was rendered when the project was still in Specify Need.
+   - Mechanism: the existing `?tab=` + `goTab(tab, focusId)` deep link, plus an optional `focus=portal|rekomendasi` in the URL, so dashboard links and a refresh land in the same place.
+   - Checks:
+     - `qa:browser`: click → 1.5 with the portal check in view, refresh keeps 1.5, Back works.
+     - `qa-domain`: the dashboard link is `?tab=workflow&focus=portal`.
+     - The rekomendasi link was verified in the browser.
+3. **Documentation.**
+   - Updated: the practical deck (step 23 has a new screenshot and instructions; step 36 shows the new draft cover) and its script.
+   - Unchanged (checksums identical): the Modul, the conceptual deck and its script, since they contained neither issue.
+4. **Not changed (outside the two requested fixes).** The Asisten page still shows a "% keyakinan" badge for its rule-based suggestion; recommended follow-up with the same wording.
 
 ### QA on the final tree (product code unchanged since `65ad4b6`)
 

@@ -1,3 +1,4 @@
+import { ISSUE_FOCUS } from '@/lib/projectAttention'
 import { ArrowRight2 } from 'iconsax-react'
 import { getProjectNextSteps, type WorkspaceTabId } from '@/content/howToWork'
 import type { Project } from '@/domain/types'
@@ -25,10 +26,9 @@ const tabLabel: Record<WorkspaceTabId, string> = {
 }
 
 function focusForStep(id: string, tab: WorkspaceTabId): string | undefined {
-  if (id === 'portal_sdi') return 'focus-portal'
-  if (id === 'rekomendasi_required' || id === 'rekomendasi_form') return 'focus-rekomendasi'
-  if (tab === 'checklist' || id === 'checklist_incomplete' || id === 'jenis_undocumented')
-    return id === 'jenis_undocumented' ? 'focus-portal' : 'focus-checklist'
+  const target = ISSUE_FOCUS[id]
+  if (target) return `focus-${target}`
+  if (tab === 'checklist' || id === 'checklist_incomplete') return 'focus-checklist'
   if (tab === 'metadata' || id.startsWith('metadata_')) return 'focus-metadata'
   return 'workspace-tab-panel'
 }

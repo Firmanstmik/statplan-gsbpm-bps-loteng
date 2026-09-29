@@ -4,7 +4,7 @@
 - browser: Google Chrome (Playwright `channel: 'chrome'`)
 - Playwright: 1.55.0 (npm package; bundled Chromium download blocked by TLS — system Chrome used)
 - app URL: http://127.0.0.1:4180
-- date/time: 2026-09-29T03:18:07.504Z
+- date/time: 2026-09-29T04:45:36.338Z
 - viewport: primary 1440×1000; also 390, 430, 768, 1280, 1440
 
 ## Final Browser Status
@@ -52,6 +52,9 @@
 - Export UI visible
 - Export gate: new incomplete project is blocked (expected)
 - Validation review explains why + how to fix
+- Portal fix link opens Alur kerja → 1.5 with the portal check in view (no extra click)
+- Refresh keeps Alur kerja → 1.5 (portal check)
+- Browser Back after portal fix link → /app/projects/8842e381-1f0a-430c-b656-dfe1cc6d151e/guided
 - Responsive screenshots captured
 - Presentation Mode opened (no project required)
 - Presentation: 8 slides navigable
@@ -108,7 +111,7 @@ Failed requests (0):
 
 ## Findings
 - **info**: Starting browser QA against http://127.0.0.1:4180
-- **info**: Guided URL: http://127.0.0.1:4180/app/projects/202bd9ef-6151-4846-8a1f-99437e6f7690/guided
+- **info**: Guided URL: http://127.0.0.1:4180/app/projects/8842e381-1f0a-430c-b656-dfe1cc6d151e/guided
 - **info**: Guided cards found: 6 (expect ~6)
 - **info**: Understanding progress: 6 dari 6 subproses sudah dipahami
 - **info**: Guided cards found: 6 (expect ~6)

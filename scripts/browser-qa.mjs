@@ -564,6 +564,38 @@ async function run() {
         if (!/Mengapa penting/.test(reviewText) || !/Cara memperbaiki/.test(reviewText)) {
           note('critical', 'Validation review lacks why/how guidance')
         } else journey.push('Validation review explains why + how to fix')
+
+        // Fix link must land on the exact fix location: Alur kerja → Specify Need 1.5 → portal check
+        const exportUrl = page.url()
+        const portalFix = page.getByRole('button', { name: /Buka pemeriksaan portal/ }).first()
+        if ((await portalFix.count()) === 0) {
+          note('critical', 'Export review has no “Buka pemeriksaan portal” link')
+        } else {
+          await portalFix.click()
+          await page.waitForTimeout(700)
+          const sub15 = page.getByRole('tablist', { name: 'Subproses Specify Need' }).getByRole('tab', { name: /^1\.5/ })
+          const sirusa = page.getByText('Sudah mengecek sirusa.web.bps.go.id').first()
+          const selected = (await sub15.getAttribute('aria-selected')) === 'true'
+          const inView = (await sirusa.count())
+            ? await sirusa.evaluate((el) => {
+                const r = el.getBoundingClientRect()
+                return r.top >= 0 && r.bottom <= window.innerHeight
+              })
+            : false
+          if (!/tab=workflow/.test(page.url()) || !selected || !inView) {
+            note('critical', 'Portal fix link did not open Specify Need 1.5 with the portal check in view', { url: page.url(), selected, inView })
+          } else journey.push('Portal fix link opens Alur kerja → 1.5 with the portal check in view (no extra click)')
+          await page.reload({ waitUntil: 'load' })
+          await page.waitForTimeout(900)
+          if ((await sub15.getAttribute('aria-selected')) !== 'true' || !(await page.getByText('Sudah mengecek sirusa.web.bps.go.id').count())) {
+            note('critical', 'Refresh lost the portal fix location')
+          } else journey.push('Refresh keeps Alur kerja → 1.5 (portal check)')
+          await page.goBack({ waitUntil: 'load' })
+          await page.waitForTimeout(700)
+          journey.push(`Browser Back after portal fix link → ${new URL(page.url()).pathname}`)
+          await page.goto(exportUrl, { waitUntil: 'load' })
+          await page.waitForTimeout(600)
+        }
       } else {
         note('critical', 'Export gate: brand-new project should not be exportable')
       }

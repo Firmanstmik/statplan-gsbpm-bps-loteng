@@ -66,6 +66,7 @@ import { useAutosaveFeedback } from '@/hooks/useAutosaveFeedback'
 import { cn, formatDateTime, jenisLabel, statusLabel } from '@/lib/utils'
 import { getGuidedSession } from '@/lib/guidedSession'
 import { FaqLink } from '@/components/ui/FaqLink'
+import { ISSUE_FOCUS, type WorkspaceFocus } from '@/lib/projectAttention'
 import { formatDateID, formatDateRangeID } from '@/content/planningTimeline'
 import { buildShareUrl, copyText, encodeProjectShare } from '@/lib/shareLink'
 
@@ -170,6 +171,7 @@ export function ProjectWorkspacePage() {
       : null
   const timelineWeeks = Math.max(16, ...(project?.timeline.map((t) => t.endWeek) ?? []))
 
+  const [specifyFocus, setSpecifyFocus] = useState<{ code: string; n: number } | null>(null)
   const tabPanelRef = useRef<HTMLDivElement>(null)
   const reduceMotion = useReducedMotion()
 
@@ -180,13 +182,26 @@ export function ProjectWorkspacePage() {
     }
   }, [searchParams])
 
+  /** Make a fix location exist before scrolling to it: portal → Specify Need 1.5, rekomendasi → Design phase. */
+  function reveal(target: WorkspaceFocus) {
+    if (!project || project.currentPhaseId !== 'specify_need') return
+    if (target === 'portal') setSpecifyFocus({ code: '1.5', n: Date.now() })
+    else setPhase(project.id, 'design')
+  }
+
   function goTab(next: TabId, focusId?: string) {
+    const target = (['focus-portal', 'focus-rekomendasi'] as const).includes(focusId as 'focus-portal')
+      ? (focusId!.replace('focus-', '') as WorkspaceFocus)
+      : null
+    if (target) reveal(target)
     setTab(next)
     setSearchParams(
       (prev) => {
         const p = new URLSearchParams(prev)
         if (next === DEFAULT_TAB) p.delete('tab')
         else p.set('tab', next)
+        if (target) p.set('focus', target)
+        else p.delete('focus')
         return p
       },
       { replace: true },
@@ -201,8 +216,21 @@ export function ProjectWorkspacePage() {
         }
       }
       tabPanelRef.current?.scrollIntoView({ behavior, block: 'start' })
-    }, 60)
+    }, target ? 140 : 60)
   }
+
+  // ?focus=portal|rekomendasi from other pages (dashboard attention links) and on refresh
+  const urlFocus = searchParams.get('focus')
+  const urlFocusDone = useRef<string | null>(null)
+  useEffect(() => {
+    if (!project || tab !== 'workflow' || (urlFocus !== 'portal' && urlFocus !== 'rekomendasi')) return
+    if (urlFocusDone.current === `${project.id}:${urlFocus}`) return
+    urlFocusDone.current = `${project.id}:${urlFocus}`
+    reveal(urlFocus)
+    window.setTimeout(() => {
+      document.getElementById(`focus-${urlFocus}`)?.scrollIntoView({ block: 'start' })
+    }, 160)
+  })
 
   function onTabListKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     const keys = ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Home', 'End']
@@ -661,6 +689,7 @@ export function ProjectWorkspacePage() {
                 klasifikasi={project.klasifikasi}
                 checklistState={project.checklistState}
                 onChecklistToggle={onChecklistToggle}
+                focusRequest={specifyFocus}
                 contextualSlotForCode={(code) =>
                   code === '1.5' ? (
                     portalComplete && !portalEditing ? (
@@ -1733,7 +1762,7 @@ export function ProjectWorkspacePage() {
             </h2>
             <ValidationBanner
               issues={validationIssues}
-              onNavigate={(t) => goTab(t as TabId)}
+              onNavigate={(t, code) => goTab(t as TabId, code && ISSUE_FOCUS[code] ? `focus-${ISSUE_FOCUS[code]}` : undefined)}
             />
             <p className="t-support mt-4">
               Tinjauan ini dibuat oleh aturan StatPlan untuk membantu kelengkapan draf — bukan
