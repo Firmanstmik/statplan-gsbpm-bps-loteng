@@ -8,6 +8,8 @@ Versi aplikasi yang didokumentasikan: **StatPlan 1.0.0** (https://statplan-gsbpm
 
 | Berkas | Untuk | Isi |
 |---|---|---|
+| `StatPlan-Panduan-Penggunaan-Aplikasi.docx` / `.pdf` | BPS, OPD/instansi, operator, pengguna non-teknis | Buku panduan resmi dari nol sampai unduh draft: 20 bab + 3 lampiran, 129 halaman A4, 35 tangkapan layar asli bertanda ①②③, 44 subproses lengkap. PDF diekspor dari DOCX yang sama |
+| `StatPlan-Panduan-Penggunaan-Aplikasi-Lengkap.pptx` / `.pdf` | Manual digital mandiri (bukan bahan presentasi) | 284 slide 16:9: 26 bagian, 20 LANGKAH, 8 fase dan 44 subproses masing-masing dengan halaman sendiri, 140 tangkapan layar asli bertanda ①②③, 1.311 tautan internal (Daftar Isi, Kembali, Awal bagian, ‹ ›). PDF memuat seluruh slide beserta tautannya |
 | `StatPlan-Modul-Penggunaan.docx` | Laporan PKL, pembaca umum | Modul lengkap: 17 bab, 36 halaman A4, 16 gambar, 22 tabel |
 | `StatPlan-Presentasi-Penggunaan.pptx` | Presentasi ke BPS, dosen, pembimbing | 24 slide konseptual: latar, GSBPM 5.2 (8 fase, 44 subproses), cara kerja, bantuan & hasil, penutup |
 | `StatPlan-Naskah-Presentasi.docx` | Presenter deck konseptual | Naskah slide demi slide: tujuan, yang ditampilkan, naskah pembicara, poin utama, transisi, durasi (18 halaman) |
@@ -58,6 +60,19 @@ powershell -File docs/user-guide/source/decks/docx2pdf.ps1 $W/practice/draft-skm
 python docs/user-guide/source/flow.py $W/flow.png
 python docs/user-guide/source/build_docx.py $W/content.json $W/img $W/flow.png docs/user-guide/StatPlan-Modul-Penggunaan.docx
 powershell -File docs/user-guide/source/export_docx.ps1 docs/user-guide/StatPlan-Modul-Penggunaan.docx
+
+# 2b. Panduan Penggunaan Aplikasi (DOCX + PDF)
+npx vite-node docs/user-guide/source/panduan/export-panduan.ts $W/panduan/content.json
+node docs/user-guide/source/panduan/capture-panduan.mjs $W/panduan/img          # 35 layar + inventaris label UI
+powershell -File docs/user-guide/source/decks/docx2pdf.ps1 $W/panduan/img/draft-skm.docx
+python docs/user-guide/source/panduan/build_panduan.py $W/panduan docs/user-guide/StatPlan-Panduan-Penggunaan-Aplikasi.docx
+powershell -File docs/user-guide/source/export_docx.ps1 docs/user-guide/StatPlan-Panduan-Penggunaan-Aplikasi.docx   # daftar isi + PDF
+
+# 2c. Manual digital PowerPoint (PPTX + PDF) — memakai hasil langkah 2b
+node docs/user-guide/source/panduan/capture-cards.mjs $W/panduan/cards        # 8 halaman fase + 44 kartu × 2
+python docs/user-guide/source/panduan/build_manual_pptx.py $W/panduan docs/user-guide/StatPlan-Panduan-Penggunaan-Aplikasi-Lengkap.pptx
+powershell -File docs/user-guide/source/panduan/export_manual.ps1 docs/user-guide/StatPlan-Panduan-Penggunaan-Aplikasi-Lengkap.pptx $W/panduan/png docs/user-guide/StatPlan-Panduan-Penggunaan-Aplikasi-Lengkap.pdf
+powershell -File docs/user-guide/source/panduan/overflow_check.ps1 docs/user-guide/StatPlan-Panduan-Penggunaan-Aplikasi-Lengkap.pptx
 
 # 3. Dua deck + dua naskah (animasi, PNG slide, daftar isi)
 bash docs/user-guide/source/decks/run_all.sh $W
