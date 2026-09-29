@@ -636,3 +636,65 @@ Final release pass: verification, documentation and publishing. No product chang
   - Wording follows the product position: a learning and planning aid, draft output, no BPS approval, timeline not a BPS duration.
 - **Regeneration:** `docs/user-guide/source/` holds the capture, content-export, DOCX and PPTX build scripts. `README.md` has the steps; `content-outline.md` has the structure.
 
+
+---
+
+## Publication & Presentation Package
+
+### GitHub
+- **Repository:** `Firmanstmik/statplan-gsbpm-bps-loteng`. The earlier `origin` (`agistiaaaaaaa/SIMULATOR-GSBPM-BPS-LOTENG`) was the wrong target; it was replaced by URL only, with no history rewrite and no force push.
+- **Release:** `65ad4b6` pushed to `main` and verified (`HEAD == origin/main`).
+- **Follow-up commit:** `e4072ea` ignores the local Vercel link files (`.vercel`, `.env*`). `vercel link` writes a `.env.local` with an OIDC token; it is ignored and never committed.
+
+### Vercel
+- **Project:** `statplan-gsbpm-bps-loteng` in scope `firman-maulanas-projects-fadfa047` (account `firmanstmik`). It was created because no StatPlan project existed in this account.
+  - The old URL `simulator-gsbpm-bps-loteng.vercel.app` belongs to a different Vercel account. `*.vercel.app` names are global, so that URL cannot be taken over from this account.
+- **Git integration:** connected to `Firmanstmik/statplan-gsbpm-bps-loteng`, production branch `main`. Build settings come from `vercel.json` (`npm run build` → `dist`, framework Vite); no environment variables.
+- **Production:** https://statplan-gsbpm-bps-loteng.vercel.app. The first Git-triggered production deployment reached **Ready** (GitHub deployment `Production` at `e4072ea`).
+- **Production verification:**
+  - The served bundle `index-DrtD-I5h.js` is identical to the local build of the release.
+  - The new strings are present ("Pertanyaan umum", the final landing copy) and the old copy is absent.
+  - All tested routes return 200, including the `/app/help` redirect.
+  - Production browser checks:
+    - `/contoh/skm`: all 8 case-study sections and 8 phase lessons.
+    - Workspace: 9 tabs, default Timeline.
+    - FAQ: 52 questions.
+    - Guided Mode loads, with 0 console errors.
+    - `qa:faq:browser` PASS at 1280; `qa:landing` PASS at 375 and 1440.
+  - Limitation: the full `qa:browser` run against production reported false "missing section" results because the Example page took ~20 s to load over this network, longer than the suite's fixed waits. The two network "failures" were `ERR_ABORTED` on a responsive hero image that the browser itself cancels on resize. The same suite passes locally on the identical build.
+- **Custom domain:** `simulator.bpsloteng.net` has no DNS record, and `bpsloteng.net` is not a domain in this Vercel account (the CLI reports no access). Attaching it requires whoever controls the domain to add it to the project and create the record Vercel shows (typically CNAME `simulator` → `cname.vercel-dns.com`). No DNS was changed.
+
+### Presentation package (`docs/user-guide/`)
+- **`StatPlan-Presentasi-Penggunaan.pptx`:** redesigned, 24 slides.
+  - Photo cover, clickable agenda, 4 section dividers, progressive 8-phase and 44-subprocess visuals, clickable flow, real screenshots in browser frames.
+  - Fade Smoothly transition on 24/24 slides; 104 native entrance effects; 129 internal links; speaker notes on every slide.
+- **`StatPlan-Naskah-Presentasi.docx`:** 18 pages. One entry per slide (24), each with a thumbnail of that slide plus Tujuan, Yang Ditampilkan, Naskah Pembicara, Poin Utama, Transisi and Perkiraan Durasi.
+- **`StatPlan-Praktik-Langsung.pptx`:** new, 45 slides (36 steps).
+  - One real screenshot per step, with numbered callouts placed from the UI element positions recorded by Playwright.
+  - Step 36 shows pages of the DOCX actually downloaded.
+  - Fade Smoothly on 45/45 slides; 183 native effects; 424 internal links.
+- **`StatPlan-Naskah-Praktik-Langsung.docx`:** 29 pages. One entry per slide (45), each with a thumbnail plus Tujuan, Yang Dilakukan Presenter, Naskah, Apa yang Harus Diperhatikan, Hasil, Jika Pengguna Bingung, Transisi and Perkiraan Durasi.
+- **`StatPlan-Modul-Penggunaan.docx`:** unchanged (checksum identical).
+- **Validation:** all four documents were opened in PowerPoint/Word through COM. Slides were exported to PNG and scripts to PDF, then every page and slide was reviewed.
+  - Both scripts have no near-empty pages.
+  - Thumbnail count equals slide count.
+  - Every link target was checked.
+
+### Findings recorded, not changed
+You asked for no product changes in this pass, so these two findings are recorded here rather than fixed.
+
+1. **The exported DOCX cover can read as official.** The generated draft (`src/lib/generateDocument.ts`) is headed "PEMERINTAH KABUPATEN LOMBOK TENGAH / Badan Pusat Statistik · StatPlan" and states "Status: DRAF — memerlukan validasi BPS". Section 4 shows "Rekomendasi: Survei (keyakinan 91%)".
+   - This is letterhead-like and implies false precision, which conflicts with the "draft, not an official BPS document" positioning used everywhere else.
+   - Recommended follow-up: neutral header, "Status: DRAF — bahan kerja", and "Saran awal jenis kegiatan (aturan sederhana)" without a confidence figure.
+2. **The portal fix link lands on the wrong subprocess.** "Buka pemeriksaan portal" opens Alur kerja with subprocess 1.1 focused, so the portal controls (under 1.5) are not visible until the user selects tab 1.5. The practical deck teaches this click (step 23).
+
+### QA on the final tree (product code unchanged since `65ad4b6`)
+
+| Gate | Result |
+|---|---|
+| typecheck / lint / build | PASS / PASS (0 problems) / PASS |
+| `npm run qa` | PASS: 6 suites (incl. 44-subprocess PDF alignment, `qa-faq`) |
+| `npm run qa:browser` (local preview) | PASS: 60 steps, 0 console errors, 0 network failures |
+| `npm run qa:browser:guided` | PASS: 44/44 × 7 widths, 0 critical/major. The first attempt aborted on a screenshot timeout with ~2 GB free RAM; the single rerun passed. |
+| `npm run qa:faq:browser` / `qa:landing` | PASS at 7 widths |
+| `npm run docs:inventory` / `docs:faq` | OK; FAQ map unchanged |

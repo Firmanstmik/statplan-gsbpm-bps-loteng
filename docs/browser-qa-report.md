@@ -4,7 +4,7 @@
 - browser: Google Chrome (Playwright `channel: 'chrome'`)
 - Playwright: 1.55.0 (npm package; bundled Chromium download blocked by TLS — system Chrome used)
 - app URL: http://127.0.0.1:4180
-- date/time: 2026-09-28T20:40:45.931Z
+- date/time: 2026-09-29T03:18:07.504Z
 - viewport: primary 1440×1000; also 390, 430, 768, 1280, 1440
 
 ## Final Browser Status
@@ -108,7 +108,7 @@ Failed requests (0):
 
 ## Findings
 - **info**: Starting browser QA against http://127.0.0.1:4180
-- **info**: Guided URL: http://127.0.0.1:4180/app/projects/0814e6da-a81e-4422-a8cf-071257eeb927/guided
+- **info**: Guided URL: http://127.0.0.1:4180/app/projects/202bd9ef-6151-4846-8a1f-99437e6f7690/guided
 - **info**: Guided cards found: 6 (expect ~6)
 - **info**: Understanding progress: 6 dari 6 subproses sudah dipahami
 - **info**: Guided cards found: 6 (expect ~6)

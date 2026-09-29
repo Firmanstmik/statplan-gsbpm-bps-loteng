@@ -30,27 +30,47 @@
 | 16 | Glosarium | 20 istilah dengan rujukan halaman | — |
 | 17 | Penutup | Ringkasan | — |
 
-## Presentasi (`StatPlan-Presentasi-Penggunaan.pptx`)
+## Presentasi (`StatPlan-Presentasi-Penggunaan.pptx`, 24 slide) + `StatPlan-Naskah-Presentasi.docx`
 
-| No | Slide | Visual |
+| No | Slide | Bagian |
 |---|---|---|
-| 1 | STATPLAN — Panduan Penggunaan (tombol *Mulai*, *Lihat alur*) | — |
-| 2 | Masalah yang ingin dibantu | Kutipan + 4 pertanyaan |
-| 3 | Apa itu StatPlan? (membantu / bukan) | Dua kolom |
-| 4 | Hubungan StatPlan dan GSBPM 5.2 | Diagram bertumpuk + tabel 8 fase |
-| 5 | Alur penggunaan (agenda interaktif, tiap langkah dapat diklik) | Diagram 9 langkah |
-| 6 | Langkah 1 — Lihat contoh | Tangkapan layar |
-| 7 | Langkah 2 — Buat rencana | Tangkapan layar |
-| 8 | Langkah 3 — Identifikasi kebutuhan | Tangkapan layar |
-| 9 | Langkah 4 — Susun timeline (bukan durasi wajib BPS) | Tangkapan layar |
-| 10 | Langkah 5 — Mode Terpandu | Tangkapan layar |
-| 11 | Mengerjakan satu subproses | Diagram + tangkapan layar format kerja |
-| 12 | FAQ | Tangkapan layar |
-| 13 | Workspace (9 tab) | Tangkapan layar |
-| 14 | Validasi | Tangkapan layar |
-| 15 | Draft output (bukan dokumen resmi BPS) | Tangkapan layar |
-| 16 | Contoh skenario (proyek demo SKM, ilustratif) | Diagram 8 langkah |
-| 17 | Manfaat StatPlan | 6 kartu |
-| 18 | Penutup — Terima kasih (tombol *Ke awal*, *Lihat alur*) | — |
+| 1 | Sampul (Mulai, Agenda) | Pembukaan |
+| 2 | Agenda — 4 kartu bagian dapat diklik | Pembukaan |
+| 3 | Pembatas A | A. Latar & Konsep |
+| 4 | Masalah yang ingin dibantu | A |
+| 5 | Apa itu StatPlan? (membantu / bukan) | A |
+| 6 | Mengapa GSBPM 5.2? (definisi & manfaat, Hal. 5) | A |
+| 7 | Delapan fase GSBPM 5.2 (muncul bertahap) | A |
+| 8 | 44 subproses (grafik per fase) | A |
+| 9 | Pembatas B | B. Cara Kerja |
+| 10 | Alur penggunaan (8 langkah, dapat diklik) | B |
+| 11 | Mulai dari contoh | B |
+| 12 | Rencana & identifikasi kebutuhan | B |
+| 13 | Timeline perencanaan (bukan durasi wajib BPS) | B |
+| 14 | Mode Terpandu | B |
+| 15 | Mengerjakan satu subproses | B |
+| 16 | Pembatas C | C. Bantuan & Hasil |
+| 17 | FAQ | C |
+| 18 | Ruang kerja | C |
+| 19 | Validasi (bukan validasi resmi BPS) | C |
+| 20 | Draft output (bukan dokumen resmi BPS) | C |
+| 21 | Pembatas D | D. Penutup |
+| 22 | Contoh skenario (proyek demo, ilustratif) | D |
+| 23 | Manfaat StatPlan | D |
+| 24 | Penutup — Terima kasih | D |
 
-Navigasi: setiap slide isi memiliki tombol *Kembali*, *Alur* (ke slide 5), dan *Lanjut*. Totalnya 60 tautan antarslide, dan semua tujuannya sudah diperiksa.
+## Praktik Langsung (`StatPlan-Praktik-Langsung.pptx`, 45 slide) + `StatPlan-Naskah-Praktik-Langsung.docx`
+
+- **Pembuka:** slide 1 Sampul, slide 2 Agenda (bagian A–E dapat diklik), slide 3 Skenario praktik.
+- **Bagian A, Memulai:** langkah 1–6. Buka StatPlan, halaman utama, contoh kegiatan, pilih contoh, pahami contoh, mulai rencana.
+- **Bagian B, Rencana & Timeline:** langkah 7–13. Informasi awal, kebutuhan, contoh & penjelasan, FAQ saat bingung, timeline, periode, timeline ilustratif.
+- **Bagian C, Mode Terpandu:** langkah 14–21. Masuk Mode Terpandu, fase pertama, subproses, contoh, format kerja, mengerjakan, lanjut, kemajuan.
+- **Bagian D, Validasi & Ruang Kerja:** langkah 22–32.
+  - Validasi, lalu memperbaiki item (portal, tab 1.5).
+  - Ruang kerja, lalu tab Timeline, Alur kerja, Checklist, Perancangan, Variabel, Instrumen, Metadata, Riwayat.
+- **Bagian E, Ekspor Draft:** langkah 33–36. Ekspor, persyaratan, unduh DOCX (proyek demo SKM), memahami dokumen.
+- **Penutup:** slide 45, “Draft perencanaan kegiatan statistik telah dihasilkan.”
+
+Setiap langkah terdiri dari satu tangkapan layar asli dengan angka callout, *Lakukan ini* (nomornya sama dengan callout), *Hasilnya*, dan *Tips*.
+
+Navigasi kedua deck: *⌂ Beranda · Agenda · ‹ · › · Akhir* di setiap slide. Transisi *Fade Smoothly* dan animasi masuk berurutan dipasang lewat PowerPoint.
